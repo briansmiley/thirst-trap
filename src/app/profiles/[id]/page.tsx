@@ -7,10 +7,5 @@ export default async function ProfilePage({
 }) {
   const { id } = await params;
 
-  return (
-    <>
-      <div>User id: {id}</div>
-      <NewProfileForm id={id} />
-    </>
-  );
+  return <NewProfileForm id={id} />;
 }
