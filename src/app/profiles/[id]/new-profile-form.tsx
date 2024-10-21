@@ -44,6 +44,7 @@ export default function NewProfileForm({ id }: { id: string }) {
         ref={fileInputRef}
         type="file"
         accept="image/*"
+        capture="environment"
         onChange={handleFileChange}
       />
       <div>
