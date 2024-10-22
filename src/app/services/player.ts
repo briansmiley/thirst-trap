@@ -146,5 +146,13 @@ export const playerService: PlayerServiceI = {
       select: selects
     });
     return updatedPlayer;
+  },
+  kill: async (playerId: string) => {
+    const killedPlayer = await prisma.player.update({
+      where: { playerId },
+      data: { faction: "GHOST", expirationTime: null },
+      select: selects
+    });
+    return killedPlayer;
   }
 };
