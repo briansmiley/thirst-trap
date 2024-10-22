@@ -1,5 +1,5 @@
 import { Faction } from "@prisma/client";
-import { Player } from "../types";
+import { Player } from "../../app/types";
 export type PlayerServiceT = {
   create: (player: Player) => Promise<Player>;
   update: (player: Player) => Promise<Player>;
@@ -14,4 +14,5 @@ export type PlayerServiceT = {
   recruit: (playerId: string, faction: Faction) => Promise<Player>;
   resetExpirationTimer: (playerId: string, minutes: number) => Promise<Player>;
   kill: (playerId: string) => Promise<Player>;
+  creditKill: (playerId: string) => Promise<Player>;
 };
