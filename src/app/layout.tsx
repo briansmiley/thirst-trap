@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Satisfy } from "next/font/google";
 import "./globals.css";
+
+const satisfy = Satisfy({
+  subsets: ["latin"],
+  variable: "--font-satisfy",
+  weight: "400"
+});
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -27,9 +34,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${satisfy.variable} bg-blood`}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-[100dvh]`}
       >
         {children}
       </body>
