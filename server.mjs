@@ -9,6 +9,11 @@ const port = 3000;
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
 
+const getNewUser = (() => {
+  let id = 0;
+  return (name) => ({ id: id++, name, status: "human" });
+})();
+
 app.prepare().then(() => {
   const httpServer = createServer(handler);
 
@@ -17,8 +22,8 @@ app.prepare().then(() => {
   io.on("connection", (socket) => {
     console.log("user connected");
 
-    socket.on("event", (...params) => {
-      io.emit("event", params);
+    socket.on("addUser", (name) => {
+      io.emit("addUser", getNewUser(name));
     });
 
     socket.on("disconnect", () => {
