@@ -3,9 +3,10 @@ type Faction = "VAMPIRE" | "HUNTER" | "NEUTRAL" | "GHOST";
 export type Player = {
   name: string;
   playerId: string;
-  picture: string | null;
+  picture?: string | null;
   faction: Faction;
   isPaused: boolean;
   pausedAt: Date | null;
   expirationTime: Date | null;
+  kills: number;
 };

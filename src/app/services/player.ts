@@ -5,7 +5,7 @@ import { Faction } from "@prisma/client";
 
 //Selects the properties of the Player schema from the database model
 type PlayerSelect = {
-  [K in keyof Player]: true;
+  [K in keyof Player]: boolean;
 };
 const selects: PlayerSelect = {
   name: true,
@@ -14,7 +14,8 @@ const selects: PlayerSelect = {
   faction: true,
   isPaused: true,
   pausedAt: true,
-  expirationTime: true
+  expirationTime: true,
+  kills: true
 };
 
 export const playerService: PlayerServiceI = {
@@ -154,5 +155,13 @@ export const playerService: PlayerServiceI = {
       select: selects
     });
     return killedPlayer;
+  },
+  creditKill: async (playerId: string) => {
+    const updatedPlayer = await prisma.player.update({
+      where: { playerId },
+      data: { kills: { increment: 1 } },
+      select: selects
+    });
+    return updatedPlayer;
   }
 };
