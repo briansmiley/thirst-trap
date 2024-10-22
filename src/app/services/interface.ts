@@ -1,3 +1,4 @@
+import { Faction } from "@prisma/client";
 import { Player } from "../types";
 export type PlayerServiceT = {
   create: (player: Player) => Promise<Player>;
@@ -10,4 +11,5 @@ export type PlayerServiceT = {
   pauseAll: () => Promise<Player[]>;
   resume: (playerId: string) => Promise<Player>;
   resumeAll: () => Promise<Player[]>;
+  recruit: (playerId: string, faction: Faction) => Promise<Player>;
 };

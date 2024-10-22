@@ -1,6 +1,7 @@
 import { PlayerServiceT as PlayerServiceI } from "./interface";
 import prisma from "../client";
 import { Player } from "../types";
+import { Faction } from "@prisma/client";
 
 //Selects the properties of the Player schema from the database model
 type PlayerSelect = {
@@ -127,5 +128,13 @@ export const playerService: PlayerServiceI = {
       })
     );
     return updatedPlayers;
+  },
+  recruit: async (playerId: string, faction: Faction) => {
+    const updatedPlayer = await prisma.player.update({
+      where: { playerId },
+      data: { faction },
+      select: selects
+    });
+    return updatedPlayer;
   }
 };
