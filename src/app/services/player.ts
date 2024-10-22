@@ -1,8 +1,12 @@
-import { PlayerServiceT } from "./interface";
+import { PlayerServiceT as PlayerServiceI } from "./interface";
 import prisma from "../client";
 import { Player } from "../types";
 
-const selects = {
+//Selects the properties of the Player schema from the database model
+type PlayerSelect = {
+  [K in keyof Player]: true;
+};
+const selects: PlayerSelect = {
   name: true,
   playerId: true,
   picture: true,
@@ -12,7 +16,7 @@ const selects = {
   expirationTime: true
 };
 
-export const playerService: PlayerServiceT = {
+export const playerService: PlayerServiceI = {
   create: async (newPlayer: Player) => {
     const player = await prisma.player.create({
       data: newPlayer,
