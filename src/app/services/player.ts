@@ -136,5 +136,15 @@ export const playerService: PlayerServiceI = {
       select: selects
     });
     return updatedPlayer;
+  },
+  resetExpirationTimer: async (playerId: string, minutes: number) => {
+    const now = new Date();
+    const duration = minutes * 60000; // Convert minutes to milliseconds
+    const updatedPlayer = await prisma.player.update({
+      where: { playerId },
+      data: { expirationTime: new Date(now.getTime() + duration) },
+      select: selects
+    });
+    return updatedPlayer;
   }
 };

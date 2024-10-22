@@ -12,4 +12,6 @@ export type PlayerServiceT = {
   resume: (playerId: string) => Promise<Player>;
   resumeAll: () => Promise<Player[]>;
   recruit: (playerId: string, faction: Faction) => Promise<Player>;
+  /**Reset the expiration time of a player**/
+  resetExpirationTimer: (playerId: string, minutes: number) => Promise<Player>;
 };
