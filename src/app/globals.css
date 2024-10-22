@@ -10,4 +10,13 @@ body {
   :root {
     --radius: 0.5rem;
   }
+  .satisfy {
+    font-family: var(--font-satisfy);
+  }
+}
+
+@layer components {
+  input {
+    @apply text-black;
+  }
 }

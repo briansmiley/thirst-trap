@@ -24,7 +24,7 @@ export default function Home() {
       setIsConnected(true);
       setTransport(socket.io.engine.transport.name);
 
-      socket.io.engine.on("upgrade", (transport) => {
+      socket.io.engine.on("upgrade", transport => {
         setTransport(transport.name);
       });
     }
@@ -35,7 +35,7 @@ export default function Home() {
     }
 
     function onAddUser(user: User) {
-      setUsers((previous) => [...previous, user]);
+      setUsers(previous => [...previous, user]);
     }
 
     socket.on("connect", onConnect);
@@ -63,11 +63,11 @@ export default function Home() {
         <input
           type="text"
           value={name}
-          onChange={(evt) => setName(evt.target.value)}
+          onChange={evt => setName(evt.target.value)}
         />
       </label>
       <button onClick={addUser}>Add User</button>
-      {users.map((user) => (
+      {users.map(user => (
         <div key={user.id} className="flex gap-2">
           <div>{user.id}</div>
           <div>{user.name}</div>
