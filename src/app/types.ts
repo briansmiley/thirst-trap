@@ -1,11 +1,11 @@
 type Faction = "VAMPIRE" | "HUNTER" | "NEUTRAL" | "GHOST";
 
 export type Player = {
-  id: string;
   name: string;
   playerId: string;
-  picture?: string;
+  picture: string | null;
   faction: Faction;
-  paused: boolean;
-  expirationTime?: Date;
+  isPaused: boolean;
+  pausedAt: Date | null;
+  expirationTime: Date | null;
 };
