@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
+import SplashEntry from "@/components/SplashEntry";
 import Image from "next/image";
 
 export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center h-full">
-      <div className="flex flex-col items-center justify-center gap-10  bg-slate-950 bg-opacity-70 rounded-2xl p-12">
+      <div className="flex flex-col items-center justify-center gap-10 h-full bg-slate-950 bg-opacity-70 p-12">
         <h1 className="satisfy text-8xl text-white">Thirst Trap</h1>
-        <Button className="font-serif w-48 h-24 text-4xl">Enter</Button>
+        <SplashEntry />
         <Image
           src="/ThirstTrapCover.png"
           alt="Thirst Trap"
