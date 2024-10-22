@@ -26,11 +26,12 @@ model Player {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name           String
+  name           String    @default("Player")
   playerId       String    @unique
   picture        String? //base64 encoded profile image
-  faction        Faction
-  isPaused       Boolean
+  faction        Faction   @default(NEUTRAL)
+  isPaused       Boolean   @default(false)
   pausedAt       DateTime?
   expirationTime DateTime?
+  kills          Int       @default(0)
 }
