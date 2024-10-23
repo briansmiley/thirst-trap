@@ -34,6 +34,7 @@ model Player {
   pausedAt       DateTime?
   expirationTime DateTime?
   kills          Int       @default(0)
+  recruits       Int       @default(0)
 }
 
 model Setting {

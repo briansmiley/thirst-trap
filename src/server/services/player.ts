@@ -2,6 +2,7 @@
 import prisma from "../../app/client";
 import { Player } from "../../app/types";
 import { Faction, Prisma } from "@prisma/client";
+import settingService from "./setting";
 
 //Selects the properties of the Player schema from the database model
 type PlayerSelect = {
@@ -152,9 +153,45 @@ const playerService = {
     return killedPlayer;
   },
   creditKill: async (playerId: string) => {
+    const player = await prisma.player.findUnique({
+      where: { playerId },
+      select: { faction: true }
+    });
+    if (!player) {
+      throw new Error("Player not found");
+    }
+    if (!["VAMPIRE", "JACKAL", "NEUTRAL"].includes(player.faction)) {
+      throw new Error("Player is not a vampire or jackal and cannot kill");
+    }
+    const killTimeCredit = await settingService.get("killTimeCredit");
+    if (!killTimeCredit) {
+      throw new Error("Kill time credit setting not found");
+    }
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
       data: { kills: { increment: 1 } },
+      select: selects
+    });
+    return updatedPlayer;
+  },
+  creditRecruit: async (playerId: string) => {
+    const player = await prisma.player.findUnique({
+      where: { playerId },
+      select: { faction: true }
+    });
+    if (!player) {
+      throw new Error("Player not found");
+    }
+    if (player.faction !== "JACKAL") {
+      throw new Error("Player is not a jackal and cannot recruit");
+    }
+    const recruitTimeCredit = await settingService.get("recruitTimeCredit");
+    if (!recruitTimeCredit) {
+      throw new Error("Recruit time credit setting not found");
+    }
+    const updatedPlayer = await prisma.player.update({
+      where: { playerId },
+      data: { recruits: { increment: recruitTimeCredit.value } },
       select: selects
     });
     return updatedPlayer;
