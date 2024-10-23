@@ -1,7 +1,7 @@
 // import { PlayerServiceT as PlayerServiceI } from "./interface";
 import prisma from "../../app/client";
 import { Player } from "../../app/types";
-import { Faction } from "@prisma/client";
+import { Faction, Prisma } from "@prisma/client";
 
 //Selects the properties of the Player schema from the database model
 type PlayerSelect = {
@@ -19,23 +19,20 @@ const selects: PlayerSelect = {
 };
 
 const playerService = {
-  create: async (newPlayer: { playerId: Player["playerId"], name: Player["name"], picture: Player["picture"]}) => {
+  create: async (newPlayer: Prisma.PlayerCreateInput) => {
     const player = await prisma.player.create({
       data: newPlayer,
       select: selects
     });
     return player;
   },
-  update: async (player: Player) => {
-    const existingPlayer = await prisma.player.findUnique({
-      where: { playerId: player.playerId }
-    });
-    if (!existingPlayer) {
-      throw new Error("Player not found");
-    }
+  update: async (
+    playerId: Player["playerId"],
+    data: Prisma.PlayerUpdateInput
+  ) => {
     const updatedPlayer = await prisma.player.update({
-      where: { playerId: player.playerId },
-      data: player,
+      where: { playerId },
+      data,
       select: selects
     });
     return updatedPlayer;
@@ -54,7 +51,6 @@ const playerService = {
     const players = await prisma.player.findMany({ select: selects });
     return players;
   },
-
   pauseAt: async (playerId: string, pauseAt: Date) => {
     const player = await prisma.player.update({
       where: { playerId },
@@ -75,7 +71,6 @@ const playerService = {
     );
     return updated;
   },
-
   resume: async (playerId: string) => {
     const now = new Date();
     const player = await prisma.player.findUnique({ where: { playerId } });
