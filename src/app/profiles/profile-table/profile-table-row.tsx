@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   flexRender,
   type Row,
@@ -14,10 +14,16 @@ export type ExtendedCellContext<TData extends RowData, TValue> = CellContext<
   TData,
   TValue
 > & {
-  // state passed into cells
+  player: Player,
 };
 
 export default function ProfileTableRow({ row }: { row: Row<Player> }) {
+  const [player, setPlayer] = useState(row.original);
+
+  useEffect(() => {
+    // socket updates state
+  }, []);
+
   return (
     <TableRow
       key={row.id}
@@ -28,7 +34,7 @@ export default function ProfileTableRow({ row }: { row: Row<Player> }) {
         <TableCell key={cell.id}>
           {flexRender(cell.column.columnDef.cell, {
             ...cell.getContext(),
-            // state passed into cells
+            player,
           })}
         </TableCell>
       ))}

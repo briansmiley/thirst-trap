@@ -1,15 +1,18 @@
 import { HeaderContext, type CellContext } from "@tanstack/react-table";
 import { type ExtendedCellContext } from "@/app/profiles/profile-table/profile-table-row";
 import { Player } from "@/app/types";
+import { Badge } from "@/components/ui/badge";
+import { ClockIcon } from "lucide-react";
+import { toDurationString } from "@/utils/timeUtils";
 
-export function IdHeader({
+export function PictureHeader({
   column,
-}: HeaderContext<Player, Player["playerId"]>) {
-  return <div>Id</div>;
+}: HeaderContext<Player, Player["picture"]>) {
+  return <></>;
 }
 
-export function IdCell({ row }: CellContext<Player, Player["playerId"]>) {
-  return <div>{row.original.playerId}</div>;
+export function PictureCell({ row }: CellContext<Player, Player["picture"]>) {
+  return <img className="w-12 h-12 object-cover" src={row.original.picture ?? ""} />
 }
 
 export function NameHeader({ column }: HeaderContext<Player, Player["name"]>) {
@@ -27,7 +30,7 @@ export function FactionHeader({
 }
 
 export function FactionCell({ row }: CellContext<Player, Player["faction"]>) {
-  return <div>{row.original.faction}</div>;
+  return <Badge>{row.original.faction}</Badge>;
 }
 
 export function KillsHeader({
@@ -47,17 +50,23 @@ export function StatusHeader({
 }
 
 export function StatusCell({ row }: CellContext<Player, Player["isPaused"]>) {
-  return <div>{row.original.isPaused}</div>;
+  return <div>{`${row.original.isPaused}`}</div>;
 }
 
 export function TimerHeader({
   column,
 }: HeaderContext<Player, Player["expirationTime"]>) {
-  return <div>Kill Timer</div>;
+  return <div className="flex justify-end items-center"><ClockIcon size={14}/></div>;
 }
 
-export function TimerCell({
-  row,
-}: CellContext<Player, Player["expirationTime"]>) {
-  return <div>{row.original.expirationTime?.toDateString()}</div>;
+export function TimerCell(props: CellContext<Player, Player["expirationTime"]>) {
+  const { player } = props as ExtendedCellContext<Player, Player["expirationTime"]>;
+  const { isPaused, expirationTime } = player;
+
+  if (isPaused && expirationTime) {
+    // TODO: calculate remaining time when paused? show blinking
+    return <div>{toDurationString(expirationTime.getTime() - Date.now())}</div>
+  } else {
+    return <div className="text-center">—</div>
+  }
 }

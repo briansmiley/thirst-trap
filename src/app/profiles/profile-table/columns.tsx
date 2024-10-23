@@ -2,8 +2,8 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { type Player } from "@/app/types";
 
 import {
-  IdHeader,
-  IdCell,
+  PictureHeader,
+  PictureCell,
   NameHeader,
   NameCell,
   FactionHeader,
@@ -19,9 +19,9 @@ import {
 const columnHelper = createColumnHelper<Player>();
 
 const columns = [
-  columnHelper.accessor("playerId", {
-    header: IdHeader,
-    cell: IdCell,
+  columnHelper.accessor("picture", {
+    header: PictureHeader,
+    cell: PictureCell,
   }),
   columnHelper.accessor("name", {
     header: NameHeader,
