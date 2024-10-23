@@ -19,7 +19,7 @@ const selects: PlayerSelect = {
 };
 
 const playerService: PlayerServiceI = {
-  create: async (newPlayer: Player) => {
+  create: async (newPlayer: Partial<Player> & { playerId: string }) => {
     const player = await prisma.player.create({
       data: newPlayer,
       select: selects
