@@ -1,4 +1,4 @@
-import { PlayerServiceT as PlayerServiceI } from "./interface";
+// import { PlayerServiceT as PlayerServiceI } from "./interface";
 import prisma from "../../app/client";
 import { Player } from "../../app/types";
 import { Faction } from "@prisma/client";
@@ -18,8 +18,8 @@ const selects: PlayerSelect = {
   kills: true
 };
 
-const playerService: PlayerServiceI = {
-  create: async (newPlayer: Partial<Player> & { playerId: string }) => {
+const playerService = {
+  create: async (newPlayer: { playerId: Player["playerId"], name: Player["name"], picture: Player["picture"]}) => {
     const player = await prisma.player.create({
       data: newPlayer,
       select: selects
@@ -166,17 +166,19 @@ const playerService: PlayerServiceI = {
   }
 };
 
-export const playerCreate = playerService.create;
-export const playerUpdate = playerService.update;
-export const playerDelete = playerService.delete;
-export const playerGet = playerService.get;
-export const playerGetAll = playerService.getAll;
-export const playerPauseAt = playerService.pauseAt;
-export const playerPause = playerService.pause;
-export const playerPauseAll = playerService.pauseAll;
-export const playerResume = playerService.resume;
-export const playerResumeAll = playerService.resumeAll;
-export const playerRecruit = playerService.recruit;
-export const playerResetExpirationTimer = playerService.resetExpirationTimer;
-export const playerKill = playerService.kill;
-export const playerCreditKill = playerService.creditKill;
+export default playerService;
+
+// export const playerCreate = playerService.create;
+// export const playerUpdate = playerService.update;
+// export const playerDelete = playerService.delete;
+// export const playerGet = playerService.get;
+// export const playerGetAll = playerService.getAll;
+// export const playerPauseAt = playerService.pauseAt;
+// export const playerPause = playerService.pause;
+// export const playerPauseAll = playerService.pauseAll;
+// export const playerResume = playerService.resume;
+// export const playerResumeAll = playerService.resumeAll;
+// export const playerRecruit = playerService.recruit;
+// export const playerResetExpirationTimer = playerService.resetExpirationTimer;
+// export const playerKill = playerService.kill;
+// export const playerCreditKill = playerService.creditKill;
