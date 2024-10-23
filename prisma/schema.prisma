@@ -16,7 +16,7 @@ datasource db {
 
 enum Faction {
   VAMPIRE
-  HUNTER
+  JACKAL
   NEUTRAL
   GHOST
 }

@@ -1,4 +1,4 @@
-type Faction = "VAMPIRE" | "HUNTER" | "NEUTRAL" | "GHOST";
+type Faction = "VAMPIRE" | "JACKAL" | "NEUTRAL" | "GHOST";
 
 export type Player = {
   name: string;
@@ -10,5 +10,3 @@ export type Player = {
   expirationTime: Date | null;
   kills: number;
 };
-
-
