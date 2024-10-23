@@ -134,7 +134,7 @@ const playerService = {
     });
     return updatedPlayer;
   },
-  resetExpirationTimer: async (playerId: string, minutes: number) => {
+  setExpirationTime: async (playerId: string, minutes: number) => {
     const now = new Date();
     const duration = minutes * 60000; // Convert minutes to milliseconds
     const updatedPlayer = await prisma.player.update({
@@ -152,24 +152,53 @@ const playerService = {
     });
     return killedPlayer;
   },
-  creditKill: async (playerId: string) => {
+  addTime: async (playerId: string, additionalMinutes: number) => {
     const player = await prisma.player.findUnique({
       where: { playerId },
-      select: { faction: true }
+      select: { expirationTime: true }
     });
     if (!player) {
       throw new Error("Player not found");
     }
-    if (!["VAMPIRE", "JACKAL", "NEUTRAL"].includes(player.faction)) {
-      throw new Error("Player is not a vampire or jackal and cannot kill");
+    if (!player.expirationTime) {
+      throw new Error("Player has no expiration time");
+    }
+    const additionalTime = additionalMinutes * 60000; // Convert minutes to milliseconds
+    const maxTimer = await settingService.get("maxTimer");
+    if (!maxTimer) {
+      throw new Error("Max timer setting not found");
+    }
+    //set new expiration time to add on additional time but capped at maxTimer
+    const newExpirationTime = new Date(
+      Math.min(player.expirationTime.getTime() + additionalTime, maxTimer.value)
+    );
+    const updatedPlayer = await prisma.player.update({
+      where: { playerId },
+      data: { expirationTime: newExpirationTime },
+      select: selects
+    });
+    return updatedPlayer;
+  },
+  creditKill: async (playerId: string) => {
+    const player = await prisma.player.findUnique({
+      where: { playerId },
+      select: { faction: true, expirationTime: true }
+    });
+    if (!player) {
+      throw new Error("Player not found");
     }
     const killTimeCredit = await settingService.get("killTimeCredit");
     if (!killTimeCredit) {
       throw new Error("Kill time credit setting not found");
     }
+    if (player.expirationTime) {
+      await playerService.addTime(playerId, killTimeCredit.value);
+    }
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
-      data: { kills: { increment: 1 } },
+      data: {
+        kills: { increment: 1 }
+      },
       select: selects
     });
     return updatedPlayer;
@@ -177,7 +206,7 @@ const playerService = {
   creditRecruit: async (playerId: string) => {
     const player = await prisma.player.findUnique({
       where: { playerId },
-      select: { faction: true }
+      select: { faction: true, expirationTime: true }
     });
     if (!player) {
       throw new Error("Player not found");
@@ -189,9 +218,12 @@ const playerService = {
     if (!recruitTimeCredit) {
       throw new Error("Recruit time credit setting not found");
     }
+    if (player.expirationTime) {
+      await playerService.addTime(playerId, recruitTimeCredit.value);
+    }
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
-      data: { recruits: { increment: recruitTimeCredit.value } },
+      data: { recruits: { increment: 1 } },
       select: selects
     });
     return updatedPlayer;
