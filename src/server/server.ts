@@ -15,19 +15,25 @@ app.prepare().then(() => {
 
   const io = new Server(httpServer);
 
-  io.on("connection", (socket) => {
+  io.on("connection", socket => {
     console.log("user connected");
 
-    socket.on("addUser", (profile) => {
+    socket.on("addUser", profile => {
       console.log(`EVT addUser`);
       console.log({
         ...profile,
-        imageBase64: profile.imageBase64.slice(0, 50),
+        imageBase64: profile.imageBase64.slice(0, 50)
       });
-      playerService.create({ playerId: profile.id, name: profile.name, picture: profile.imageBase64 })
-        .then((newPlayer) => {
+      playerService
+        .create({
+          playerId: profile.id,
+          name: profile.name,
+          picture: profile.imageBase64
+        })
+        .then(newPlayer => {
           io.emit("addUser", newPlayer);
-        }).catch((err) => console.error(err));
+        })
+        .catch(err => console.error(err));
     });
 
     socket.on("disconnect", () => {
@@ -36,7 +42,7 @@ app.prepare().then(() => {
   });
 
   httpServer
-    .once("error", (err) => {
+    .once("error", err => {
       console.error(err);
       process.exit(1);
     })
