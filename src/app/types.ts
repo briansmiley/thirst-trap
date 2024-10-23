@@ -10,3 +10,9 @@ export type Player = {
   expirationTime: Date | null;
   kills: number;
 };
+
+export type Settings = {
+  maxDeathTimer: number;
+  killTimeCredit: number;
+  recruitTimeCredit: number;
+};

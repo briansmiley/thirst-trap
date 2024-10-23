@@ -1,6 +1,6 @@
 // import { PlayerServiceT as PlayerServiceI } from "./interface";
 import prisma from "../../app/client";
-import { Player } from "../../app/types";
+import { Player } from "@/app/types";
 import { Faction, Prisma } from "@prisma/client";
 import settingService from "./setting";
 
@@ -174,13 +174,10 @@ const playerService = {
       throw new Error("Player has no expiration time");
     }
     const additionalTime = additionalMinutes * 60000; // Convert minutes to milliseconds
-    const maxTimer = await settingService.get("maxTimer");
-    if (!maxTimer) {
-      throw new Error("Max timer setting not found");
-    }
+    const maxTimer = (await settingService.get()).maxDeathTimer;
     //set new expiration time to add on additional time but capped at maxTimer
     const newExpirationTime = new Date(
-      Math.min(player.expirationTime.getTime() + additionalTime, maxTimer.value)
+      Math.min(player.expirationTime.getTime() + additionalTime, maxTimer)
     );
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
@@ -197,12 +194,9 @@ const playerService = {
     if (!player) {
       throw new Error("Player not found");
     }
-    const killTimeCredit = await settingService.get("killTimeCredit");
-    if (!killTimeCredit) {
-      throw new Error("Kill time credit setting not found");
-    }
+    const killTimeCredit = (await settingService.get()).killTimeCredit;
     if (player.expirationTime) {
-      await playerService.addTime(playerId, killTimeCredit.value);
+      await playerService.addTime(playerId, killTimeCredit);
     }
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
@@ -224,12 +218,9 @@ const playerService = {
     if (player.faction !== "JACKAL") {
       throw new Error("Player is not a jackal and cannot recruit");
     }
-    const recruitTimeCredit = await settingService.get("recruitTimeCredit");
-    if (!recruitTimeCredit) {
-      throw new Error("Recruit time credit setting not found");
-    }
+    const recruitTimeCredit = (await settingService.get()).recruitTimeCredit;
     if (player.expirationTime) {
-      await playerService.addTime(playerId, recruitTimeCredit.value);
+      await playerService.addTime(playerId, recruitTimeCredit);
     }
     const updatedPlayer = await prisma.player.update({
       where: { playerId },

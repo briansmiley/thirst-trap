@@ -2,20 +2,18 @@
 
 import settingService from "./setting";
 
-const settings = [
-  { name: "maxDeathTimer", value: 45 },
-  { name: "killTimeCredit", value: 30 },
-  { name: "recruitTimeCredit", value: 15 }
-];
+const settings = {
+  maxDeathTimer: 45,
+  killTimeCredit: 30,
+  recruitTimeCredit: 15
+};
 
 async function initializeSettings() {
-  for (const setting of settings) {
-    try {
-      const result = await settingService.upsert(setting);
-      console.log(result);
-    } catch (error) {
-      console.error(`Error upserting setting ${setting.name}:`, error);
-    }
+  try {
+    const result = await settingService.upsert(settings);
+    console.log(result);
+  } catch (error) {
+    console.error(`Error upserting settings: `, error);
   }
 }
 
