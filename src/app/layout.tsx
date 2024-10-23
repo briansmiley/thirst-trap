@@ -35,7 +35,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${satisfy.variable} bg-blood`}>
+    <html
+      lang="en"
+      className={`${satisfy.variable} bg-blood`}
+      suppressHydrationWarning
+    >
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-[100dvh]`}
       >
