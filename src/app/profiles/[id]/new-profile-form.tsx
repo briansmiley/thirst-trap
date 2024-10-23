@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { socket } from "@/socket";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,8 +29,12 @@ export default function NewProfileForm({ id }: { id: string }) {
     }
   };
 
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    socket.emit("addUser", { id, name, imageBase64 });
+  };
+
   return (
-    <form className="flex flex-col gap-4 p-8">
+    <form className="flex flex-col gap-4 p-8" onSubmit={handleSubmit}>
       <h1 className="text-center font-semibold text-3xl">New Profile</h1>
       <div
         onClick={() => fileInputRef.current?.click()}
@@ -60,7 +66,9 @@ export default function NewProfileForm({ id }: { id: string }) {
           onChange={(evt) => setName(evt.target.value)}
         />
       </div>
-      <Button>Save Profile</Button>
+      <Button type="submit" disabled={!imageBase64 || !name}>
+        Save Profile
+      </Button>
     </form>
   );
 }

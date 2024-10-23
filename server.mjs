@@ -22,8 +22,13 @@ app.prepare().then(() => {
   io.on("connection", (socket) => {
     console.log("user connected");
 
-    socket.on("addUser", (name) => {
-      io.emit("addUser", getNewUser(name));
+    socket.on("addUser", (profile) => {
+      console.log(`EVT addUser`);
+      console.log({
+        ...profile,
+        imageBase64: profile.imageBase64.slice(0, 50),
+      });
+      io.emit("addUser", JSON.stringify(profile));
     });
 
     socket.on("disconnect", () => {
