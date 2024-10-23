@@ -35,3 +35,12 @@ model Player {
   expirationTime DateTime?
   kills          Int       @default(0)
 }
+
+model Setting {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name  String @unique
+  value Int
+}
