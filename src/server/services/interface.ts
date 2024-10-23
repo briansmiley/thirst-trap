@@ -1,7 +1,7 @@
 import { Faction } from "@prisma/client";
 import { Player } from "../../app/types";
 export type PlayerServiceT = {
-  create: (player: Player) => Promise<Player>;
+  create: (player: Partial<Player> & { playerId: string }) => Promise<Player>;
   update: (player: Player) => Promise<Player>;
   delete: (playerId: string) => Promise<void>;
   get: (playerId: string) => Promise<Player | null>;
