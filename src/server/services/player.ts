@@ -152,6 +152,16 @@ const playerService = {
     });
     return killedPlayer;
   },
+  addTimeToAll: async (minutes: number) => {
+    const players = await prisma.player.findMany({
+      where: { expirationTime: { not: null } }
+    });
+    const ms = minutes * 60000;
+    const updatedPlayers = await Promise.all(
+      players.map(player => playerService.addTime(player.playerId, ms))
+    );
+    return updatedPlayers;
+  },
   addTime: async (playerId: string, additionalMinutes: number) => {
     const player = await prisma.player.findUnique({
       where: { playerId },
