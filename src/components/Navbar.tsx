@@ -13,6 +13,12 @@ const Navbar = () => {
   const excludedPaths = ["/splash", "/"];
   const isSplashRoute = excludedPaths.includes(pathname);
 
+  const selectedClass = (tabName: string): string => {
+    return pathname.startsWith(tabName)
+      ? "bg-neutral-800"
+      : "hover:text-neutral-300 hover:bg-neutral-800";
+  };
+
   if (isSplashRoute) {
     return null;
   }
@@ -38,7 +44,9 @@ const Navbar = () => {
           <li>
             <Link
               href="/dashboard"
-              className="hover:text-neutral-300 hover:bg-neutral-800 h-full flex justify-center items-center px-2 md:px-4"
+              className={` h-full flex justify-center items-center px-2 md:px-4 ${selectedClass(
+                "/dashboard"
+              )}`}
             >
               Dashboard
             </Link>
@@ -46,7 +54,9 @@ const Navbar = () => {
           <li>
             <Link
               href="/commands"
-              className="hover:text-neutral-300 hover:bg-neutral-800 h-full flex justify-center items-center px-2 md:px-4"
+              className={` h-full flex justify-center items-center px-2 md:px-4 ${selectedClass(
+                "/commands"
+              )}`}
             >
               Commands
             </Link>
@@ -54,7 +64,9 @@ const Navbar = () => {
           <li>
             <Link
               href="/settings"
-              className="hover:text-neutral-300 hover:bg-neutral-800 h-full flex justify-center items-center px-2 md:px-4"
+              className={` h-full flex justify-center items-center px-2 md:px-4 ${selectedClass(
+                "/settings"
+              )}`}
             >
               Settings
             </Link>
@@ -62,7 +74,9 @@ const Navbar = () => {
           <li>
             <Link
               href="/profile"
-              className="hover:text-neutral-300 hover:bg-neutral-800 h-full flex justify-center items-center px-2 md:px-4"
+              className={` h-full flex justify-center items-center px-2 md:px-4 ${selectedClass(
+                "/profile"
+              )}`}
             >
               Profiles
             </Link>
