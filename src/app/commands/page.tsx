@@ -9,7 +9,12 @@ export default function Commands() {
         <div className="flex flex-col items-center justify-center gap-2">
           <span>Pause All</span>
           <form action={pauseAll}>
-            <Button variant="outline" className="w-24 h-20" type="submit">
+            <Button
+              variant="outline"
+              size="icon"
+              className="w-24 h-24"
+              type="submit"
+            >
               <Pause className="!size-12" />
             </Button>
           </form>
@@ -20,7 +25,7 @@ export default function Commands() {
             <Button
               variant="outline"
               size="icon"
-              className="flex p-0 w-24 h-20"
+              className="w-24 h-24"
               type="submit"
             >
               <Play className="!size-12" />
