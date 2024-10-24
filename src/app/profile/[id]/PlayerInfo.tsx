@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-// import { socket } from "@/socket";
+import { socket } from "@/socket";
 import { Faction, Player } from "@/app/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +11,7 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, Minus, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -20,44 +20,46 @@ export default function PlayerInfo(props: Player) {
   const [playerData, setPlayerData] = useState(props);
 
   const handleFactionChange = (faction: Faction) => {
-    //TODO: send faction change to server
-    setPlayerData({
-      ...playerData,
-      faction
-    });
-    console.log(`Update sending: ${playerData.name} to ${faction}`);
-  };
-  const handleKillsChange = (change: number) => {
-    //TODO: send kills change to server
-    setPlayerData({
-      ...playerData,
-      kills: playerData.kills + change
-    });
-    console.log(
-      `Update sending: ${playerData.name} to ${playerData.kills + change}`
-    );
-  };
-  const handleRecruitsChange = (change: number) => {
-    //TODO: send recruits change to server
-    setPlayerData({
-      ...playerData,
-      recruits: playerData.recruits + change
-    });
-    console.log(
-      `Update sending: ${playerData.name} to ${playerData.recruits + change}`
+    console.log("EMIT updatePlayer:", { playerId: props.playerId, faction });
+    socket.emit(
+      "updatePlayer",
+      { playerId: props.playerId, faction },
+      (response) => {
+        console.log("ACK updatePlayer:", response);
+      }
     );
   };
 
+  const handleCountChange =
+    (type: "kills" | "recruits") => (change: number) => {
+      console.log("EMIT updatePlayer:", {
+        playerId: props.playerId,
+        [type]: playerData[type] + change,
+      });
+      socket.emit(
+        "updatePlayer",
+        { playerId: props.playerId, [type]: playerData[type] + change },
+        (response) => {
+          console.log("ACK updatePlayer:", response);
+        }
+      );
+    };
+
   useEffect(() => {
-    // // placeholder boilerplate for handling websocket state changes to this data
-    // // maybe use specific events? or player based events? idk
-    // function onPlayerChange(changes: Partial<Player>) {
-    //   setPlayerData({ ...playerData, ...changes });
-    // }
-    // socket.on("playerChange", onPlayerChange);
-    // return () => {
-    //   socket.off("playerChange", onPlayerChange);
-    // };
+    function onUpdatePlayer({
+      playerId,
+      ...changes
+    }: Partial<Player> & Pick<Player, "playerId">) {
+      if (playerId === props.playerId) {
+        setPlayerData({ ...playerData, ...changes });
+      }
+    }
+
+    socket.on("updatePlayer", onUpdatePlayer);
+
+    return () => {
+      socket.off("updatePlayer", onUpdatePlayer);
+    };
   });
 
   return (
@@ -85,7 +87,7 @@ export default function PlayerInfo(props: Player) {
               <DropdownMenuSeparator />
               <DropdownMenuRadioGroup
                 value={playerData.faction}
-                onValueChange={value => {
+                onValueChange={(value) => {
                   handleFactionChange(value as Faction);
                 }}
               >
@@ -109,7 +111,8 @@ export default function PlayerInfo(props: Player) {
               className="rounded-full"
               variant="outline"
               size="icon"
-              onClick={() => handleKillsChange(-1)}
+              onClick={() => handleCountChange("kills")(-1)}
+              disabled={playerData.kills < 1}
             >
               <Minus />
             </Button>
@@ -118,7 +121,7 @@ export default function PlayerInfo(props: Player) {
               className="rounded-full"
               variant="outline"
               size="icon"
-              onClick={() => handleKillsChange(1)}
+              onClick={() => handleCountChange("kills")(1)}
             >
               <Plus />
             </Button>
@@ -128,7 +131,8 @@ export default function PlayerInfo(props: Player) {
               className="rounded-full"
               variant="outline"
               size="icon"
-              onClick={() => handleRecruitsChange(-1)}
+              onClick={() => handleCountChange("recruits")(-1)}
+              disabled={playerData.recruits < 1}
             >
               <Minus />
             </Button>
@@ -139,7 +143,7 @@ export default function PlayerInfo(props: Player) {
               className="rounded-full"
               variant="outline"
               size="icon"
-              onClick={() => handleRecruitsChange(1)}
+              onClick={() => handleCountChange("recruits")(1)}
             >
               <Plus />
             </Button>
