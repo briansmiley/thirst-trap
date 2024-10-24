@@ -23,7 +23,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-neutral-900 text-neutral-50 text-sm md:text-base h-16 flex items-center">
+    <nav className="bg-neutral-900 text-neutral-50 text-sm md:text-base min-h-16 flex items-center">
       <div className="flex items-center justify-between w-full h-full px-2">
         <ul className="flex h-full">
           <li className="flex items-center justify-center px-2 md:px-4">
@@ -60,7 +60,7 @@ const Navbar = () => {
               href="/profile"
               className="hover:text-neutral-300 hover:bg-neutral-800 h-full flex justify-center items-center px-2 md:px-4"
             >
-              Profile
+              Profiles
             </Link>
           </li>
         </ul>
