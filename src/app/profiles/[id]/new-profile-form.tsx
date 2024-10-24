@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { socket } from "@/socket";
 
 import { Button } from "@/components/ui/button";
@@ -14,24 +14,74 @@ export default function NewProfileForm({ id }: { id: string }) {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        setImageBase64(String(reader.result));
-      };
-      setImageUrl(URL.createObjectURL(file));
-    } else {
-      setImageBase64(undefined);
-      setImageUrl(undefined);
-    }
-  };
+  const resizeAndConvertToBase64 = useCallback(
+    (file: File, maxWidth: number, maxHeight: number): Promise<string> => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const img = new Image();
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            let width = img.width;
+            let height = img.height;
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    socket.emit("addUser", { id, name, imageBase64 });
-  };
+            if (width > height) {
+              if (width > maxWidth) {
+                height *= maxWidth / width;
+                width = maxWidth;
+              }
+            } else {
+              if (height > maxHeight) {
+                width *= maxHeight / height;
+                height = maxHeight;
+              }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx?.drawImage(img, 0, 0, width, height);
+
+            const resizedBase64 = canvas.toDataURL("image/jpeg");
+            resolve(resizedBase64);
+          };
+          img.onerror = reject;
+          img.src = e.target?.result as string;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    },
+    []
+  );
+
+  const handleFileChange = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (file) {
+        try {
+          const resizedBase64 = await resizeAndConvertToBase64(file, 400, 400);
+          setImageBase64(resizedBase64);
+          setImageUrl(URL.createObjectURL(file));
+        } catch (error) {
+          console.error("Error resizing image:", error);
+        }
+      } else {
+        setImageBase64(undefined);
+        setImageUrl(undefined);
+      }
+    },
+    [resizeAndConvertToBase64]
+  );
+
+  const handleSubmit = useCallback(
+    (event: React.FormEvent<HTMLFormElement>) => {
+      console.log(imageBase64);
+      event.preventDefault();
+      socket.emit("addUser", { id, name, imageBase64 });
+    },
+    [id, name, imageBase64]
+  );
 
   return (
     <form className="flex flex-col gap-4 p-8" onSubmit={handleSubmit}>
@@ -41,7 +91,11 @@ export default function NewProfileForm({ id }: { id: string }) {
         className="w-72 h-72 border m-auto"
       >
         {imageUrl ? (
-          <img src={imageUrl} className="w-full h-full object-cover" />
+          <img
+            src={imageUrl}
+            className="w-full h-full object-cover"
+            alt="Profile"
+          />
         ) : (
           <div className="w-full h-full"></div>
         )}
@@ -63,7 +117,7 @@ export default function NewProfileForm({ id }: { id: string }) {
         <Input
           id="name"
           value={name}
-          onChange={(evt) => setName(evt.target.value)}
+          onChange={evt => setName(evt.target.value)}
         />
       </div>
       <Button type="submit" disabled={!imageBase64 || !name}>
