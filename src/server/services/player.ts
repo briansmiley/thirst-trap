@@ -16,7 +16,8 @@ const selects: PlayerSelect = {
   isPaused: true,
   pausedAt: true,
   expirationTime: true,
-  kills: true
+  kills: true,
+  recruits: true
 };
 
 const playerService = {
