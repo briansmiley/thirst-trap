@@ -7,18 +7,18 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-  TableCell,
+  TableCell
 } from "@/components/ui/table";
 import {
   useReactTable,
   flexRender,
-  getCoreRowModel,
+  getCoreRowModel
 } from "@tanstack/react-table";
-import columns from "@/app/profiles/profile-table/columns";
+import columns from "@/app/dashboard/profile-table/columns";
 import { type Player } from "@/app/types";
 
 import { socket } from "@/socket";
-import ProfileTableRow from "@/app/profiles/profile-table/profile-table-row";
+import ProfileTableRow from "@/app/dashboard/profile-table/profile-table-row";
 
 export default function ProfileTable(props: { data: Player[] }) {
   const [data, setData] = useState(props.data);
@@ -26,13 +26,13 @@ export default function ProfileTable(props: { data: Player[] }) {
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel: getCoreRowModel()
   });
 
   useEffect(() => {
     function onAddPlayer(player: Player) {
       console.log("onAddPlayer");
-      setData((data) => [...data, player]);
+      setData(data => [...data, player]);
     }
 
     socket.on("addPlayer", onAddPlayer);
@@ -45,9 +45,9 @@ export default function ProfileTable(props: { data: Player[] }) {
   return (
     <Table>
       <TableHeader>
-        {table.getHeaderGroups().map((headerGroup) => (
+        {table.getHeaderGroups().map(headerGroup => (
           <TableRow key={headerGroup.id}>
-            {headerGroup.headers.map((header) => (
+            {headerGroup.headers.map(header => (
               <TableHead key={header.id}>
                 {header.isPlaceholder
                   ? null
@@ -64,7 +64,7 @@ export default function ProfileTable(props: { data: Player[] }) {
         {table.getRowModel().rows?.length ? (
           table
             .getRowModel()
-            .rows.map((row) => <ProfileTableRow key={row.id} row={row} />)
+            .rows.map(row => <ProfileTableRow key={row.id} row={row} />)
         ) : (
           <TableRow className="block">
             <TableCell className="h-24 justify-center">No results.</TableCell>
