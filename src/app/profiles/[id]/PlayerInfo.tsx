@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { socket } from "@/socket";
+// import { socket } from "@/socket";
 import { Faction, Player } from "@/app/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -49,16 +49,15 @@ export default function PlayerInfo(props: Player) {
   };
 
   useEffect(() => {
-    // placeholder boilerplate for handling websocket state changes to this data
-    // maybe use specific events? or player based events? idk
-    function onPlayerChange(changes: Partial<Player>) {
-      setPlayerData({ ...playerData, ...changes });
-    }
-    socket.on("playerChange", onPlayerChange);
-
-    return () => {
-      socket.off("playerChange", onPlayerChange);
-    };
+    // // placeholder boilerplate for handling websocket state changes to this data
+    // // maybe use specific events? or player based events? idk
+    // function onPlayerChange(changes: Partial<Player>) {
+    //   setPlayerData({ ...playerData, ...changes });
+    // }
+    // socket.on("playerChange", onPlayerChange);
+    // return () => {
+    //   socket.off("playerChange", onPlayerChange);
+    // };
   });
 
   return (
