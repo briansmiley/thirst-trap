@@ -79,16 +79,20 @@ const playerService = {
     if (!player) {
       throw new Error("Player not found");
     }
-    if (!player.pausedAt) {
-      throw new Error("Player is not paused");
-    }
-    if (!player.expirationTime) {
-      throw new Error("Player has no expiration time");
-    }
-    const pauseDuration = now.getTime() - player.pausedAt.getTime();
-    const newExpirationTime = new Date(
-      player.expirationTime.getTime() + pauseDuration
+    //Default time til expiration if there isn't a preexisting timer/pause
+    const defaultExpirationTime = new Date(
+      now.getTime() + (await settingService.get()).maxDeathTimer
     );
+    //Calculate the duration of the pause
+    const pauseDuration = player.pausedAt
+      ? now.getTime() - player.pausedAt.getTime()
+      : 0;
+    //Calculate the new expiration time by adding the pause duration to the preexisting timer or default timer
+    const newExpirationTime = player.expirationTime
+      ? new Date(player.expirationTime.getTime() + pauseDuration)
+      : defaultExpirationTime;
+
+    //Update the player's expiration time and remove the pause
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
       data: {
