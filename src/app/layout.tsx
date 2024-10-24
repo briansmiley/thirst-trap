@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { Satisfy } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
 
 const satisfy = Satisfy({
   subsets: ["latin"],
@@ -44,6 +45,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-[100dvh]`}
       >
         <ThemeProvider attribute="class" defaultTheme="dark">
+          <Navbar />
           {children}
         </ThemeProvider>
       </body>
