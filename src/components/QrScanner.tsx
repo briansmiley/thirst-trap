@@ -18,21 +18,21 @@ export default function QrScanner() {
     }
   };
   return (
-    <>
+    <div className="z-50">
       {showQrScanner && (
-        <div className="fixed inset-0 size-full flex items-center justify-center bg-slate-900 bg-opacity-25 z-50">
-          <div className="my_box relative size-[500px] items-center justify-center flex flex-col">
+        <div className="fixed inset-0 size-full flex items-center justify-center bg-slate-900 bg-opacity-25">
+          <div className="my_box relative size-[600px] items-center justify-center flex flex-col gap-8">
             <Button
               variant="outline"
               size="icon"
-              className="absolute rounded-full top-2 right-2 cursor-pointer"
+              className="absolute rounded-full top-2 right-2 cursor-pointer size-16"
               onClick={() => setShowQrScanner(false)}
             >
-              <XIcon />
+              <XIcon className="!size-12" />
             </Button>
             <BarcodeScannerComponent
-              width={400}
-              height={400}
+              width={500}
+              height={500}
               facingMode="environment"
               onUpdate={(err, result) => {
                 if (result) {
@@ -40,17 +40,17 @@ export default function QrScanner() {
                 }
               }}
             />
-            <p>Scan player badge</p>
+            <p className="text-2xl font-bold">Scan player&apos;s QR code</p>
           </div>
         </div>
       )}
       <Button
         variant="outline"
-        className="fixed right-2 bottom-2 rounded-full w-20 h-20"
+        className="fixed right-6 bottom-6 rounded-full w-28 h-28"
         onClick={() => setShowQrScanner(true)}
       >
         <CameraIcon className="!size-12" />
       </Button>
-    </>
+    </div>
   );
 }
