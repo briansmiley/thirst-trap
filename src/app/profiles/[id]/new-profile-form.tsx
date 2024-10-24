@@ -19,7 +19,7 @@ export default function NewProfileForm({ id }: { id: string }) {
     (file: File, maxWidth: number, maxHeight: number): Promise<string> => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = e => {
+        reader.onload = (e) => {
           const img = new Image();
           img.onload = () => {
             const canvas = document.createElement("canvas");
@@ -78,15 +78,11 @@ export default function NewProfileForm({ id }: { id: string }) {
   const handleSubmit = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      console.log("handleSubmit");
-      console.log("Emitting addPlayer:", { id, name, imageBase64 });
-      socket.emit(
-        "addPlayer",
-        { id, name, imageBase64 },
-        (response: { success: boolean; message?: string }) => {
-          console.log("Server acknowledged addPlayer event:", response);
-        }
-      );
+      const player = { playerId: id, name, picture: imageBase64 ?? "" };
+      console.log("EMIT addPlayer:", player);
+      socket.emit("addPlayer", player, (response) => {
+        console.log("ACK addPlayer:", response);
+      });
     },
     [id, name, imageBase64]
   );
@@ -127,7 +123,7 @@ export default function NewProfileForm({ id }: { id: string }) {
         <Input
           id="name"
           value={name}
-          onChange={evt => setName(evt.target.value)}
+          onChange={(evt) => setName(evt.target.value)}
         />
       </div>
       <Button type="submit" disabled={!imageBase64 || !name}>
