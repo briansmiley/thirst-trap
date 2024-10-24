@@ -1,10 +1,9 @@
 import SplashEntry from "@/components/SplashEntry";
-import Image from "next/image";
 
 export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center h-full">
-      <Image
+      <img
         src="/ThirstTrapCover.png"
         alt="Thirst Trap"
         width={920}
