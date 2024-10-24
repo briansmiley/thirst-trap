@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Lock } from "lucide-react";
-import { checkPassword } from "@/app/actions/auth";
+import { checkPassword, isAuthenticated } from "@/app/actions/auth";
 import { useRouter } from "next/navigation";
 
 export default function SplashEntry() {
@@ -12,6 +12,15 @@ export default function SplashEntry() {
   const [enteredPassword, setEnteredPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+
+  const handleEnterClick = async () => {
+    const authenticated = await isAuthenticated();
+    if (authenticated) {
+      router.push("/dashboard");
+    } else {
+      setShowPasswordInput(true);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +58,7 @@ export default function SplashEntry() {
       ) : (
         <Button
           className="font-serif w-48 h-24 text-4xl"
-          onClick={() => setShowPasswordInput(true)}
+          onClick={handleEnterClick}
         >
           Enter
         </Button>
