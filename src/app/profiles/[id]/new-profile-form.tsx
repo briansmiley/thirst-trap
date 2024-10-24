@@ -30,7 +30,16 @@ export default function NewProfileForm({ id }: { id: string }) {
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    socket.emit("addUser", { id, name, imageBase64 });
+    event.preventDefault();
+    console.log("handleSubmit");
+    console.log("Emitting addPlayer:", { id, name, imageBase64 });
+    socket.emit(
+      "addPlayer",
+      { id, name, imageBase64 },
+      (response: { success: boolean; message?: string }) => {
+        console.log("Server acknowledged addPlayer event:", response);
+      }
+    );
   };
 
   return (
