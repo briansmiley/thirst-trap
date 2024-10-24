@@ -2,14 +2,28 @@
 
 import { cookies } from "next/headers";
 
+const appPassword = process.env.APP_PASSWORD;
+const authCookieToken = process.env.AUTH_COOKIE_TOKEN;
 export async function checkPassword(password: string) {
-  const correctPassword = process.env.APP_PASSWORD;
-
-  if (password === correctPassword) {
+  if (!authCookieToken) {
+    throw new Error("AUTH_COOKIE_TOKEN is not set");
+  }
+  if (password === appPassword) {
     // Set a cookie to remember that the user is authenticated
-    const cookieStore = await cookies();
-    cookieStore.set("authenticated", "true", { httpOnly: true, secure: true });
+    const cookieStore = cookies();
+    cookieStore.set("authenticated", authCookieToken, {
+      httpOnly: true,
+      secure: true
+    });
     return true;
   }
   return false;
+}
+export async function isAuthenticated() {
+  const cookieStore = cookies();
+  return cookieStore.get("authenticated")?.value === authCookieToken;
+}
+export async function logout() {
+  const cookieStore = cookies();
+  cookieStore.delete("authenticated");
 }
