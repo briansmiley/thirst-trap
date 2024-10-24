@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { socket } from "@/socket";
 import { Player } from "@/app/types";
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 
 export default function PlayerInfo(props: Player) {
   const [playerData, setPlayerData] = useState(props);
@@ -24,6 +25,7 @@ export default function PlayerInfo(props: Player) {
   return (
     <div className="flex flex-col gap-4 p-8 items-center">
       <img
+        alt={`Profile photo for ${playerData.name}`}
         src={playerData.picture ?? ""}
         className="w-72 h-72 border m-auto object-cover"
       />
