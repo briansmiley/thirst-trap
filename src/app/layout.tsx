@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   title: "Thirst Trap",
   description: "This party sucks.",
   icons: {
-    icon: "/favicon.svg"
+    icon: "/images/favicon.svg"
   }
 };
 

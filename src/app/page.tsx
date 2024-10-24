@@ -4,7 +4,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center h-full">
       <img
-        src="/ThirstTrapCover.png"
+        src="/images/ThirstTrapCover.png"
         alt="Thirst Trap"
         width={920}
         height={768}

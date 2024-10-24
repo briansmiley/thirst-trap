@@ -10,6 +10,8 @@ export function middleware(request: NextRequest) {
   }
 
   if (!authenticated) {
+    console.log("Not authenticated");
+
     return NextResponse.redirect(new URL("/", request.url));
   }
 
@@ -17,5 +19,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|favicon.svg).*)"]
+  matcher: ["/((?!api|_next/static|images).*)"]
 };
