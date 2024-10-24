@@ -16,12 +16,17 @@ export default function ProfilePage() {
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <div className="flex flex-col gap-4  p-12 justify-center items-center my_box">
-        <h1 className="text-4xl font-bold">Player Profile</h1>
+        <h1 className="text-4xl font-bold">Player Profiles</h1>
         <form
           onSubmit={handleSubmit}
           className="flex flex-col justify-center items-center gap-4"
         >
-          <input type="text" name="id" placeholder="Enter Player ID" />
+          <input
+            type="text"
+            className="border-2 border-neutral-700 rounded px-1"
+            name="id"
+            placeholder="Player Badge ID"
+          />
           <Button type="submit">Go to Profile</Button>
         </form>
       </div>
