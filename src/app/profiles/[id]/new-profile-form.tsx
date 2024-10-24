@@ -6,6 +6,7 @@ import { socket } from "@/socket";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Camera } from "lucide-react";
 
 export default function NewProfileForm({ id }: { id: string }) {
   const [name, setName] = useState("");
@@ -105,7 +106,7 @@ export default function NewProfileForm({ id }: { id: string }) {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-400">
-            Click to upload image
+            <Camera size={96} />
           </div>
         )}
       </div>
