@@ -14,3 +14,8 @@ body {
     font-family: var(--font-satisfy);
   }
 }
+@layer components {
+  .my_box {
+    @apply bg-slate-900 p-5 border-2 border-neutral-700 rounded;
+  }
+}

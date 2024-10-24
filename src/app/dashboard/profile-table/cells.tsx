@@ -1,18 +1,20 @@
 import { HeaderContext, type CellContext } from "@tanstack/react-table";
-import { type ExtendedCellContext } from "@/app/profiles/profile-table/profile-table-row";
+import { type ExtendedCellContext } from "@/app/dashboard/profile-table/profile-table-row";
 import { Player } from "@/app/types";
 import { Badge } from "@/components/ui/badge";
 import { ClockIcon } from "lucide-react";
 import { toDurationString } from "@/utils/timeUtils";
 
 export function PictureHeader({
-  column,
+  column
 }: HeaderContext<Player, Player["picture"]>) {
   return <></>;
 }
 
 export function PictureCell({ row }: CellContext<Player, Player["picture"]>) {
-  return <img className="w-12 h-12 object-cover" src={row.original.picture ?? ""} />
+  return (
+    <img className="w-12 h-12 object-cover" src={row.original.picture ?? ""} />
+  );
 }
 
 export function NameHeader({ column }: HeaderContext<Player, Player["name"]>) {
@@ -24,7 +26,7 @@ export function NameCell({ row }: CellContext<Player, Player["name"]>) {
 }
 
 export function FactionHeader({
-  column,
+  column
 }: HeaderContext<Player, Player["faction"]>) {
   return <div>Faction</div>;
 }
@@ -34,7 +36,7 @@ export function FactionCell({ row }: CellContext<Player, Player["faction"]>) {
 }
 
 export function KillsHeader({
-  column,
+  column
 }: HeaderContext<Player, Player["kills"]>) {
   return <div>Kills</div>;
 }
@@ -44,7 +46,7 @@ export function KillsCell({ row }: CellContext<Player, Player["kills"]>) {
 }
 
 export function StatusHeader({
-  column,
+  column
 }: HeaderContext<Player, Player["isPaused"]>) {
   return <div>Status</div>;
 }
@@ -54,19 +56,28 @@ export function StatusCell({ row }: CellContext<Player, Player["isPaused"]>) {
 }
 
 export function TimerHeader({
-  column,
+  column
 }: HeaderContext<Player, Player["expirationTime"]>) {
-  return <div className="flex justify-end items-center"><ClockIcon size={14}/></div>;
+  return (
+    <div className="flex justify-end items-center">
+      <ClockIcon size={14} />
+    </div>
+  );
 }
 
-export function TimerCell(props: CellContext<Player, Player["expirationTime"]>) {
-  const { player } = props as ExtendedCellContext<Player, Player["expirationTime"]>;
+export function TimerCell(
+  props: CellContext<Player, Player["expirationTime"]>
+) {
+  const { player } = props as ExtendedCellContext<
+    Player,
+    Player["expirationTime"]
+  >;
   const { isPaused, expirationTime } = player;
 
   if (isPaused && expirationTime) {
     // TODO: calculate remaining time when paused? show blinking
-    return <div>{toDurationString(expirationTime.getTime() - Date.now())}</div>
+    return <div>{toDurationString(expirationTime.getTime() - Date.now())}</div>;
   } else {
-    return <div className="text-center">—</div>
+    return <div className="text-center">—</div>;
   }
 }

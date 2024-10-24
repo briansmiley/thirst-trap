@@ -23,10 +23,10 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-neutral-900 text-neutral-50 h-16 flex items-center">
+    <nav className="bg-neutral-900 text-neutral-50 text-sm md:text-base h-16 flex items-center">
       <div className="flex items-center justify-between w-full h-full px-2">
         <ul className="flex h-full">
-          <li className="flex items-center justify-center px-4">
+          <li className="flex items-center justify-center px-2 md:px-4">
             <Link href="/">
               <Image alt="logo" src="/favicon.svg" width={24} height={24} />
             </Link>
@@ -34,7 +34,7 @@ const Navbar = () => {
           <li>
             <Link
               href="/dashboard"
-              className="hover:text-neutral-300 hover:bg-neutral-800 h-full flex justify-center items-center px-4"
+              className="hover:text-neutral-300 hover:bg-neutral-800 h-full flex justify-center items-center px-2 md:px-4"
             >
               Dashboard
             </Link>
@@ -42,7 +42,7 @@ const Navbar = () => {
           <li>
             <Link
               href="/commands"
-              className="hover:text-neutral-300 hover:bg-neutral-800 h-full flex justify-center items-center px-4"
+              className="hover:text-neutral-300 hover:bg-neutral-800 h-full flex justify-center items-center px-2 md:px-4"
             >
               Commands
             </Link>
@@ -50,9 +50,17 @@ const Navbar = () => {
           <li>
             <Link
               href="/settings"
-              className="hover:text-neutral-300 hover:bg-neutral-800 h-full flex justify-center items-center px-4"
+              className="hover:text-neutral-300 hover:bg-neutral-800 h-full flex justify-center items-center px-2 md:px-4"
             >
               Settings
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/profile"
+              className="hover:text-neutral-300 hover:bg-neutral-800 h-full flex justify-center items-center px-2 md:px-4"
+            >
+              Profile
             </Link>
           </li>
         </ul>
