@@ -21,6 +21,9 @@ export async function checkPassword(password: string) {
 }
 export async function isAuthenticated() {
   const cookieStore = cookies();
+  if (!authCookieToken) {
+    throw new Error("AUTH_COOKIE_TOKEN is not set");
+  }
   return cookieStore.get("authenticated")?.value === authCookieToken;
 }
 export async function logout() {
