@@ -11,14 +11,14 @@ export default function PlayerInfo(props: Player) {
   useEffect(() => {
     // placeholder boilerplate for handling websocket state changes to this data
     // maybe use specific events? or player based events? idk
-    function onPlayerChange(changes: Partial<Player>) {
-      setPlayerData({ ...playerData, ...changes });
-    }
-    socket.on("playerChange", onPlayerChange);
+    // function onPlayerChange(changes: Partial<Player>) {
+    //   setPlayerData({ ...playerData, ...changes });
+    // }
+    // socket.on("playerChange", onPlayerChange);
 
-    return () => {
-      socket.off("playerChange", onPlayerChange);
-    };
+    // return () => {
+    //   socket.off("playerChange", onPlayerChange);
+    // };
   });
 
   return (
