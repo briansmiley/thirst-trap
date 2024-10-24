@@ -1,7 +1,6 @@
 "use client";
 
 import { logout } from "@/app/actions/auth";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -28,7 +27,12 @@ const Navbar = () => {
         <ul className="flex h-full">
           <li className="flex items-center justify-center px-2 md:px-4">
             <Link href="/">
-              <Image alt="logo" src="/favicon.svg" width={24} height={24} />
+              <img
+                alt="logo"
+                src="/images/favicon.svg"
+                width={24}
+                height={24}
+              />
             </Link>
           </li>
           <li>
