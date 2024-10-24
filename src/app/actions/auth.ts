@@ -13,7 +13,7 @@ export async function checkPassword(password: string) {
     const cookieStore = cookies();
     cookieStore.set("authenticated", authCookieToken, {
       httpOnly: true,
-      secure: true
+      secure: false
     });
     return true;
   }
