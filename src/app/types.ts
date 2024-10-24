@@ -9,6 +9,7 @@ export type Player = {
   pausedAt: Date | null;
   expirationTime: Date | null;
   kills: number;
+  recruits: number;
 };
 
 export type Settings = {
