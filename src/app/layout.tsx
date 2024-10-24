@@ -42,7 +42,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-[100dvh]`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-[100dvh] flex flex-col`}
       >
         <ThemeProvider attribute="class" defaultTheme="dark">
           <Navbar />

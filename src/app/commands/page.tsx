@@ -4,7 +4,7 @@ import { pauseAll, unpauseAll } from "@/app/actions/globalCommands";
 
 export default function Commands() {
   return (
-    <div className="flex flex-col items-center w-full h-full justify-center text-2xl">
+    <div className="flex flex-col items-center w-full grow justify-center text-2xl">
       <div className="flex w-96 flex-row items-center justify-between gap-2">
         <div className="flex flex-col items-center justify-center gap-2">
           <span>Pause All</span>
