@@ -1,7 +1,7 @@
 import playerService from "@/server/services/player";
 
-import NewProfileForm from "./new-profile-form";
-import PlayerInfo from "./player-info";
+import NewProfileForm from "./NewProfileForm";
+import PlayerInfo from "./PlayerInfo";
 
 async function getPlayerData(id: string) {
   "use server";
@@ -9,7 +9,7 @@ async function getPlayerData(id: string) {
 }
 
 export default async function ProfilePage({
-  params,
+  params
 }: {
   params: { id: string };
 }) {
