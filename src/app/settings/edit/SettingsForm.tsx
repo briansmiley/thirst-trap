@@ -34,7 +34,7 @@ export default function SettingsForm({
         <label htmlFor="maxDeathTimer">Death Timer Cap</label>
         <Input
           id="maxDeathTimer"
-          className="w-16 h-6"
+          className="w-16 h-8"
           type="number"
           value={maxDeathTimerState}
           onChange={e => setMaxDeathTimer(parseInt(e.target.value))}
@@ -44,7 +44,7 @@ export default function SettingsForm({
         <label htmlFor="killTimeCredit">Kill Time Credit</label>
         <Input
           id="killTimeCredit"
-          className="w-16 h-6"
+          className="w-16 h-8"
           type="number"
           value={killTimeCreditState}
           onChange={e => setKillTimeCredit(parseInt(e.target.value))}
@@ -54,7 +54,7 @@ export default function SettingsForm({
         <label htmlFor="recruitTimeCredit">Recruit Time Credit</label>
         <Input
           id="recruitTimeCredit"
-          className="w-16 h-6"
+          className="w-16 h-8"
           type="number"
           value={recruitTimeCreditState}
           onChange={e => setRecruitTimeCredit(parseInt(e.target.value))}
