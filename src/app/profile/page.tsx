@@ -16,7 +16,7 @@ export default function ProfilePage() {
   return (
     <div className="flex h-screen flex-col items-center justify-center">
       <div className="my_box flex flex-col items-center justify-center gap-4 p-12">
-        <h1 className="text-4xl font-bold">Player Profiles</h1>
+        <h1 className="satisfy text-4xl font-bold">Player Profiles</h1>
         <form
           onSubmit={handleSubmit}
           className="flex flex-col items-center justify-center gap-4"

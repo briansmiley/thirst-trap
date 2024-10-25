@@ -9,7 +9,7 @@ export default function Settings() {
   return (
     <div className="flex w-full grow flex-col items-center justify-center">
       <div className="my_box flex flex-col items-center justify-start gap-4">
-        <h1 className="satisfy text-2xl font-bold">Settings</h1>
+        <h1 className="satisfy text-4xl font-bold">Settings</h1>
         <SettingsView {...settings} />
         <Button asChild>
           <Link href="/settings/edit">Edit</Link>
