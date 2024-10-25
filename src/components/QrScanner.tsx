@@ -1,14 +1,16 @@
 'use client'
 import { CameraIcon, XIcon } from 'lucide-react'
 import { Button } from './ui/button'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { useState } from 'react'
 import BarcodeScannerComponent from 'react-qr-barcode-scanner'
 
 export default function QrScanner() {
+  const pathname = usePathname()
   const router = useRouter()
   const [showQrScanner, setShowQrScanner] = useState(false)
-
+  const excludedPaths = ['/splash', '/']
+  const isSplashRoute = excludedPaths.includes(pathname)
   const handleScanResult = (result: string | null) => {
     const id = result ? result.split('/profile/')[1] : null
     //Option where we redirect directly on scan
@@ -16,6 +18,9 @@ export default function QrScanner() {
       router.push(`/profile/${id}`)
       return
     }
+  }
+  if (isSplashRoute) {
+    return null
   }
   return (
     <div className="z-50">
