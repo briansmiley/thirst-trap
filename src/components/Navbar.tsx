@@ -1,35 +1,35 @@
-"use client";
+'use client'
 
-import { logout } from "@/app/actions/auth";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { Button } from "./ui/button";
-import { LogOut } from "lucide-react";
+import { logout } from '@/app/actions/auth'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
+import { Button } from './ui/button'
+import { LogOut } from 'lucide-react'
 
 const Navbar = () => {
-  const pathname = usePathname();
-  const router = useRouter();
-  const excludedPaths = ["/splash", "/"];
-  const isSplashRoute = excludedPaths.includes(pathname);
+  const pathname = usePathname()
+  const router = useRouter()
+  const excludedPaths = ['/splash', '/']
+  const isSplashRoute = excludedPaths.includes(pathname)
 
   const selectedClass = (tabName: string): string => {
     return pathname.startsWith(tabName)
-      ? "bg-neutral-800"
-      : "hover:text-neutral-300 hover:bg-neutral-800";
-  };
+      ? 'bg-neutral-800'
+      : 'hover:text-neutral-300 hover:bg-neutral-800'
+  }
 
   if (isSplashRoute) {
-    return null;
+    return null
   }
   const handleLogout = async () => {
-    await logout();
-    router.push("/");
-  };
+    await logout()
+    router.push('/')
+  }
 
   return (
-    <nav className="bg-neutral-900 text-neutral-50 text-sm md:text-base min-h-16 flex items-center">
-      <div className="flex items-center justify-between w-full h-full px-2">
+    <nav className="flex min-h-16 items-center bg-neutral-900 text-sm text-neutral-50 md:text-base">
+      <div className="flex h-full w-full items-center justify-between px-2">
         <ul className="flex h-full">
           <li className="flex items-center justify-center px-2 md:px-4">
             <Link href="/">
@@ -44,8 +44,8 @@ const Navbar = () => {
           <li>
             <Link
               href="/dashboard"
-              className={` h-full flex justify-center items-center px-2 md:px-4 ${selectedClass(
-                "/dashboard"
+              className={`flex h-full items-center justify-center px-2 md:px-4 ${selectedClass(
+                '/dashboard'
               )}`}
             >
               Dashboard
@@ -54,8 +54,8 @@ const Navbar = () => {
           <li>
             <Link
               href="/commands"
-              className={` h-full flex justify-center items-center px-2 md:px-4 ${selectedClass(
-                "/commands"
+              className={`flex h-full items-center justify-center px-2 md:px-4 ${selectedClass(
+                '/commands'
               )}`}
             >
               Commands
@@ -64,8 +64,8 @@ const Navbar = () => {
           <li>
             <Link
               href="/settings"
-              className={` h-full flex justify-center items-center px-2 md:px-4 ${selectedClass(
-                "/settings"
+              className={`flex h-full items-center justify-center px-2 md:px-4 ${selectedClass(
+                '/settings'
               )}`}
             >
               Settings
@@ -74,8 +74,8 @@ const Navbar = () => {
           <li>
             <Link
               href="/profile"
-              className={` h-full flex justify-center items-center px-2 md:px-4 ${selectedClass(
-                "/profile"
+              className={`flex h-full items-center justify-center px-2 md:px-4 ${selectedClass(
+                '/profile'
               )}`}
             >
               Profiles
@@ -92,7 +92,7 @@ const Navbar = () => {
         </Button>
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

@@ -1,5 +1,5 @@
-import { createColumnHelper } from "@tanstack/react-table";
-import { type Player } from "@/app/types";
+import { createColumnHelper } from '@tanstack/react-table'
+import { type Player } from '@/app/types'
 
 import {
   PictureHeader,
@@ -13,36 +13,36 @@ import {
   StatusHeader,
   StatusCell,
   TimerHeader,
-  TimerCell
-} from "@/app/dashboard/profile-table/cells";
+  TimerCell,
+} from '@/app/dashboard/profile-table/cells'
 
-const columnHelper = createColumnHelper<Player>();
+const columnHelper = createColumnHelper<Player>()
 
 const columns = [
-  columnHelper.accessor("picture", {
+  columnHelper.accessor('picture', {
     header: PictureHeader,
-    cell: PictureCell
+    cell: PictureCell,
   }),
-  columnHelper.accessor("name", {
+  columnHelper.accessor('name', {
     header: NameHeader,
-    cell: NameCell
+    cell: NameCell,
   }),
-  columnHelper.accessor("faction", {
+  columnHelper.accessor('faction', {
     header: FactionHeader,
-    cell: FactionCell
+    cell: FactionCell,
   }),
-  columnHelper.accessor("kills", {
+  columnHelper.accessor('kills', {
     header: KillsHeader,
-    cell: KillsCell
+    cell: KillsCell,
   }),
-  columnHelper.accessor("isPaused", {
+  columnHelper.accessor('isPaused', {
     header: StatusHeader,
-    cell: StatusCell
+    cell: StatusCell,
   }),
-  columnHelper.accessor("expirationTime", {
+  columnHelper.accessor('expirationTime', {
     header: TimerHeader,
-    cell: TimerCell
-  })
-];
+    cell: TimerCell,
+  }),
+]
 
-export default columns;
+export default columns

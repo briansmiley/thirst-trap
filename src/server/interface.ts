@@ -1,37 +1,37 @@
-import { Player } from "@/app/types";
+import { Player } from '@/app/types'
 
 export interface ServerToClientEvents {
-  addPlayer: (player: Player) => void;
-  updatePlayer: (player: Partial<Player> & Pick<Player, "playerId">) => void;
+  addPlayer: (player: Player) => void
+  updatePlayer: (player: Partial<Player> & Pick<Player, 'playerId'>) => void
   pausePlayer: (
     player: Pick<
       Player,
-      "playerId" | "isPaused" | "expirationTime" | "pausedAt"
+      'playerId' | 'isPaused' | 'expirationTime' | 'pausedAt'
     >
-  ) => void;
+  ) => void
   resumePlayer: (
     player: Pick<
       Player,
-      "playerId" | "isPaused" | "expirationTime" | "pausedAt"
+      'playerId' | 'isPaused' | 'expirationTime' | 'pausedAt'
     >
-  ) => void;
+  ) => void
 }
 
 export interface ClientToServerEvents {
   addPlayer: (
-    player: Pick<Player, "name" | "playerId" | "picture">,
+    player: Pick<Player, 'name' | 'playerId' | 'picture'>,
     callback: (response: { success: boolean; message?: string }) => void
-  ) => void;
+  ) => void
   updatePlayer: (
-    player: Partial<Player> & Pick<Player, "playerId">,
+    player: Partial<Player> & Pick<Player, 'playerId'>,
     callback: (response: { success: boolean; message?: string }) => void
-  ) => void;
+  ) => void
   pausePlayer: (
     playerId: string,
     callback: (response: { success: boolean; message?: string }) => void
-  ) => void;
+  ) => void
   resumePlayer: (
     playerId: string,
     callback: (response: { success: boolean; message?: string }) => void
-  ) => void;
+  ) => void
 }
