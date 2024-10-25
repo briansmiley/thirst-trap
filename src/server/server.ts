@@ -59,6 +59,36 @@ app.prepare().then(() => {
         });
     });
 
+    socket.on("pausePlayer", (playerId, callback) => {
+      console.log("ON pausePlayer:", socket.id, playerId);
+      playerService
+        .pause(playerId)
+        .then((player) => {
+          io.emit("pausePlayer", player);
+          console.log("EMIT pausePlayer:", loggable(player));
+          callback({ success: true });
+        })
+        .catch((err) => {
+          console.error(err);
+          callback({ success: false, message: err.message });
+        });
+    });
+
+    socket.on("resumePlayer", (playerId, callback) => {
+      console.log("ON resumePlayer:", socket.id, playerId);
+      playerService
+        .resume(playerId)
+        .then((player) => {
+          console.log("EMIT resumePlayer:", loggable(player));
+          io.emit("resumePlayer", player);
+          callback({ success: true });
+        })
+        .catch((err) => {
+          console.error(err);
+          callback({ success: false, message: err.message });
+        });
+    });
+
     socket.on("disconnect", () => {
       console.log("User disconnected:", socket.id);
     });
