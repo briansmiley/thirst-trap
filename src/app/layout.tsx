@@ -4,6 +4,7 @@ import { Satisfy } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import QrScanner from "@/components/QrScanner";
 
 const satisfy = Satisfy({
   subsets: ["latin"],
@@ -46,6 +47,7 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="dark">
           <Navbar />
+          <QrScanner />
           {children}
         </ThemeProvider>
       </body>

@@ -16,6 +16,7 @@ app.prepare().then(() => {
   const httpServer = createServer(handler);
 
   const io = new Server<ClientToServerEvents, ServerToClientEvents>(
+  const io = new Server<ClientToServerEvents, ServerToClientEvents>(
     httpServer
     //   , {
     //   cors: {
@@ -25,7 +26,7 @@ app.prepare().then(() => {
     // }
   );
 
-  io.on("connection", (socket) => {
+  io.on("connection", socket => {
     console.log("ON connected:", socket.id);
 
     socket.on("addPlayer", (player, callback) => {
@@ -89,17 +90,63 @@ app.prepare().then(() => {
         });
     });
 
+    socket.on("updatePlayer", (player, callback) => {
+      console.log("ON updatePlayer:", socket.id, loggable(player));
+      const { playerId, ...rest } = player;
+      playerService
+        .update(playerId, rest)
+        .then((updatedPlayer) => {
+          console.log("EMIT updatePlayer:", loggable(updatedPlayer));
+          io.emit("updatePlayer", updatedPlayer);
+          callback({ success: true });
+        })
+        .catch((err) => {
+          console.error(err);
+          callback({ success: false, message: err.message });
+        });
+    });
+
+    socket.on("pausePlayer", (playerId, callback) => {
+      console.log("ON pausePlayer:", socket.id, playerId);
+      playerService
+        .pause(playerId)
+        .then((player) => {
+          io.emit("pausePlayer", player);
+          console.log("EMIT pausePlayer:", loggable(player));
+          callback({ success: true });
+        })
+        .catch((err) => {
+          console.error(err);
+          callback({ success: false, message: err.message });
+        });
+    });
+
+    socket.on("resumePlayer", (playerId, callback) => {
+      console.log("ON resumePlayer:", socket.id, playerId);
+      playerService
+        .resume(playerId)
+        .then((player) => {
+          console.log("EMIT resumePlayer:", loggable(player));
+          io.emit("resumePlayer", player);
+          callback({ success: true });
+        })
+        .catch((err) => {
+          console.error(err);
+          callback({ success: false, message: err.message });
+        });
+    });
+
     socket.on("disconnect", () => {
       console.log("User disconnected:", socket.id);
     });
   });
 
   httpServer
-    .once("error", (err) => {
+    .once("error", err => {
       console.error(err);
       process.exit(1);
     })
-    .listen(port, () => {
+    .listen(port, dev ? undefined : "127.0.0.1", () => {
       console.log(`> Ready on http://${hostname}:${port}`);
     });
 });
