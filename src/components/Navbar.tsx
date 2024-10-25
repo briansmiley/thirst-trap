@@ -15,8 +15,8 @@ const Navbar = () => {
 
   const selectedClass = (tabName: string): string => {
     return pathname.startsWith(tabName)
-      ? 'bg-neutral-800'
-      : 'hover:text-neutral-300 hover:bg-neutral-800'
+      ? 'bg-neutral-800 font-semibold'
+      : 'hover:text-neutral-300 hover:bg-neutral-700'
   }
 
   if (isSplashRoute) {
@@ -28,23 +28,16 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="flex min-h-16 items-center bg-neutral-900 text-sm text-neutral-50 md:text-base">
-      <div className="flex h-full w-full items-center justify-between px-2">
-        <ul className="flex h-full">
-          <li className="flex items-center justify-center px-2 md:px-4">
-            <Link href="/">
-              <img
-                alt="logo"
-                src="/images/favicon.svg"
-                width={24}
-                height={24}
-              />
-            </Link>
-          </li>
+    <nav className="flex min-h-16 items-center bg-neutral-900 text-xs text-neutral-50 sm:text-sm md:text-base">
+      <div className="flex h-full w-full items-center justify-start gap-2 px-2">
+        <Link href="/">
+          <img alt="logo" src="/images/favicon.svg" width={24} height={24} />
+        </Link>
+        <ul className="flex h-full overflow-x-auto">
           <li>
             <Link
               href="/dashboard"
-              className={`flex h-full items-center justify-center px-2 md:px-4 ${selectedClass(
+              className={`flex h-full w-[75px] items-center justify-center px-1 sm:w-[100px] sm:px-2 md:w-[125px] md:px-4 ${selectedClass(
                 '/dashboard'
               )}`}
             >
@@ -54,7 +47,7 @@ const Navbar = () => {
           <li>
             <Link
               href="/commands"
-              className={`flex h-full items-center justify-center px-2 md:px-4 ${selectedClass(
+              className={`flex h-full w-[75px] items-center justify-center px-1 sm:w-[100px] sm:px-2 md:w-[125px] md:px-4 ${selectedClass(
                 '/commands'
               )}`}
             >
@@ -64,7 +57,7 @@ const Navbar = () => {
           <li>
             <Link
               href="/settings"
-              className={`flex h-full items-center justify-center px-2 md:px-4 ${selectedClass(
+              className={`flex h-full w-[75px] items-center justify-center px-1 sm:w-[100px] sm:px-2 md:w-[125px] md:px-4 ${selectedClass(
                 '/settings'
               )}`}
             >
@@ -74,7 +67,7 @@ const Navbar = () => {
           <li>
             <Link
               href="/profile"
-              className={`flex h-full items-center justify-center px-2 md:px-4 ${selectedClass(
+              className={`flex h-full w-[75px] items-center justify-center px-1 sm:w-[100px] sm:px-2 md:w-[125px] md:px-4 ${selectedClass(
                 '/profile'
               )}`}
             >
@@ -82,15 +75,10 @@ const Navbar = () => {
             </Link>
           </li>
         </ul>
-        <Button
-          size="icon"
-          variant="ghost"
-          onClick={handleLogout}
-          title="Logout"
-        >
-          <LogOut />
-        </Button>
       </div>
+      <Button size="icon" variant="ghost" onClick={handleLogout} title="Logout">
+        <LogOut />
+      </Button>
     </nav>
   )
 }
