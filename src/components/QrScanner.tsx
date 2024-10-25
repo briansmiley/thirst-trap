@@ -15,6 +15,7 @@ export default function QrScanner() {
     const id = result ? result.split('/profile/')[1] : null
     //Option where we redirect directly on scan
     if (id) {
+      setShowQrScanner(false)
       router.push(`/profile/${id}`)
       return
     }
