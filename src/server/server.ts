@@ -55,7 +55,7 @@ app.prepare().then(() => {
       console.error(err);
       process.exit(1);
     })
-    .listen(port, "127.0.0.1", () => {
+    .listen(port, dev ? undefined : "127.0.0.1", () => {
       console.log(`> Ready on http://${hostname}:${port}`);
     });
 });
