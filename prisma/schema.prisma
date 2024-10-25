@@ -30,7 +30,7 @@ model Player {
   playerId       String    @unique
   picture        String
   faction        Faction   @default(NEUTRAL)
-  isPaused       Boolean   @default(false)
+  isPaused       Boolean   @default(true)
   pausedAt       DateTime?
   expirationTime DateTime?
   kills          Int       @default(0)

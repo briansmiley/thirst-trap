@@ -13,7 +13,11 @@ export function PictureHeader({
 
 export function PictureCell({ row }: CellContext<Player, Player["picture"]>) {
   return (
-    <img className="w-12 h-12 object-cover" src={row.original.picture ?? ""} />
+    <img
+      alt="picture"
+      className="w-12 h-12 object-cover"
+      src={row.original.picture ?? ""}
+    />
   );
 }
 
