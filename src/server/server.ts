@@ -3,6 +3,7 @@ import next from "next";
 import { Server } from "socket.io";
 import playerService from "./services/player";
 import { ClientToServerEvents, ServerToClientEvents } from "./interface";
+import { loggable } from "./utils";
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = process.env.HOSTNAME || "localhost";
@@ -28,18 +29,61 @@ app.prepare().then(() => {
     console.log("ON connected:", socket.id);
 
     socket.on("addPlayer", (player, callback) => {
-      console.log("ON addPlayer:", socket.id, {
-        ...player,
-        picture: player.picture.slice(0, 50)
-      });
+      console.log("ON addPlayer:", socket.id, loggable(player));
       playerService
         .create(player)
-        .then(newPlayer => {
-          console.log("EMIT addPlayer:", newPlayer);
+        .then((newPlayer) => {
+          console.log("EMIT addPlayer:", loggable(newPlayer));
           io.emit("addPlayer", newPlayer);
           callback({ success: true });
         })
-        .catch(err => {
+        .catch((err) => {
+          console.error(err);
+          callback({ success: false, message: err.message });
+        });
+    });
+
+    socket.on("updatePlayer", (player, callback) => {
+      console.log("ON updatePlayer:", socket.id, loggable(player));
+      const { playerId, ...rest } = player;
+      playerService
+        .update(playerId, rest)
+        .then((updatedPlayer) => {
+          console.log("EMIT updatePlayer:", loggable(updatedPlayer));
+          io.emit("updatePlayer", updatedPlayer);
+          callback({ success: true });
+        })
+        .catch((err) => {
+          console.error(err);
+          callback({ success: false, message: err.message });
+        });
+    });
+
+    socket.on("pausePlayer", (playerId, callback) => {
+      console.log("ON pausePlayer:", socket.id, playerId);
+      playerService
+        .pause(playerId)
+        .then((player) => {
+          io.emit("pausePlayer", player);
+          console.log("EMIT pausePlayer:", loggable(player));
+          callback({ success: true });
+        })
+        .catch((err) => {
+          console.error(err);
+          callback({ success: false, message: err.message });
+        });
+    });
+
+    socket.on("resumePlayer", (playerId, callback) => {
+      console.log("ON resumePlayer:", socket.id, playerId);
+      playerService
+        .resume(playerId)
+        .then((player) => {
+          console.log("EMIT resumePlayer:", loggable(player));
+          io.emit("resumePlayer", player);
+          callback({ success: true });
+        })
+        .catch((err) => {
           console.error(err);
           callback({ success: false, message: err.message });
         });

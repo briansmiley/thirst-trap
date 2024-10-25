@@ -6,8 +6,8 @@ export type Player = {
   picture: string;
   faction: Faction;
   isPaused: boolean;
-  pausedAt: Date | null;
-  expirationTime: Date | null;
+  pausedAt: Date;
+  expirationTime: Date;
   kills: number;
   recruits: number;
 };

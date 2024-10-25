@@ -21,9 +21,13 @@ const selects: PlayerSelect = {
 };
 
 const playerService = {
-  create: async (newPlayer: Prisma.PlayerCreateInput) => {
+  create: async (newPlayer: Omit<Prisma.PlayerCreateInput, "pausedAt" | "expirationTime">) => {
+    const now = new Date();
+    const killTimerMinutes = (await settingService.get()).maxDeathTimer;
+    const killTimer = killTimerMinutes * 60000;
+    const initialExpirationTime = new Date(now.getTime() + killTimer);
     const player = await prisma.player.create({
-      data: newPlayer,
+      data: { ...newPlayer, expirationTime: initialExpirationTime, pausedAt: now },
       select: selects
     });
     return player;
@@ -97,7 +101,6 @@ const playerService = {
       where: { playerId },
       data: {
         isPaused: false,
-        pausedAt: null,
         expirationTime: newExpirationTime
       },
       select: selects
@@ -122,7 +125,6 @@ const playerService = {
           where: { playerId: player.playerId },
           data: {
             isPaused: false,
-            pausedAt: null,
             expirationTime: newExpirationTime
           },
           select: selects
@@ -152,14 +154,14 @@ const playerService = {
   kill: async (playerId: string) => {
     const killedPlayer = await prisma.player.update({
       where: { playerId },
-      data: { faction: "GHOST", expirationTime: null },
+      data: { faction: "GHOST", expirationTime: new Date() },
       select: selects
     });
     return killedPlayer;
   },
   addTimeToAll: async (minutes: number) => {
     const players = await prisma.player.findMany({
-      where: { expirationTime: { not: null } }
+      where: { faction: { not: "GHOST" } }
     });
     const ms = minutes * 60000;
     const updatedPlayers = await Promise.all(

@@ -1,8 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-// import { socket } from "@/socket";
+import {
+  ChevronDownIcon,
+  MinusIcon,
+  PauseIcon,
+  PlayIcon,
+  PlusIcon,
+} from "lucide-react";
+import { socket } from "@/socket";
 import { Faction, Player } from "@/app/types";
+import { toDurationString } from "@/utils/timeUtils";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,149 +19,218 @@ import {
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Minus, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export default function PlayerInfo(props: Player) {
   const [playerData, setPlayerData] = useState(props);
-
-  const handleFactionChange = (faction: Faction) => {
-    //TODO: send faction change to server
-    setPlayerData({
-      ...playerData,
-      faction
-    });
-    console.log(`Update sending: ${playerData.name} to ${faction}`);
-  };
-  const handleKillsChange = (change: number) => {
-    //TODO: send kills change to server
-    setPlayerData({
-      ...playerData,
-      kills: playerData.kills + change
-    });
-    console.log(
-      `Update sending: ${playerData.name} to ${playerData.kills + change}`
-    );
-  };
-  const handleRecruitsChange = (change: number) => {
-    //TODO: send recruits change to server
-    setPlayerData({
-      ...playerData,
-      recruits: playerData.recruits + change
-    });
-    console.log(
-      `Update sending: ${playerData.name} to ${playerData.recruits + change}`
-    );
-  };
+  const [msLeft, setMsLeft] = useState(
+    Math.max(props.expirationTime.getTime() - Date.now(), 0)
+  );
 
   useEffect(() => {
-    // // placeholder boilerplate for handling websocket state changes to this data
-    // // maybe use specific events? or player based events? idk
-    // function onPlayerChange(changes: Partial<Player>) {
-    //   setPlayerData({ ...playerData, ...changes });
-    // }
-    // socket.on("playerChange", onPlayerChange);
-    // return () => {
-    //   socket.off("playerChange", onPlayerChange);
-    // };
+    let interval: NodeJS.Timeout;
+    if (!playerData.isPaused) {
+      interval = setInterval(() => {
+        setMsLeft((p) => p - 1000);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [playerData.isPaused]);
+
+  useEffect(() => {
+    function onUpdatePlayer({
+      playerId,
+      ...changes
+    }: Partial<Player> & Pick<Player, "playerId">) {
+      if (playerId === props.playerId) {
+        setPlayerData({ ...playerData, ...changes });
+      }
+    }
+
+    function onPausePlayer({
+      playerId,
+      ...changes
+    }: Pick<Player, "playerId" | "isPaused" | "expirationTime" | "pausedAt">) {
+      if (playerId === props.playerId) {
+        const isPaused = changes.isPaused;
+        const expirationTime = new Date(changes.expirationTime);
+        const pausedAt = new Date(changes.pausedAt);
+        console.log("ON pausePlayer:", socket.id, {
+          isPaused,
+          expirationTime,
+          pausedAt,
+        });
+        setPlayerData({ ...playerData, isPaused, expirationTime, pausedAt });
+        setMsLeft(expirationTime.getTime() - pausedAt.getTime());
+      }
+    }
+    function onResumePlayer({
+      playerId,
+      ...changes
+    }: Pick<Player, "playerId" | "isPaused" | "expirationTime" | "pausedAt">) {
+      if (playerId === props.playerId) {
+        const isPaused = changes.isPaused;
+        const expirationTime = new Date(changes.expirationTime);
+        const pausedAt = new Date(changes.pausedAt);
+        console.log("ON resumePlayer:", socket.id, {
+          isPaused,
+          expirationTime,
+          pausedAt,
+        });
+        setPlayerData({ ...playerData, isPaused, expirationTime, pausedAt });
+        setMsLeft(Math.max(expirationTime.getTime() - Date.now(), 0));
+      }
+    }
+
+    socket.on("updatePlayer", onUpdatePlayer);
+    socket.on("pausePlayer", onPausePlayer);
+    socket.on("resumePlayer", onResumePlayer);
+
+    return () => {
+      socket.off("updatePlayer", onUpdatePlayer);
+      socket.off("pausePlayer", onPausePlayer);
+      socket.off("resumePlayer", onResumePlayer);
+    };
   });
 
+  const handleFactionChange = (faction: Faction) => {
+    console.log("EMIT updatePlayer:", { playerId: props.playerId, faction });
+    socket.emit(
+      "updatePlayer",
+      { playerId: props.playerId, faction },
+      (res) => {
+        console.log("ACK updatePlayer:", res);
+      }
+    );
+  };
+
+  const handleCountChange =
+    (type: "kills" | "recruits") => (change: number) => {
+      console.log("EMIT updatePlayer:", {
+        playerId: props.playerId,
+        [type]: playerData[type] + change,
+      });
+      socket.emit(
+        "updatePlayer",
+        { playerId: props.playerId, [type]: playerData[type] + change },
+        (res) => {
+          console.log("ACK updatePlayer:", res);
+        }
+      );
+    };
+
+  const pauseOrResume = () => {
+    if (playerData.isPaused) {
+      socket.emit("resumePlayer", props.playerId, (res) => {
+        console.log("ACK updatePlayer:", res);
+      });
+    } else {
+      socket.emit("pausePlayer", props.playerId, (res) => {
+        console.log("ACK pausePlayer:", res);
+      });
+    }
+  };
+
   return (
-    <div className="flex flex-col gap-4 p-8 items-center h-[100dvh]">
+    <div className="flex flex-col gap-2 items-center p-8">
       <img
         alt={`Profile photo for ${playerData.name}`}
-        src={playerData.picture ?? ""}
-        className="w-72 h-72 border m-auto object-cover"
+        src={playerData.picture}
+        className="w-72 h-72 border m-auto object-cover mb-4"
       />
-      <div className="flex flex-col justify-between h-full grow-1">
-        <div className="flex flex-col gap-2 items-center">
-          <h1 className="font-semibold text-3xl">{playerData.name}</h1>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                <Badge variant="outline">
-                  {playerData.faction.charAt(0) +
-                    playerData.faction.slice(1).toLowerCase()}
-                </Badge>
-                <ChevronDown />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-32">
-              <DropdownMenuLabel>Faction</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuRadioGroup
-                value={playerData.faction}
-                onValueChange={value => {
-                  handleFactionChange(value as Faction);
-                }}
-              >
-                <DropdownMenuRadioItem value="NEUTRAL">
-                  <Badge variant="outline">Neutral</Badge>
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="VAMPIRE">
-                  <Badge variant="outline">Vampire</Badge>
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="JACKAL">
-                  <Badge variant="outline">Jackal</Badge>
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="GHOST">
-                  <Badge variant="outline">Ghost</Badge>
-                </DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <div className="flex gap-2 items-center justify-between w-48">
-            <Button
-              className="rounded-full"
-              variant="outline"
-              size="icon"
-              onClick={() => handleKillsChange(-1)}
-            >
-              <Minus />
-            </Button>
-            <div className="font-semibold">Kills: {playerData.kills} </div>
-            <Button
-              className="rounded-full"
-              variant="outline"
-              size="icon"
-              onClick={() => handleKillsChange(1)}
-            >
-              <Plus />
-            </Button>
-          </div>
-          <div className="flex gap-2 items-center justify-between w-48">
-            <Button
-              className="rounded-full"
-              variant="outline"
-              size="icon"
-              onClick={() => handleRecruitsChange(-1)}
-            >
-              <Minus />
-            </Button>
-            <div className="font-semibold">
-              Recruits: {playerData.recruits || 0}
-            </div>
-            <Button
-              className="rounded-full"
-              variant="outline"
-              size="icon"
-              onClick={() => handleRecruitsChange(1)}
-            >
-              <Plus />
-            </Button>
-          </div>
+      <h1 className="font-semibold text-3xl">{playerData.name}</h1>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline">
+            <Badge variant="outline">
+              {playerData.faction.charAt(0) +
+                playerData.faction.slice(1).toLowerCase()}
+            </Badge>
+            <ChevronDownIcon />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-32">
+          <DropdownMenuLabel>Faction</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuRadioGroup
+            value={playerData.faction}
+            onValueChange={(value) => {
+              handleFactionChange(value as Faction);
+            }}
+          >
+            <DropdownMenuRadioItem value="NEUTRAL">
+              <Badge variant="outline">Neutral</Badge>
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="VAMPIRE">
+              <Badge variant="outline">Vampire</Badge>
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="JACKAL">
+              <Badge variant="outline">Jackal</Badge>
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="GHOST">
+              <Badge variant="outline">Ghost</Badge>
+            </DropdownMenuRadioItem>
+          </DropdownMenuRadioGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <div className="flex gap-2 items-center justify-between w-48">
+        <Button
+          className="rounded-full"
+          variant="outline"
+          size="icon"
+          onClick={() => handleCountChange("kills")(-1)}
+          disabled={playerData.kills < 1}
+        >
+          <MinusIcon />
+        </Button>
+        <div className="font-semibold">Kills: {playerData.kills} </div>
+        <Button
+          className="rounded-full"
+          variant="outline"
+          size="icon"
+          onClick={() => handleCountChange("kills")(1)}
+        >
+          <PlusIcon />
+        </Button>
+      </div>
+      <div className="flex gap-2 items-center justify-between w-48">
+        <Button
+          className="rounded-full"
+          variant="outline"
+          size="icon"
+          onClick={() => handleCountChange("recruits")(-1)}
+          disabled={playerData.recruits < 1}
+        >
+          <MinusIcon />
+        </Button>
+        <div className="font-semibold">
+          Recruits: {playerData.recruits || 0}
         </div>
-        <div className="text-xl text-center">
-          {playerData.isPaused
-            ? "PAUSED"
-            : `Expires: ${
-                playerData.expirationTime
-                  ? playerData.expirationTime.toDateString()
-                  : "-"
-              }`}
-        </div>
+        <Button
+          className="rounded-full"
+          variant="outline"
+          size="icon"
+          onClick={() => handleCountChange("recruits")(1)}
+        >
+          <PlusIcon />
+        </Button>
+      </div>
+      <Button
+        variant="outline"
+        size="icon"
+        className="w-14 h-14"
+        onClick={pauseOrResume}
+      >
+        {playerData.isPaused ? (
+          <PlayIcon className="!size-8" />
+        ) : (
+          <PauseIcon className="!size-8" />
+        )}
+      </Button>
+      <div className="text-xl text-center">
+        Expires: {toDurationString(msLeft)}
       </div>
     </div>
   );
