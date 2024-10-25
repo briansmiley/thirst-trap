@@ -8,17 +8,20 @@ type SettingsFormProps = {
   maxDeathTimer: number
   killTimeCredit: number
   recruitTimeCredit: number
+  startingTimer: number
 }
 
 export default function SettingsForm({
   maxDeathTimer,
   killTimeCredit,
   recruitTimeCredit,
+  startingTimer,
 }: SettingsFormProps) {
   const [maxDeathTimerState, setMaxDeathTimer] = useState(maxDeathTimer)
   const [killTimeCreditState, setKillTimeCredit] = useState(killTimeCredit)
   const [recruitTimeCreditState, setRecruitTimeCredit] =
     useState(recruitTimeCredit)
+  const [startingTimerState, setStartingTimer] = useState(startingTimer)
 
   //TODO add handler functions
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -28,9 +31,19 @@ export default function SettingsForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col items-center justify-start gap-4"
+      className="flex w-full flex-col items-center justify-start gap-4"
     >
-      <div className="flex min-h-12 w-64 items-center justify-between">
+      <div className="flex min-h-12 w-full items-center justify-between">
+        <label htmlFor="maxDeathTimer">Starting Timer</label>
+        <Input
+          id="startingTimer"
+          className="h-8 w-16"
+          type="number"
+          value={startingTimerState}
+          onChange={(e) => setStartingTimer(parseInt(e.target.value))}
+        />
+      </div>
+      <div className="flex min-h-12 w-full items-center justify-between">
         <label htmlFor="maxDeathTimer">Death Timer Cap</label>
         <Input
           id="maxDeathTimer"
@@ -40,7 +53,7 @@ export default function SettingsForm({
           onChange={(e) => setMaxDeathTimer(parseInt(e.target.value))}
         />
       </div>
-      <div className="flex min-h-12 w-64 items-center justify-between">
+      <div className="flex min-h-12 w-full items-center justify-between">
         <label htmlFor="killTimeCredit">Kill Time Credit</label>
         <Input
           id="killTimeCredit"
@@ -50,7 +63,7 @@ export default function SettingsForm({
           onChange={(e) => setKillTimeCredit(parseInt(e.target.value))}
         />
       </div>
-      <div className="flex min-h-12 w-64 items-center justify-between">
+      <div className="flex min-h-12 w-full items-center justify-between">
         <label htmlFor="recruitTimeCredit">Recruit Time Credit</label>
         <Input
           id="recruitTimeCredit"

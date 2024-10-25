@@ -27,14 +27,14 @@ model Player {
   updatedAt DateTime @updatedAt
 
   name           String
-  playerId       String    @unique
+  playerId       String   @unique
   picture        String
-  faction        Faction   @default(NEUTRAL)
-  isPaused       Boolean   @default(true)
+  faction        Faction  @default(NEUTRAL)
+  isPaused       Boolean  @default(true)
   pausedAt       DateTime
   expirationTime DateTime
-  kills          Int       @default(0)
-  recruits       Int       @default(0)
+  kills          Int      @default(0)
+  recruits       Int      @default(0)
 }
 
 model Settings {
@@ -42,4 +42,5 @@ model Settings {
   maxDeathTimer     Int
   killTimeCredit    Int
   recruitTimeCredit Int
+  startingTimer     Int
 }

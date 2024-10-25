@@ -6,6 +6,7 @@ const settings = {
   maxDeathTimer: 45,
   killTimeCredit: 30,
   recruitTimeCredit: 15,
+  startingTimer: 30,
 }
 
 async function initializeSettings() {
