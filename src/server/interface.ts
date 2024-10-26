@@ -1,6 +1,17 @@
 import { Player } from '@/app/types'
+import { DisconnectDescription } from 'socket.io-client/build/esm/socket'
+import { Socket } from 'socket.io-client'
 
-export interface ServerToClientEvents {
+export interface DefaultServerToClientEvents {
+  connect: () => void
+  connect_error: (err: Error) => void
+  disconnect: (
+    reason: Socket.DisconnectReason,
+    description?: DisconnectDescription
+  ) => void
+}
+
+export interface ServerToClientEvents extends DefaultServerToClientEvents {
   addPlayer: (player: Player) => void
   updatePlayer: (player: Partial<Player> & Pick<Player, 'playerId'>) => void
   pausePlayer: (
