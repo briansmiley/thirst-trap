@@ -27,6 +27,10 @@ function createUseSocketSubscription<STCE extends EventsMap = DefaultEventsMap>(
     listener: STCE[K]
   ) {
     useEffect(() => {
+      if (event === 'connect' && socket.connected) {
+        listener()
+      }
+
       socket.on(event, listener)
 
       return () => {
