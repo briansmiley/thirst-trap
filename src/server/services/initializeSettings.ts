@@ -11,7 +11,7 @@ const settings = {
 
 async function initializeSettings() {
   try {
-    const result = await settingService.create(settings)
+    const result = await settingService.upsert(settings)
     console.log(result)
   } catch (error) {
     console.error(`Error upserting settings: `, error)
