@@ -8,7 +8,7 @@ import {
   PlayIcon,
   PlusIcon,
 } from 'lucide-react'
-import { socket } from '@/socket'
+import { socket, useSocketSubscription } from '@/socket/client'
 import { Faction, Player } from '@/app/types'
 import { toDurationString } from '@/utils/timeUtils'
 import { Button } from '@/components/ui/button'
@@ -39,59 +39,37 @@ export default function PlayerInfo(props: Player) {
     return () => clearInterval(interval)
   }, [playerData.isPaused])
 
-  useEffect(() => {
-    function onUpdatePlayer({
-      playerId,
-      ...changes
-    }: Partial<Player> & Pick<Player, 'playerId'>) {
-      if (playerId === props.playerId) {
-        setPlayerData({ ...playerData, ...changes })
-      }
+  useSocketSubscription('updatePlayer', ({ playerId, ...changes }) => {
+    if (playerId === props.playerId) {
+      setPlayerData({ ...playerData, ...changes })
     }
-
-    function onPausePlayer({
-      playerId,
-      ...changes
-    }: Pick<Player, 'playerId' | 'isPaused' | 'expirationTime' | 'pausedAt'>) {
-      if (playerId === props.playerId) {
-        const isPaused = changes.isPaused
-        const expirationTime = new Date(changes.expirationTime)
-        const pausedAt = new Date(changes.pausedAt)
-        console.log('ON pausePlayer:', socket.id, {
-          isPaused,
-          expirationTime,
-          pausedAt,
-        })
-        setPlayerData({ ...playerData, isPaused, expirationTime, pausedAt })
-        setMsLeft(expirationTime.getTime() - pausedAt.getTime())
-      }
+  })
+  useSocketSubscription('pausePlayer', ({ playerId, ...changes }) => {
+    if (playerId === props.playerId) {
+      const isPaused = changes.isPaused
+      const expirationTime = new Date(changes.expirationTime)
+      const pausedAt = new Date(changes.pausedAt)
+      console.log('ON pausePlayer:', socket.id, {
+        isPaused,
+        expirationTime,
+        pausedAt,
+      })
+      setPlayerData({ ...playerData, isPaused, expirationTime, pausedAt })
+      setMsLeft(expirationTime.getTime() - pausedAt.getTime())
     }
-    function onResumePlayer({
-      playerId,
-      ...changes
-    }: Pick<Player, 'playerId' | 'isPaused' | 'expirationTime' | 'pausedAt'>) {
-      if (playerId === props.playerId) {
-        const isPaused = changes.isPaused
-        const expirationTime = new Date(changes.expirationTime)
-        const pausedAt = new Date(changes.pausedAt)
-        console.log('ON resumePlayer:', socket.id, {
-          isPaused,
-          expirationTime,
-          pausedAt,
-        })
-        setPlayerData({ ...playerData, isPaused, expirationTime, pausedAt })
-        setMsLeft(Math.max(expirationTime.getTime() - Date.now(), 0))
-      }
-    }
-
-    socket.on('updatePlayer', onUpdatePlayer)
-    socket.on('pausePlayer', onPausePlayer)
-    socket.on('resumePlayer', onResumePlayer)
-
-    return () => {
-      socket.off('updatePlayer', onUpdatePlayer)
-      socket.off('pausePlayer', onPausePlayer)
-      socket.off('resumePlayer', onResumePlayer)
+  })
+  useSocketSubscription('resumePlayer', ({ playerId, ...changes }) => {
+    if (playerId === props.playerId) {
+      const isPaused = changes.isPaused
+      const expirationTime = new Date(changes.expirationTime)
+      const pausedAt = new Date(changes.pausedAt)
+      console.log('ON resumePlayer:', socket.id, {
+        isPaused,
+        expirationTime,
+        pausedAt,
+      })
+      setPlayerData({ ...playerData, isPaused, expirationTime, pausedAt })
+      setMsLeft(Math.max(expirationTime.getTime() - Date.now(), 0))
     }
   })
 

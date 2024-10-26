@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useCallback } from 'react'
-import { socket } from '@/socket'
+import { socket } from '@/socket/client'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'

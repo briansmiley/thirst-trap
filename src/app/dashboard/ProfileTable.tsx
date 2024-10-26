@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import {
   Table,
   TableBody,
@@ -14,11 +14,11 @@ import {
   flexRender,
   getCoreRowModel,
 } from '@tanstack/react-table'
-import columns from '@/app/dashboard/profile-table/columns'
+import columns from '@/app/dashboard/ProfileTable/columns'
 import { type Player } from '@/app/types'
 
-import { socket } from '@/socket'
-import ProfileTableRow from '@/app/dashboard/profile-table/profile-table-row'
+import { socket, useSocketSubscription } from '@/socket/client'
+import ProfileTableRow from '@/app/dashboard/ProfileTable/ProfileTableRow'
 
 export default function ProfileTable(props: { data: Player[] }) {
   const [data, setData] = useState(props.data)
@@ -29,18 +29,10 @@ export default function ProfileTable(props: { data: Player[] }) {
     getCoreRowModel: getCoreRowModel(),
   })
 
-  useEffect(() => {
-    function onAddPlayer(player: Player) {
-      console.log('onAddPlayer')
-      setData((data) => [...data, player])
-    }
-
-    socket.on('addPlayer', onAddPlayer)
-
-    return () => {
-      socket.off('addPlayer', onAddPlayer)
-    }
-  }, [])
+  useSocketSubscription('addPlayer', (player: Player) => {
+    console.log('ON addPlayer:', socket.id, player)
+    setData((data) => [...data, player])
+  })
 
   return (
     <Table>

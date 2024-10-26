@@ -1,5 +1,5 @@
 import { HeaderContext, type CellContext } from '@tanstack/react-table'
-import { type ExtendedCellContext } from '@/app/dashboard/profile-table/profile-table-row'
+import { type ExtendedCellContext } from '@/app/dashboard/ProfileTable/ProfileTableRow'
 import { Player } from '@/app/types'
 import { Badge } from '@/components/ui/badge'
 import { ClockIcon } from 'lucide-react'
