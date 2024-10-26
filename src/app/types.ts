@@ -16,4 +16,5 @@ export type Settings = {
   maxDeathTimer: number
   killTimeCredit: number
   recruitTimeCredit: number
+  startingTimer: number
 }
