@@ -17,7 +17,7 @@ import {
 import columns from '@/app/dashboard/profile-table/columns'
 import { type Player } from '@/app/types'
 
-import { socket } from '@/socket'
+import { socket } from '@/socket/client'
 import ProfileTableRow from '@/app/dashboard/profile-table/profile-table-row'
 
 export default function ProfileTable(props: { data: Player[] }) {

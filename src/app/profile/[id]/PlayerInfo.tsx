@@ -8,7 +8,7 @@ import {
   PlayIcon,
   PlusIcon,
 } from 'lucide-react'
-import { socket } from '@/socket'
+import { socket } from '@/socket/client'
 import { Faction, Player } from '@/app/types'
 import { toDurationString } from '@/utils/timeUtils'
 import { Button } from '@/components/ui/button'
