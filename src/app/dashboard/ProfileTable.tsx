@@ -14,11 +14,11 @@ import {
   flexRender,
   getCoreRowModel,
 } from '@tanstack/react-table'
-import columns from '@/app/dashboard/profile-table/columns'
+import columns from '@/app/dashboard/ProfileTable/columns'
 import { type Player } from '@/app/types'
 
 import { socket } from '@/socket/client'
-import ProfileTableRow from '@/app/dashboard/profile-table/profile-table-row'
+import ProfileTableRow from '@/app/dashboard/ProfileTable/ProfileTableRow'
 
 export default function ProfileTable(props: { data: Player[] }) {
   const [data, setData] = useState(props.data)

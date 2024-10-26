@@ -14,7 +14,7 @@ import {
   StatusCell,
   TimerHeader,
   TimerCell,
-} from '@/app/dashboard/profile-table/cells'
+} from '@/app/dashboard/ProfileTable/cells'
 
 const columnHelper = createColumnHelper<Player>()
 

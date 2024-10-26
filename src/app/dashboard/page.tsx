@@ -1,5 +1,5 @@
 import playerService from '@/server/services/player'
-import ProfileTable from './profile-table'
+import ProfileTable from '@/app/dashboard/ProfileTable'
 
 async function getPlayersData() {
   'use server'
