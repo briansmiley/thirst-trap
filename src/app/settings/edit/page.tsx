@@ -11,7 +11,7 @@ export default async function SettingsEdit() {
 
   return (
     <div className="flex w-full grow flex-col items-center justify-center">
-      <div className="my_box min-w-80 flex w-[40%] flex-col items-center justify-start gap-4 px-10 py-5">
+      <div className="my_box flex min-w-[70%] flex-col items-center justify-start gap-4 md:min-w-[50%] lg:max-w-[40%]">
         <h1 className="satisfy text-4xl font-bold">Settings</h1>
         <SettingsForm {...settings} />
       </div>

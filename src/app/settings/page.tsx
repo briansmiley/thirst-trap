@@ -13,8 +13,8 @@ export default async function Settings() {
 
   return (
     <div className="flex w-full grow flex-col items-center justify-center px-10">
-      <div className="my_box flex min-w-full flex-col items-center justify-start gap-4 md:min-w-[50%] lg:max-w-[40%]">
-        <h1 className="satisfy text-2xl font-bold">Settings</h1>
+      <div className="my_box flex min-w-[70%] flex-col items-center justify-start gap-4 md:min-w-[50%] lg:max-w-[40%]">
+        <h1 className="satisfy text-4xl font-bold">Settings</h1>
         <SettingsView {...settings} />
         <Button asChild>
           <Link href="/settings/edit">Edit</Link>
