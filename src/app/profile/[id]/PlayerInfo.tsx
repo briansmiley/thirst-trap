@@ -118,7 +118,12 @@ export default function PlayerInfo(props: Player) {
         src={playerData.picture}
         className="m-auto mb-4 h-72 w-72 border object-cover"
       />
-      <h1 className="text-3xl font-semibold">{playerData.name}</h1>
+      <div className="flex flex-col items-center">
+        <h1 className="text-3xl font-semibold">{playerData.name}</h1>
+        <h2 className="text-sm font-semibold text-neutral-400 opacity-50">
+          id: {playerData.playerId}
+        </h2>
+      </div>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline">
