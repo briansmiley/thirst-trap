@@ -145,9 +145,14 @@ const playerService = {
     return updatedPlayers
   },
   recruit: async (playerId: string, faction: Faction) => {
+    const now = new Date()
+    const startingExpirationTime = (await settingService.get()).startingTimer
+    const startingExpirationDate = new Date(
+      now.getTime() + startingExpirationTime
+    )
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
-      data: { faction },
+      data: { faction, expirationTime: startingExpirationDate },
       select: selects,
     })
     return updatedPlayer

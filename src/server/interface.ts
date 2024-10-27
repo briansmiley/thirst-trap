@@ -1,4 +1,4 @@
-import { type Player, type Settings } from '@/app/types'
+import { Faction, type Player, type Settings } from '@/app/types'
 import { type DisconnectDescription } from 'socket.io-client/build/esm/socket'
 import { type Socket } from 'socket.io-client'
 
@@ -26,7 +26,9 @@ export interface ServerToClientEvents extends DefaultServerToClientEvents {
       'playerId' | 'isPaused' | 'expirationTime' | 'pausedAt'
     >
   ) => void
-
+  recruitPlayer: (
+    player: Omit<Player, 'picture' | 'kills' | 'recruits'>
+  ) => void
   updateSettings: (settings: Partial<Settings>) => void
 }
 
@@ -45,6 +47,10 @@ export interface ClientToServerEvents {
   ) => void
   resumePlayer: (
     playerId: string,
+    callback: (response: { success: boolean; message?: string }) => void
+  ) => void
+  recruitPlayer: (
+    player: Pick<Player, 'playerId' | 'faction'>,
     callback: (response: { success: boolean; message?: string }) => void
   ) => void
   updateSettings: (

@@ -34,11 +34,13 @@ export default function PlayerInfo(props: Player) {
     let interval: NodeJS.Timeout
     if (!playerData.isPaused) {
       interval = setInterval(() => {
-        setMsLeft((p) => Math.max(p - 1000, 0))
+        setMsLeft((p) =>
+          Math.max(playerData.expirationTime.getTime() - Date.now(), 0)
+        )
       }, 1000)
     }
     return () => clearInterval(interval)
-  }, [playerData.isPaused])
+  }, [playerData.isPaused, playerData.expirationTime])
 
   useSocketSubscription('updatePlayer', ({ playerId, ...changes }) => {
     if (playerId === props.playerId) {
@@ -74,10 +76,22 @@ export default function PlayerInfo(props: Player) {
     }
   })
 
+  useSocketSubscription('recruitPlayer', ({ playerId, ...changes }) => {
+    if (playerId === props.playerId) {
+      const expirationTime = new Date(changes.expirationTime)
+      const pausedAt = new Date(changes.pausedAt)
+      console.log('ON recruitPlayer:', socket.id, {
+        expirationTime,
+        pausedAt,
+      })
+      setPlayerData({ ...playerData, ...changes, expirationTime, pausedAt })
+    }
+  })
+
   const handleFactionChange = (faction: Faction) => {
-    console.log('EMIT updatePlayer:', { playerId: props.playerId, faction })
+    console.log('EMIT recruitPlayer:', { playerId: props.playerId, faction })
     socket.emit(
-      'updatePlayer',
+      'recruitPlayer',
       { playerId: props.playerId, faction },
       (res) => {
         console.log('ACK updatePlayer:', res)
@@ -203,7 +217,7 @@ export default function PlayerInfo(props: Player) {
       </div>
 
       {hasExpiration && (
-        <div>
+        <div className="flex flex-col items-center gap-2">
           <Button
             variant="outline"
             size="icon"

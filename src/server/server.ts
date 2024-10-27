@@ -93,10 +93,25 @@ app.prepare().then(() => {
         })
     })
 
+    socket.on('recruitPlayer', ({ playerId, faction }, callback) => {
+      console.log('ON recruitPlayer:', socket.id, playerId, faction)
+      playerService
+        .recruit(playerId, faction)
+        .then((player) => {
+          console.log('EMIT recruitPlayer:', loggable(player))
+          io.emit('recruitPlayer', player)
+          callback({ success: true })
+        })
+        .catch((err) => {
+          console.error(err)
+          callback({ success: false, message: err.message })
+        })
+    })
+
     socket.on('updateSettings', (settings, callback) => {
       console.log('ON updateSettings:', socket.id, settings)
       settingService
-        .upsert(settings)
+        .update(settings)
         .then((newSettings) => {
           io.emit('updateSettings', newSettings)
           callback({ success: true })
