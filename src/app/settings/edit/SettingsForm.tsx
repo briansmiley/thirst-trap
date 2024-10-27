@@ -41,6 +41,16 @@ export default function SettingsForm(props: SettingsFormProps) {
       className="flex w-full flex-col items-center justify-start gap-4"
     >
       <div className="flex min-h-12 w-64 items-center justify-between">
+        <label htmlFor="maxDeathTimer">Starting Timer</label>
+        <Input
+          id="startingTimer"
+          className="h-8 w-16"
+          type="number"
+          value={startingTimer}
+          onChange={(e) => setStartingTimer(parseInt(e.target.value))}
+        />
+      </div>
+      <div className="flex min-h-12 w-64 items-center justify-between">
         <label htmlFor="maxDeathTimer">Death Timer Cap</label>
         <Input
           id="maxDeathTimer"
