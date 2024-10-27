@@ -201,26 +201,29 @@ export default function PlayerInfo(props: Player) {
           <PlusIcon />
         </Button>
       </div>
-      <Button
-        variant="outline"
-        size="icon"
-        className="h-14 w-14"
-        onClick={pauseOrResume}
-      >
-        {playerData.isPaused ? (
-          <PlayIcon className="!size-8" />
-        ) : (
-          <PauseIcon className="!size-8" />
-        )}
-      </Button>
+
       {hasExpiration && (
-        <div className="text-center text-xl">
-          Expires:{' '}
-          {msLeft === 0 ? (
-            <span className="animate-pulse text-red-500">0:00</span>
-          ) : (
-            toDurationString(msLeft)
-          )}
+        <div>
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-14 w-14"
+            onClick={pauseOrResume}
+          >
+            {playerData.isPaused ? (
+              <PlayIcon className="!size-8" />
+            ) : (
+              <PauseIcon className="!size-8" />
+            )}
+          </Button>
+          <div className="text-center text-xl">
+            Expires:{' '}
+            {msLeft === 0 ? (
+              <span className="animate-pulse text-red-500">0:00</span>
+            ) : (
+              toDurationString(msLeft)
+            )}
+          </div>
         </div>
       )}
     </div>
