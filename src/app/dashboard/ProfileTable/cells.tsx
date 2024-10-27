@@ -80,7 +80,14 @@ export function TimerCell(
 
   if (isPaused && expirationTime) {
     // TODO: calculate remaining time when paused? show blinking
-    return <div>{toDurationString(expirationTime.getTime() - Date.now())}</div>
+    const remainingTime = Math.max(expirationTime.getTime() - Date.now(), 0)
+    return (
+      <div
+        className={`${remainingTime === 0 ? 'animate-pulse text-red-500' : ''}`}
+      >
+        {toDurationString(remainingTime)}
+      </div>
+    )
   } else {
     return <div className="text-center">—</div>
   }
