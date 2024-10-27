@@ -2,30 +2,21 @@ import prisma from '../../app/client'
 import { Prisma } from '@prisma/client'
 
 const settingService = {
-  create: async (newValues: Omit<Prisma.SettingsCreateInput, 'id'>) => {
-    const newSettings = await prisma.settings.upsert({
-      where: { id: 1 },
-      update: newValues,
-      create: newValues,
-      select: {
-        maxDeathTimer: true,
-        killTimeCredit: true,
-        recruitTimeCredit: true,
-        startingTimer: true,
-      },
+  create: async (newValues: Prisma.SettingsCreateInput) => {
+    const newSettings = await prisma.settings.create({
+      data: { id: 1, ...newValues },
     })
     return newSettings
   },
-  upsert: async (newValues: Omit<Prisma.SettingsUpdateInput, 'id'>) => {
+  update: async (newValues: Prisma.SettingsUpdateInput) => {
     const newSettings = await prisma.settings.update({
       where: { id: 1 },
+      data: newValues,
       select: {
         maxDeathTimer: true,
         killTimeCredit: true,
         recruitTimeCredit: true,
-        startingTimer: true,
       },
-      data: newValues,
     })
     return newSettings
   },
