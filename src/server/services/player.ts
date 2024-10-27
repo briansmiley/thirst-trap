@@ -53,8 +53,13 @@ const playerService = {
     await prisma.player.delete({ where: { playerId } })
   },
   get: async (playerId: string) => {
-    const player = await prisma.player.findUnique({
-      where: { playerId },
+    const player = await prisma.player.findFirst({
+      where: {
+        playerId: {
+          equals: playerId,
+          mode: 'insensitive',
+        },
+      },
       select: selects,
     })
     return player
