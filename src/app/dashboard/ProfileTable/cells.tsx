@@ -4,6 +4,8 @@ import { Player } from '@/app/types'
 import { Badge } from '@/components/ui/badge'
 import { ClockIcon } from 'lucide-react'
 import { toDurationString } from '@/utils/timeUtils'
+import Link from 'next/link'
+import { useState } from 'react'
 
 export function PictureHeader({
   column,
@@ -12,12 +14,29 @@ export function PictureHeader({
 }
 
 export function PictureCell({ row }: CellContext<Player, Player['picture']>) {
+  const [showZoomed, setShowZoomed] = useState(false)
+
   return (
-    <img
-      alt="picture"
-      className="h-12 w-12 object-cover"
-      src={row.original.picture ?? ''}
-    />
+    <>
+      {showZoomed && (
+        <div
+          className="fixed inset-0 flex h-[100dvh] w-[100dvw] items-center justify-center"
+          onClick={() => setShowZoomed(false)}
+        >
+          <img
+            alt="picture"
+            className="w-[95%] object-cover"
+            src={row.original.picture ?? ''}
+          />
+        </div>
+      )}
+      <img
+        alt="picture"
+        onClick={() => setShowZoomed(true)}
+        className="h-12 w-12 object-cover"
+        src={row.original.picture ?? ''}
+      />
+    </>
   )
 }
 
@@ -26,7 +45,14 @@ export function NameHeader({ column }: HeaderContext<Player, Player['name']>) {
 }
 
 export function NameCell({ row }: CellContext<Player, Player['name']>) {
-  return <div>{row.original.name}</div>
+  return (
+    <Link
+      className="text-cyan-500 underline"
+      href={`/profile/${row.original.playerId}`}
+    >
+      {row.original.name}
+    </Link>
+  )
 }
 
 export function FactionHeader({
