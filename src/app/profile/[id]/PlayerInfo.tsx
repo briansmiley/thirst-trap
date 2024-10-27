@@ -28,12 +28,13 @@ export default function PlayerInfo(props: Player) {
   const [msLeft, setMsLeft] = useState(
     Math.max(props.expirationTime.getTime() - Date.now(), 0)
   )
-
+  const hasExpiration =
+    playerData.faction === 'VAMPIRE' || playerData.faction === 'JACKAL'
   useEffect(() => {
     let interval: NodeJS.Timeout
     if (!playerData.isPaused) {
       interval = setInterval(() => {
-        setMsLeft((p) => p - 1000)
+        setMsLeft((p) => Math.max(p - 1000, 0))
       }, 1000)
     }
     return () => clearInterval(interval)
@@ -212,9 +213,16 @@ export default function PlayerInfo(props: Player) {
           <PauseIcon className="!size-8" />
         )}
       </Button>
-      <div className="text-center text-xl">
-        Expires: {toDurationString(msLeft)}
-      </div>
+      {hasExpiration && (
+        <div className="text-center text-xl">
+          Expires:{' '}
+          {msLeft === 0 ? (
+            <span className="animate-pulse text-red-500">0:00</span>
+          ) : (
+            toDurationString(msLeft)
+          )}
+        </div>
+      )}
     </div>
   )
 }
