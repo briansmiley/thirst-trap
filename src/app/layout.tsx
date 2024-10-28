@@ -6,6 +6,7 @@ import './globals.css'
 import playerService from '@/server/services/player'
 import settingService from '@/server/services/setting'
 import { AppStoreProvider } from '@/lib/stores/AppStoreProvider'
+import StoreUpdater from '@/lib/stores/StoreUpdater'
 import Navbar from '@/components/Navbar'
 import QrScanner from '@/components/QrScanner'
 
@@ -60,6 +61,7 @@ export default async function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="dark">
           <AppStoreProvider initProps={initProps}>
+            <StoreUpdater />
             <Navbar />
             <QrScanner />
             {children}
