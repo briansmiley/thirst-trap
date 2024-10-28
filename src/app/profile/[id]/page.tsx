@@ -1,24 +1,16 @@
-import playerService from '@/server/services/player'
-
+'use client'
+import { useAppStore } from '@/lib/stores/AppStoreProvider'
 import NewProfileForm from './NewProfileForm'
 import PlayerInfo from './PlayerInfo'
 
-async function getPlayerData(id: string) {
-  'use server'
-  return await playerService.get(id)
-}
+export default function ProfilePage({ params }: { params: { id: string } }) {
+  const { player } = useAppStore((state) => ({
+    player: state.players.find((p) => p.playerId === params.id),
+  }))
 
-export default async function ProfilePage({
-  params,
-}: {
-  params: { id: string }
-}) {
-  const { id } = await params
-  const playerData = await getPlayerData(id)
-
-  return playerData ? (
-    <PlayerInfo {...playerData} />
+  return player ? (
+    <PlayerInfo playerData={player} />
   ) : (
-    <NewProfileForm id={id} />
+    <NewProfileForm id={params.id} />
   )
 }

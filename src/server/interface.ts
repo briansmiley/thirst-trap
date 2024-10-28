@@ -14,21 +14,16 @@ export interface DefaultServerToClientEvents {
 export interface ServerToClientEvents extends DefaultServerToClientEvents {
   addPlayer: (player: Player) => void
   updatePlayer: (player: Partial<Player> & Pick<Player, 'playerId'>) => void
-  pausePlayer: (
-    player: Pick<
-      Player,
-      'playerId' | 'isPaused' | 'expirationTime' | 'pausedAt'
-    >
+  updateAllPlayers: (
+    players: Partial<Player> & Pick<Player, 'playerId'>[]
   ) => void
-  resumePlayer: (
-    player: Pick<
-      Player,
-      'playerId' | 'isPaused' | 'expirationTime' | 'pausedAt'
-    >
-  ) => void
-  recruitPlayer: (
-    player: Omit<Player, 'picture' | 'kills' | 'recruits'>
-  ) => void
+  // pausePlayer: (player: Omit<Player, 'picture'>) => void
+  // pauseAll: (players: Omit<Player, 'picture'>[]) => void
+  // resumePlayer: (player: Omit<Player, 'picture'>) => void
+  // resumeAll: (players: Omit<Player, 'picture'>[]) => void
+  // recruitPlayer: (
+  //   player: Omit<Player, 'picture' | 'kills' | 'recruits'>
+  // ) => void
   updateSettings: (settings: Partial<Settings>) => void
 }
 
@@ -45,12 +40,36 @@ export interface ClientToServerEvents {
     playerId: string,
     callback: (response: { success: boolean; message?: string }) => void
   ) => void
+  pauseAll: (
+    callback: (response: { success: boolean; message?: string }) => void
+  ) => void
   resumePlayer: (
     playerId: string,
     callback: (response: { success: boolean; message?: string }) => void
   ) => void
+  resumeAll: (
+    callback: (response: { success: boolean; message?: string }) => void
+  ) => void
   recruitPlayer: (
     player: Pick<Player, 'playerId' | 'faction'>,
+    callback: (response: { success: boolean; message?: string }) => void
+  ) => void
+  grantTime: (
+    playerId: Player['playerId'],
+    minutes: number,
+    callback: (response: { success: boolean; message?: string }) => void
+  ) => void
+  takeTime: (
+    playerId: Player['playerId'],
+    minutes: number,
+    callback: (response: { success: boolean; message?: string }) => void
+  ) => void
+  grantTimeToAll: (
+    minutes: number,
+    callback: (response: { success: boolean; message?: string }) => void
+  ) => void
+  takeTimeFromAll: (
+    minutes: number,
     callback: (response: { success: boolean; message?: string }) => void
   ) => void
   updateSettings: (
