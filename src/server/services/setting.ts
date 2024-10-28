@@ -1,33 +1,39 @@
-import prisma from "../../app/client";
-import { Prisma } from "@prisma/client";
+import prisma from '../../app/client'
+import { Prisma } from '@prisma/client'
 
 const settingService = {
-  upsert: async (newValues: Prisma.SettingsCreateInput) => {
-    const newSettings = await prisma.settings.upsert({
+  create: async (newValues: Prisma.SettingsCreateInput) => {
+    const newSettings = await prisma.settings.create({
+      data: { id: 1, ...newValues },
+    })
+    return newSettings
+  },
+  update: async (newValues: Prisma.SettingsUpdateInput) => {
+    const newSettings = await prisma.settings.update({
       where: { id: 1 },
-      update: newValues,
-      create: newValues,
+      data: newValues,
       select: {
         maxDeathTimer: true,
         killTimeCredit: true,
-        recruitTimeCredit: true
-      }
-    });
-    return newSettings;
+        recruitTimeCredit: true,
+      },
+    })
+    return newSettings
   },
   get: async () => {
     const settings = await prisma.settings.findFirst({
       select: {
         maxDeathTimer: true,
         killTimeCredit: true,
-        recruitTimeCredit: true
-      }
-    });
+        recruitTimeCredit: true,
+        startingTimer: true,
+      },
+    })
     if (!settings) {
-      throw new Error("Settings not found");
+      throw new Error('Settings not found')
     }
-    return settings;
-  }
-};
+    return settings
+  },
+}
 
-export default settingService;
+export default settingService

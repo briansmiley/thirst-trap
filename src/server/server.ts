@@ -2,7 +2,11 @@ import { createServer } from 'node:http'
 import next from 'next'
 import { Server } from 'socket.io'
 import playerService from './services/player'
-import { ClientToServerEvents, ServerToClientEvents } from './interface'
+import settingService from './services/setting'
+import {
+  type ClientToServerEvents,
+  type ServerToClientEvents,
+} from './interface'
 import { loggable } from './utils'
 
 const dev = process.env.NODE_ENV !== 'production'
@@ -81,6 +85,35 @@ app.prepare().then(() => {
         .then((player) => {
           console.log('EMIT resumePlayer:', loggable(player))
           io.emit('resumePlayer', player)
+          callback({ success: true })
+        })
+        .catch((err) => {
+          console.error(err)
+          callback({ success: false, message: err.message })
+        })
+    })
+
+    socket.on('recruitPlayer', ({ playerId, faction }, callback) => {
+      console.log('ON recruitPlayer:', socket.id, playerId, faction)
+      playerService
+        .recruit(playerId, faction)
+        .then((player) => {
+          console.log('EMIT recruitPlayer:', loggable(player))
+          io.emit('recruitPlayer', player)
+          callback({ success: true })
+        })
+        .catch((err) => {
+          console.error(err)
+          callback({ success: false, message: err.message })
+        })
+    })
+
+    socket.on('updateSettings', (settings, callback) => {
+      console.log('ON updateSettings:', socket.id, settings)
+      settingService
+        .update(settings)
+        .then((newSettings) => {
+          io.emit('updateSettings', newSettings)
           callback({ success: true })
         })
         .catch((err) => {

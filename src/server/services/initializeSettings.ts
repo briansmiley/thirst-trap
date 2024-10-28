@@ -1,22 +1,24 @@
 // run with: tsx src/server/services/initializeSettings.ts
 
-import settingService from "./setting";
+import { Settings } from '@/app/types'
+import settingService from './setting'
 
-const settings = {
+const settings: Settings = {
   maxDeathTimer: 45,
   killTimeCredit: 30,
-  recruitTimeCredit: 15
-};
+  recruitTimeCredit: 15,
+  startingTimer: 30,
+}
 
 async function initializeSettings() {
   try {
-    const result = await settingService.upsert(settings);
-    console.log(result);
+    const result = await settingService.create(settings)
+    console.log(result)
   } catch (error) {
-    console.error(`Error upserting settings: `, error);
+    console.error(`Error upserting settings: `, error)
   }
 }
 
-initializeSettings().catch(error => {
-  console.error("Failed to initialize settings:", error);
-});
+initializeSettings().catch((error) => {
+  console.error('Failed to initialize settings:', error)
+})

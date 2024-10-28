@@ -1,53 +1,45 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
+import { useState } from 'react'
 import {
   Table,
   TableBody,
   TableHead,
   TableHeader,
   TableRow,
-  TableCell
-} from "@/components/ui/table";
+  TableCell,
+} from '@/components/ui/table'
 import {
   useReactTable,
   flexRender,
-  getCoreRowModel
-} from "@tanstack/react-table";
-import columns from "@/app/dashboard/profile-table/columns";
-import { type Player } from "@/app/types";
+  getCoreRowModel,
+} from '@tanstack/react-table'
+import columns from '@/app/dashboard/ProfileTable/columns'
+import { type Player } from '@/app/types'
 
-import { socket } from "@/socket";
-import ProfileTableRow from "@/app/dashboard/profile-table/profile-table-row";
+import { socket, useSocketSubscription } from '@/socket/client'
+import ProfileTableRow from '@/app/dashboard/ProfileTable/ProfileTableRow'
 
 export default function ProfileTable(props: { data: Player[] }) {
-  const [data, setData] = useState(props.data);
+  const [data, setData] = useState(props.data)
 
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel()
-  });
+    getCoreRowModel: getCoreRowModel(),
+  })
 
-  useEffect(() => {
-    function onAddPlayer(player: Player) {
-      console.log("onAddPlayer");
-      setData(data => [...data, player]);
-    }
-
-    socket.on("addPlayer", onAddPlayer);
-
-    return () => {
-      socket.off("addPlayer", onAddPlayer);
-    };
-  }, []);
+  useSocketSubscription('addPlayer', (player: Player) => {
+    console.log('ON addPlayer:', socket.id, player)
+    setData((data) => [...data, player])
+  })
 
   return (
     <Table>
       <TableHeader>
-        {table.getHeaderGroups().map(headerGroup => (
+        {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>
-            {headerGroup.headers.map(header => (
+            {headerGroup.headers.map((header) => (
               <TableHead key={header.id}>
                 {header.isPlaceholder
                   ? null
@@ -64,7 +56,7 @@ export default function ProfileTable(props: { data: Player[] }) {
         {table.getRowModel().rows?.length ? (
           table
             .getRowModel()
-            .rows.map(row => <ProfileTableRow key={row.id} row={row} />)
+            .rows.map((row) => <ProfileTableRow key={row.id} row={row} />)
         ) : (
           <TableRow className="block">
             <TableCell className="h-24 justify-center">No results.</TableCell>
@@ -72,5 +64,5 @@ export default function ProfileTable(props: { data: Player[] }) {
         )}
       </TableBody>
     </Table>
-  );
+  )
 }
