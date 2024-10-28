@@ -226,10 +226,14 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
                   <MinusIcon />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="flex items-center gap-2">
+              <PopoverContent
+                align="end"
+                className="flex w-fit items-center gap-2"
+              >
                 <Input
                   type="number"
                   value={timeTake}
+                  className="w-16"
                   onChange={(e) => setTimeTake(parseInt(e.target.value))}
                 />
                 <Button variant="outline" size="icon" onClick={takeTime}>
@@ -251,9 +255,13 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
                   <PlusIcon />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="flex items-center gap-2">
+              <PopoverContent
+                align="start"
+                className="flex w-fit items-center gap-2"
+              >
                 <Input
                   type="number"
+                  className="w-16"
                   value={timeGrant}
                   onChange={(e) => setTimeGrant(parseInt(e.target.value))}
                 />
