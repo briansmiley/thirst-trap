@@ -64,9 +64,14 @@ const playerService = {
     })
     return player
   },
-  getAll: async () => {
-    const players = await prisma.player.findMany({ select: selects })
-    return players
+  getAll: async <K extends keyof Player>(keys?: K[]) => {
+    const keySelects = keys
+      ? Object.fromEntries(keys.map((key) => [key, true]))
+      : selects
+    const players = await prisma.player.findMany({
+      select: keySelects,
+    })
+    return players as K[] extends undefined ? Player[] : Pick<Player, K>[]
   },
   pauseAt: async (playerId: string, pauseAt: Date) => {
     const player = await prisma.player.update({
