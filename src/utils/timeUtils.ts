@@ -15,3 +15,7 @@ export function toDurationString(durationOrMs: Duration | number) {
     typeof durationOrMs === 'number' ? toDuration(durationOrMs) : durationOrMs
   return `${duration.minutes}:${String(duration.seconds).padStart(2, '0')}`
 }
+
+export function calcMsLeft(expirationTime: Date) {
+  return Math.max(expirationTime.getTime() - Date.now(), 0)
+}

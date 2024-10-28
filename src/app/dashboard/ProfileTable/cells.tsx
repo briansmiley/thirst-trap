@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { HeaderContext, type CellContext } from '@tanstack/react-table'
 import { Player } from '@/app/types'
 import { Badge } from '@/components/ui/badge'
@@ -9,7 +10,7 @@ import {
   PlayIcon,
   SkullIcon,
 } from 'lucide-react'
-import { toDurationString } from '@/utils/timeUtils'
+import { calcMsLeft, toDurationString } from '@/utils/timeUtils'
 import { cn } from '@/lib/utils'
 
 export function PictureNameHeader({
@@ -118,20 +119,35 @@ export function TimerHeader({
 export function TimerCell({
   row,
 }: CellContext<Player, Player['expirationTime']>) {
-  const { isPaused, expirationTime } = row.original
+  const [msLeft, setMsLeft] = useState(calcMsLeft(row.original.expirationTime))
+  const hasExpiration =
+    row.original.faction === 'VAMPIRE' || row.original.faction === 'JACKAL'
 
-  if (isPaused && expirationTime) {
-    // TODO: calculate remaining time when paused? show blinking
-    const remainingTime = Math.max(expirationTime.getTime() - Date.now(), 0)
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    setMsLeft(calcMsLeft(row.original.expirationTime))
+    if (!row.original.isPaused) {
+      interval = setInterval(() => {
+        setMsLeft(calcMsLeft(row.original.expirationTime))
+      }, 1000)
+    }
+    return () => clearInterval(interval)
+  }, [row.original.isPaused, row.original.expirationTime])
+
+  if (hasExpiration) {
     return (
       <div
         suppressHydrationWarning
         className={cn(
           'text-right tabular-nums',
-          remainingTime === 0 ? 'animate-pulse text-red-500' : ''
+          msLeft === 0 ? 'animate-pulse text-red-500' : ''
         )}
       >
-        {toDurationString(remainingTime)}
+        {msLeft === 0 ? (
+          <span className="animate-pulse text-red-500">0:00</span>
+        ) : (
+          toDurationString(msLeft)
+        )}
       </div>
     )
   } else {

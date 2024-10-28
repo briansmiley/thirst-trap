@@ -10,7 +10,7 @@ import {
 } from 'lucide-react'
 import { socket } from '@/socket/client'
 import { Faction, Player } from '@/app/types'
-import { toDurationString } from '@/utils/timeUtils'
+import { calcMsLeft, toDurationString } from '@/utils/timeUtils'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -22,10 +22,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Badge } from '@/components/ui/badge'
-
-const calcMsLeft = (expirationTime: Date) => {
-  return Math.max(expirationTime.getTime() - Date.now(), 0)
-}
 
 type PlayerInfoProps = {
   playerData: Player
