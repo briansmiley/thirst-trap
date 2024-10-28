@@ -4,6 +4,7 @@ import { Satisfy } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import './globals.css'
 import playerService from '@/server/services/player'
+import settingService from '@/server/services/setting'
 import { AppStoreProvider } from '@/lib/stores/AppStoreProvider'
 import Navbar from '@/components/Navbar'
 import QrScanner from '@/components/QrScanner'
@@ -37,6 +38,7 @@ async function getInitProps() {
   'use server'
   return {
     players: await playerService.getAll(),
+    settings: await settingService.get(),
   }
 }
 
