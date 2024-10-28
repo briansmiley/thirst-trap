@@ -23,20 +23,20 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Badge } from '@/components/ui/badge'
 
+const calcMsLeft = (expirationTime: Date) => {
+  return Math.max(expirationTime.getTime() - Date.now(), 0)
+}
 export default function PlayerInfo(props: Player) {
   const [playerData, setPlayerData] = useState(props)
-  const [msLeft, setMsLeft] = useState(
-    Math.max(props.expirationTime.getTime() - Date.now(), 0)
-  )
+  const [msLeft, setMsLeft] = useState(calcMsLeft(props.expirationTime))
   const hasExpiration =
     playerData.faction === 'VAMPIRE' || playerData.faction === 'JACKAL'
   useEffect(() => {
     let interval: NodeJS.Timeout
+    setMsLeft(calcMsLeft(playerData.expirationTime))
     if (!playerData.isPaused) {
       interval = setInterval(() => {
-        setMsLeft((p) =>
-          Math.max(playerData.expirationTime.getTime() - Date.now(), 0)
-        )
+        setMsLeft(calcMsLeft(playerData.expirationTime))
       }, 1000)
     }
     return () => clearInterval(interval)
@@ -72,7 +72,6 @@ export default function PlayerInfo(props: Player) {
         pausedAt,
       })
       setPlayerData({ ...playerData, isPaused, expirationTime, pausedAt })
-      setMsLeft(Math.max(expirationTime.getTime() - Date.now(), 0))
     }
   })
 
