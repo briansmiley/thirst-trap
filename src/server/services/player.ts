@@ -249,13 +249,17 @@ const playerService = {
     const prevExpirationTime =
       player.expirationTime < new Date() ? new Date() : player.expirationTime
     const newExpirationTime = new Date(
-      Math.min(prevExpirationTime.getTime() + additionalTime, maxTimer)
+      Math.min(
+        prevExpirationTime.getTime() + additionalTime,
+        new Date().getTime() + maxTimer
+      )
     )
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
       data: { expirationTime: newExpirationTime },
       select: baseSelects,
     })
+    console.log('GRANT TIME:', updatedPlayer)
     return updatedPlayer
   },
   creditKill: async (playerId: string) => {
@@ -275,7 +279,7 @@ const playerService = {
       data: {
         kills: { increment: 1 },
       },
-      select: selects,
+      select: baseSelects,
     })
     return updatedPlayer
   },
