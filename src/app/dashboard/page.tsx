@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/table'
 import {
   type SortingState,
+  type ColumnFiltersState,
   getFilteredRowModel,
   getSortedRowModel,
   useReactTable,
@@ -26,14 +27,20 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
-import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { ArrowDownIcon, ArrowUpIcon, ChevronDownIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export default function ProfileTable() {
   const { players } = useAppStore(({ players }) => ({ players }))
   const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 
   const table = useReactTable({
     data: players,
@@ -42,8 +49,10 @@ export default function ProfileTable() {
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
     state: {
       sorting,
+      columnFilters,
     },
   })
 
@@ -138,6 +147,58 @@ export default function ProfileTable() {
                 )
               ) : null}
             </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">
+              Filter:{' '}
+              {table.getColumn('faction')?.getFilterValue() ? (
+                <Badge
+                  className="capitalize"
+                  variant={
+                    String(
+                      table.getColumn('faction')?.getFilterValue()
+                    ).toLowerCase() as
+                      | 'neutral'
+                      | 'vampire'
+                      | 'jackal'
+                      | 'ghost'
+                  }
+                >
+                  {String(
+                    table.getColumn('faction')?.getFilterValue()
+                  ).toLowerCase()}
+                </Badge>
+              ) : (
+                <span className="font-extrabold">None</span>
+              )}
+              <ChevronDownIcon />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-32">
+            <DropdownMenuLabel>Faction</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuRadioGroup
+              value={table.getColumn('faction')?.getFilterValue() as string}
+              onValueChange={(value) => {
+                table.getColumn('faction')?.setFilterValue(value)
+              }}
+            >
+              <DropdownMenuRadioItem value="">None</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="NEUTRAL">
+                <Badge variant="neutral">Neutral</Badge>
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="VAMPIRE">
+                <Badge variant="vampire">Vampire</Badge>
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="JACKAL">
+                <Badge variant="jackal">Jackal</Badge>
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="GHOST">
+                <Badge variant="ghost">Ghost</Badge>
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

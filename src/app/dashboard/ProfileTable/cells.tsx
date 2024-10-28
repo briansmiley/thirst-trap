@@ -62,7 +62,20 @@ export function FactionHeader({
 }
 
 export function FactionCell({ row }: CellContext<Player, Player['faction']>) {
-  return <Badge>{row.original.faction}</Badge>
+  return (
+    <Badge
+      className="capitalize"
+      variant={
+        row.original.faction.toLowerCase() as
+          | 'neutral'
+          | 'vampire'
+          | 'jackal'
+          | 'ghost'
+      }
+    >
+      {row.original.faction.toLowerCase()}
+    </Badge>
+  )
 }
 
 export function KillsHeader({
