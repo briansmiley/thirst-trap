@@ -19,7 +19,16 @@ const selects: PlayerSelect = {
   kills: true,
   recruits: true,
 }
-
+const baseSelects = {
+  name: true,
+  playerId: true,
+  faction: true,
+  isPaused: true,
+  pausedAt: true,
+  expirationTime: true,
+  kills: true,
+  recruits: true,
+}
 const playerService = {
   create: async (
     newPlayer: Omit<Prisma.PlayerCreateInput, 'pausedAt' | 'expirationTime'>
@@ -77,7 +86,7 @@ const playerService = {
     const player = await prisma.player.update({
       where: { playerId },
       data: { isPaused: true, pausedAt: pauseAt },
-      select: selects,
+      select: baseSelects,
     })
     return player
   },
@@ -119,7 +128,7 @@ const playerService = {
         isPaused: false,
         expirationTime: newExpirationTime,
       },
-      select: selects,
+      select: baseSelects,
     })
     return updatedPlayer
   },
@@ -143,7 +152,7 @@ const playerService = {
             isPaused: false,
             expirationTime: newExpirationTime,
           },
-          select: selects,
+          select: baseSelects,
         })
       })
     )
@@ -158,7 +167,7 @@ const playerService = {
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
       data: { faction, expirationTime: startingExpirationDate },
-      select: selects,
+      select: baseSelects,
     })
     return updatedPlayer
   },
@@ -208,21 +217,21 @@ const playerService = {
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
       data: { expirationTime: newExpirationTime },
-      select: selects,
+      select: baseSelects,
     })
     return updatedPlayer
   },
-  addTimeToAll: async (minutes: number) => {
+  grantTimeToAll: async (minutes: number) => {
     const players = await prisma.player.findMany({
       where: { faction: { in: ['JACKAL', 'VAMPIRE'] } },
     })
     const ms = minutes * 60000
     const updatedPlayers = await Promise.all(
-      players.map((player) => playerService.addTime(player.playerId, ms))
+      players.map((player) => playerService.grantTime(player.playerId, ms))
     )
     return updatedPlayers
   },
-  addTime: async (playerId: string, additionalMinutes: number) => {
+  grantTime: async (playerId: string, additionalMinutes: number) => {
     const player = await prisma.player.findUnique({
       where: { playerId },
       select: { expirationTime: true },
@@ -240,13 +249,17 @@ const playerService = {
     const prevExpirationTime =
       player.expirationTime < new Date() ? new Date() : player.expirationTime
     const newExpirationTime = new Date(
-      Math.min(prevExpirationTime.getTime() + additionalTime, maxTimer)
+      Math.min(
+        prevExpirationTime.getTime() + additionalTime,
+        new Date().getTime() + maxTimer
+      )
     )
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
       data: { expirationTime: newExpirationTime },
-      select: selects,
+      select: baseSelects,
     })
+    console.log('GRANT TIME:', updatedPlayer)
     return updatedPlayer
   },
   creditKill: async (playerId: string) => {
@@ -259,14 +272,14 @@ const playerService = {
     }
     const killTimeCredit = (await settingService.get()).killTimeCredit
     if (player.expirationTime) {
-      await playerService.addTime(playerId, killTimeCredit)
+      await playerService.grantTime(playerId, killTimeCredit)
     }
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
       data: {
         kills: { increment: 1 },
       },
-      select: selects,
+      select: baseSelects,
     })
     return updatedPlayer
   },
@@ -283,7 +296,7 @@ const playerService = {
     }
     const recruitTimeCredit = (await settingService.get()).recruitTimeCredit
     if (player.expirationTime) {
-      await playerService.addTime(playerId, recruitTimeCredit)
+      await playerService.grantTime(playerId, recruitTimeCredit)
     }
     const updatedPlayer = await prisma.player.update({
       where: { playerId },

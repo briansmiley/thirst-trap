@@ -6,6 +6,9 @@ export interface PlayerSlice {
   players: Player[]
   addPlayer: (player: Player) => void
   updatePlayer: (player: Pick<Player, 'playerId'> & Partial<Player>) => void
+  updateAllPlayers: (
+    players: (Pick<Player, 'playerId'> & Partial<Player>)[]
+  ) => void
 }
 
 export const createPlayerSlice: (
@@ -39,6 +42,28 @@ export const createPlayerSlice: (
         players: players.map((p) =>
           p.playerId === player.playerId ? { ...p, ...player } : p
         ),
+      })
+    },
+    updateAllPlayers: (updatedPlayers) => {
+      const { players } = get()
+      set({
+        players: players.map((p) => {
+          const updatedPlayer = updatedPlayers.find(
+            (up) => up.playerId === p.playerId
+          )
+          if (updatedPlayer) {
+            if (updatedPlayer.pausedAt) {
+              updatedPlayer.pausedAt = new Date(updatedPlayer.pausedAt)
+            }
+            if (updatedPlayer.expirationTime) {
+              updatedPlayer.expirationTime = new Date(
+                updatedPlayer.expirationTime
+              )
+            }
+            return { ...p, ...updatedPlayer }
+          }
+          return p
+        }),
       })
     },
   })

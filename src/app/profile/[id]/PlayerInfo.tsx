@@ -8,7 +8,7 @@ import {
   PlayIcon,
   PlusIcon,
 } from 'lucide-react'
-import { socket, useSocketSubscription } from '@/socket/client'
+import { socket } from '@/socket/client'
 import { Faction, Player } from '@/app/types'
 import { toDurationString } from '@/utils/timeUtils'
 import { Button } from '@/components/ui/button'
@@ -26,9 +26,12 @@ import { Badge } from '@/components/ui/badge'
 const calcMsLeft = (expirationTime: Date) => {
   return Math.max(expirationTime.getTime() - Date.now(), 0)
 }
-export default function PlayerInfo(props: Player) {
-  const [playerData, setPlayerData] = useState(props)
-  const [msLeft, setMsLeft] = useState(calcMsLeft(props.expirationTime))
+
+type PlayerInfoProps = {
+  playerData: Player
+}
+export default function PlayerInfo({ playerData }: PlayerInfoProps) {
+  const [msLeft, setMsLeft] = useState(calcMsLeft(playerData.expirationTime))
   const hasExpiration =
     playerData.faction === 'VAMPIRE' || playerData.faction === 'JACKAL'
   useEffect(() => {
@@ -42,56 +45,14 @@ export default function PlayerInfo(props: Player) {
     return () => clearInterval(interval)
   }, [playerData.isPaused, playerData.expirationTime])
 
-  useSocketSubscription('updatePlayer', ({ playerId, ...changes }) => {
-    if (playerId === props.playerId) {
-      setPlayerData({ ...playerData, ...changes })
-    }
-  })
-  useSocketSubscription('pausePlayer', ({ playerId, ...changes }) => {
-    if (playerId === props.playerId) {
-      const isPaused = changes.isPaused
-      const expirationTime = new Date(changes.expirationTime)
-      const pausedAt = new Date(changes.pausedAt)
-      console.log('ON pausePlayer:', socket.id, {
-        isPaused,
-        expirationTime,
-        pausedAt,
-      })
-      setPlayerData({ ...playerData, isPaused, expirationTime, pausedAt })
-      setMsLeft(expirationTime.getTime() - pausedAt.getTime())
-    }
-  })
-  useSocketSubscription('resumePlayer', ({ playerId, ...changes }) => {
-    if (playerId === props.playerId) {
-      const isPaused = changes.isPaused
-      const expirationTime = new Date(changes.expirationTime)
-      const pausedAt = new Date(changes.pausedAt)
-      console.log('ON resumePlayer:', socket.id, {
-        isPaused,
-        expirationTime,
-        pausedAt,
-      })
-      setPlayerData({ ...playerData, isPaused, expirationTime, pausedAt })
-    }
-  })
-
-  useSocketSubscription('recruitPlayer', ({ playerId, ...changes }) => {
-    if (playerId === props.playerId) {
-      const expirationTime = new Date(changes.expirationTime)
-      const pausedAt = new Date(changes.pausedAt)
-      console.log('ON recruitPlayer:', socket.id, {
-        expirationTime,
-        pausedAt,
-      })
-      setPlayerData({ ...playerData, ...changes, expirationTime, pausedAt })
-    }
-  })
-
   const handleFactionChange = (faction: Faction) => {
-    console.log('EMIT recruitPlayer:', { playerId: props.playerId, faction })
+    console.log('EMIT recruitPlayer:', {
+      playerId: playerData.playerId,
+      faction,
+    })
     socket.emit(
       'recruitPlayer',
-      { playerId: props.playerId, faction },
+      { playerId: playerData.playerId, faction },
       (res) => {
         console.log('ACK updatePlayer:', res)
       }
@@ -101,12 +62,12 @@ export default function PlayerInfo(props: Player) {
   const handleCountChange =
     (type: 'kills' | 'recruits') => (change: number) => {
       console.log('EMIT updatePlayer:', {
-        playerId: props.playerId,
+        playerId: playerData.playerId,
         [type]: playerData[type] + change,
       })
       socket.emit(
         'updatePlayer',
-        { playerId: props.playerId, [type]: playerData[type] + change },
+        { playerId: playerData.playerId, [type]: playerData[type] + change },
         (res) => {
           console.log('ACK updatePlayer:', res)
         }
@@ -115,11 +76,11 @@ export default function PlayerInfo(props: Player) {
 
   const pauseOrResume = () => {
     if (playerData.isPaused) {
-      socket.emit('resumePlayer', props.playerId, (res) => {
+      socket.emit('resumePlayer', playerData.playerId, (res) => {
         console.log('ACK updatePlayer:', res)
       })
     } else {
-      socket.emit('pausePlayer', props.playerId, (res) => {
+      socket.emit('pausePlayer', playerData.playerId, (res) => {
         console.log('ACK pausePlayer:', res)
       })
     }
@@ -229,7 +190,7 @@ export default function PlayerInfo(props: Player) {
               <PauseIcon className="!size-8" />
             )}
           </Button>
-          <div className="text-center text-xl">
+          <div className="text-center text-xl" suppressHydrationWarning>
             Expires:{' '}
             {msLeft === 0 ? (
               <span className="animate-pulse text-red-500">0:00</span>

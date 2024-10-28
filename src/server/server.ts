@@ -68,8 +68,22 @@ app.prepare().then(() => {
       playerService
         .pause(playerId)
         .then((player) => {
-          io.emit('pausePlayer', player)
-          console.log('EMIT pausePlayer:', loggable(player))
+          io.emit('updatePlayer', player)
+          console.log('EMIT updatePlayer (pause):', loggable(player))
+          callback({ success: true })
+        })
+        .catch((err) => {
+          console.error(err)
+          callback({ success: false, message: err.message })
+        })
+    })
+    socket.on('pauseAll', (callback) => {
+      console.log('ON pauseAll:', socket.id)
+      playerService
+        .pauseAll()
+        .then((players) => {
+          io.emit('updateAllPlayers', players)
+          console.log('EMIT updateAllPlayers (pause)')
           callback({ success: true })
         })
         .catch((err) => {
@@ -83,8 +97,8 @@ app.prepare().then(() => {
       playerService
         .resume(playerId)
         .then((player) => {
-          console.log('EMIT resumePlayer:', loggable(player))
-          io.emit('resumePlayer', player)
+          console.log('EMIT updatePlayer (resume):', loggable(player))
+          io.emit('updatePlayer', player)
           callback({ success: true })
         })
         .catch((err) => {
@@ -92,14 +106,21 @@ app.prepare().then(() => {
           callback({ success: false, message: err.message })
         })
     })
-
+    socket.on('resumeAll', (callback) => {
+      console.log('ON resumeAll:', socket.id)
+      playerService.resumeAll().then((players) => {
+        io.emit('updateAllPlayers', players)
+        console.log('EMIT updateAllPlayers (resume)')
+        callback({ success: true })
+      })
+    })
     socket.on('recruitPlayer', ({ playerId, faction }, callback) => {
       console.log('ON recruitPlayer:', socket.id, playerId, faction)
       playerService
         .recruit(playerId, faction)
         .then((player) => {
-          console.log('EMIT recruitPlayer:', loggable(player))
-          io.emit('recruitPlayer', player)
+          console.log('EMIT updatePlayer (recruit):', loggable(player))
+          io.emit('updatePlayer', player)
           callback({ success: true })
         })
         .catch((err) => {
@@ -107,7 +128,38 @@ app.prepare().then(() => {
           callback({ success: false, message: err.message })
         })
     })
-
+    socket.on('grantTime', (playerId, minutes, callback) => {
+      console.log('ON grantTime:', socket.id, playerId, minutes)
+      playerService.grantTime(playerId, minutes).then((player) => {
+        io.emit('updatePlayer', player)
+        console.log('EMIT updatePlayer (grantTime):', loggable(player))
+        callback({ success: true })
+      })
+    })
+    socket.on('grantTimeToAll', (minutes, callback) => {
+      console.log('ON grantTimeToAll:', socket.id, minutes)
+      playerService.grantTimeToAll(minutes).then((players) => {
+        io.emit('updateAllPlayers', players)
+        console.log('EMIT updateAllPlayers (grantTimeToAll)')
+        callback({ success: true })
+      })
+    })
+    socket.on('takeTime', (playerId, minutes, callback) => {
+      console.log('ON takeTime:', socket.id, playerId, minutes)
+      playerService.takeTime(playerId, minutes).then((player) => {
+        io.emit('updatePlayer', player)
+        console.log('EMIT updatePlayer (takeTime):', loggable(player))
+        callback({ success: true })
+      })
+    })
+    socket.on('takeTimeFromAll', (minutes, callback) => {
+      console.log('ON takeTimeFromAll:', socket.id, minutes)
+      playerService.takeTimeFromAll(minutes).then((players) => {
+        io.emit('updateAllPlayers', players)
+        console.log('EMIT updateAllPlayers (takeTimeFromAll)')
+        callback({ success: true })
+      })
+    })
     socket.on('updateSettings', (settings, callback) => {
       console.log('ON updateSettings:', socket.id, settings)
       settingService
