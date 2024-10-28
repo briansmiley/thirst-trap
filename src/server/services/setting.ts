@@ -16,6 +16,7 @@ const settingService = {
         maxDeathTimer: true,
         killTimeCredit: true,
         recruitTimeCredit: true,
+        startingTimer: true,
       },
     })
     return newSettings
