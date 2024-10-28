@@ -10,6 +10,8 @@ import {
   FactionCell,
   KillsHeader,
   KillsCell,
+  RecruitsCell,
+  RecruitsHeader,
   StatusHeader,
   StatusCell,
   TimerHeader,
@@ -35,11 +37,16 @@ const columns = [
     header: KillsHeader,
     cell: KillsCell,
   }),
+  columnHelper.accessor('recruits', {
+    header: RecruitsHeader,
+    cell: RecruitsCell,
+  }),
   columnHelper.accessor('isPaused', {
     header: StatusHeader,
     cell: StatusCell,
   }),
   columnHelper.accessor('expirationTime', {
+    sortingFn: 'datetime',
     header: TimerHeader,
     cell: TimerCell,
   }),
