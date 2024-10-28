@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "ts-node src/server/server.ts",
     "network": "HOSTNAME=\"$(ipconfig getifaddr en0)\" npm run dev -- -H \"$(ipconfig getifaddr en0)\"",
-    "build": "npx prisma generate && next build",
+    "build": "npm i && npx prisma generate && next build",
     "start": "NODE_ENV=production node src/server/server.js",
     "lint": "next lint"
   },
