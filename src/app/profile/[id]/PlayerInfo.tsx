@@ -102,9 +102,17 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline">
-            <Badge variant="outline">
-              {playerData.faction.charAt(0) +
-                playerData.faction.slice(1).toLowerCase()}
+            <Badge
+              className="capitalize"
+              variant={
+                playerData.faction.toLowerCase() as
+                  | 'neutral'
+                  | 'vampire'
+                  | 'jackal'
+                  | 'ghost'
+              }
+            >
+              {playerData.faction.toLowerCase()}
             </Badge>
             <ChevronDownIcon />
           </Button>
@@ -119,16 +127,16 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
             }}
           >
             <DropdownMenuRadioItem value="NEUTRAL">
-              <Badge variant="outline">Neutral</Badge>
+              <Badge variant="neutral">Neutral</Badge>
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="VAMPIRE">
-              <Badge variant="outline">Vampire</Badge>
+              <Badge variant="vampire">Vampire</Badge>
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="JACKAL">
-              <Badge variant="outline">Jackal</Badge>
+              <Badge variant="jackal">Jackal</Badge>
             </DropdownMenuRadioItem>
             <DropdownMenuRadioItem value="GHOST">
-              <Badge variant="outline">Ghost</Badge>
+              <Badge variant="ghost">Ghost</Badge>
             </DropdownMenuRadioItem>
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
