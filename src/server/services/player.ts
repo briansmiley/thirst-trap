@@ -180,9 +180,41 @@ const playerService = {
     })
     return killedPlayer
   },
+  takeTimeFromAll: async (minutes: number) => {
+    const players = await prisma.player.findMany({
+      where: { faction: { in: ['JACKAL', 'VAMPIRE'] } },
+    })
+    const ms = minutes * 60000
+    const updatedPlayers = await Promise.all(
+      players.map((player) => playerService.takeTime(player.playerId, ms))
+    )
+    return updatedPlayers
+  },
+  takeTime: async (playerId: string, minutes: number) => {
+    const deductionFloor = 5 * 60000
+    const deductionMs = minutes * 60000
+    const player = await prisma.player.findUnique({ where: { playerId } })
+    if (!player) {
+      throw new Error('Player not found')
+    }
+    const currentRemainingTime = player.expirationTime
+      ? player.expirationTime.getTime() - new Date().getTime()
+      : 0
+    const newRemainingTime = Math.max(
+      currentRemainingTime - deductionMs,
+      deductionFloor
+    )
+    const newExpirationTime = new Date(new Date().getTime() + newRemainingTime)
+    const updatedPlayer = await prisma.player.update({
+      where: { playerId },
+      data: { expirationTime: newExpirationTime },
+      select: selects,
+    })
+    return updatedPlayer
+  },
   addTimeToAll: async (minutes: number) => {
     const players = await prisma.player.findMany({
-      where: { faction: { not: 'GHOST' } },
+      where: { faction: { in: ['JACKAL', 'VAMPIRE'] } },
     })
     const ms = minutes * 60000
     const updatedPlayers = await Promise.all(
@@ -203,9 +235,12 @@ const playerService = {
     }
     const additionalTime = additionalMinutes * 60000 // Convert minutes to milliseconds
     const maxTimer = (await settingService.get()).maxDeathTimer
-    //set new expiration time to add on additional time but capped at maxTimer
+
+    //if they are expired, set prevExpirationTime to now so they actually get time
+    const prevExpirationTime =
+      player.expirationTime < new Date() ? new Date() : player.expirationTime
     const newExpirationTime = new Date(
-      Math.min(player.expirationTime.getTime() + additionalTime, maxTimer)
+      Math.min(prevExpirationTime.getTime() + additionalTime, maxTimer)
     )
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
