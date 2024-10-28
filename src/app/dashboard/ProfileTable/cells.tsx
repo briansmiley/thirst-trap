@@ -119,16 +119,16 @@ export function TimerHeader({
 export function TimerCell({
   row,
 }: CellContext<Player, Player['expirationTime']>) {
-  const [msLeft, setMsLeft] = useState(calcMsLeft(row.original.expirationTime))
+  const [msLeft, setMsLeft] = useState(calcMsLeft(row.original))
   const hasExpiration =
     row.original.faction === 'VAMPIRE' || row.original.faction === 'JACKAL'
 
   useEffect(() => {
     let interval: NodeJS.Timeout
-    setMsLeft(calcMsLeft(row.original.expirationTime))
+    setMsLeft(calcMsLeft(row.original))
     if (!row.original.isPaused) {
       interval = setInterval(() => {
-        setMsLeft(calcMsLeft(row.original.expirationTime))
+        setMsLeft(calcMsLeft(row.original))
       }, 1000)
     }
     return () => clearInterval(interval)

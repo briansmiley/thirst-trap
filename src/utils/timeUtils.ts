@@ -1,3 +1,5 @@
+import { Player } from '@/app/types'
+
 export type Duration = {
   minutes: number
   seconds: number
@@ -16,6 +18,7 @@ export function toDurationString(durationOrMs: Duration | number) {
   return `${duration.minutes}:${String(duration.seconds).padStart(2, '0')}`
 }
 
-export function calcMsLeft(expirationTime: Date) {
-  return Math.max(expirationTime.getTime() - Date.now(), 0)
+export function calcMsLeft(player: Player) {
+  const startingPoint = player.isPaused ? player.pausedAt.getTime() : Date.now()
+  return Math.max(player.expirationTime.getTime() - startingPoint, 0)
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import {
+  CheckIcon,
   ChevronDownIcon,
   MinusIcon,
   PauseIcon,
@@ -22,20 +23,29 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Badge } from '@/components/ui/badge'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
+import { Input } from '@/components/ui/input'
 
 type PlayerInfoProps = {
   playerData: Player
 }
 export default function PlayerInfo({ playerData }: PlayerInfoProps) {
-  const [msLeft, setMsLeft] = useState(calcMsLeft(playerData.expirationTime))
+  const [msLeft, setMsLeft] = useState(calcMsLeft(playerData))
+  const [timeGrant, setTimeGrant] = useState(10)
+  const [timeTake, setTimeTake] = useState(10)
+
   const hasExpiration =
     playerData.faction === 'VAMPIRE' || playerData.faction === 'JACKAL'
   useEffect(() => {
     let interval: NodeJS.Timeout
-    setMsLeft(calcMsLeft(playerData.expirationTime))
+    setMsLeft(calcMsLeft(playerData))
     if (!playerData.isPaused) {
       interval = setInterval(() => {
-        setMsLeft(calcMsLeft(playerData.expirationTime))
+        setMsLeft(calcMsLeft(playerData))
       }, 1000)
     }
     return () => clearInterval(interval)
@@ -81,7 +91,16 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
       })
     }
   }
-
+  const grantTime = () => {
+    socket.emit('grantTime', playerData.playerId, timeGrant, (res) => {
+      console.log('ACK grantTime:', res)
+    })
+  }
+  const takeTime = () => {
+    socket.emit('takeTime', playerData.playerId, timeTake, (res) => {
+      console.log('ACK takeTime:', res)
+    })
+  }
   return (
     <div className="flex flex-col items-center gap-2 p-8">
       <img
@@ -194,13 +213,49 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
               <PauseIcon className="!size-8" />
             )}
           </Button>
-          <div className="text-center text-xl" suppressHydrationWarning>
-            Expires:{' '}
-            {msLeft === 0 ? (
-              <span className="animate-pulse text-red-500">0:00</span>
-            ) : (
-              toDurationString(msLeft)
-            )}
+          <div className="flex items-center gap-2">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <MinusIcon />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="flex items-center gap-2">
+                <Input
+                  type="number"
+                  value={timeTake}
+                  onChange={(e) => setTimeTake(parseInt(e.target.value))}
+                />
+                <Button variant="outline" size="icon" onClick={takeTime}>
+                  <CheckIcon />
+                </Button>
+              </PopoverContent>
+            </Popover>
+            <div className="text-center text-xl" suppressHydrationWarning>
+              Expires:{' '}
+              {msLeft === 0 ? (
+                <span className="animate-pulse text-red-500">0:00</span>
+              ) : (
+                toDurationString(msLeft)
+              )}
+            </div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="icon">
+                  <PlusIcon />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="flex items-center gap-2">
+                <Input
+                  type="number"
+                  value={timeGrant}
+                  onChange={(e) => setTimeGrant(parseInt(e.target.value))}
+                />
+                <Button variant="outline" size="icon" onClick={grantTime}>
+                  <CheckIcon />
+                </Button>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
       )}
