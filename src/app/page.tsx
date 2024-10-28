@@ -14,7 +14,7 @@ export default function Home() {
         <h1 className="satisfy text-center text-8xl text-white">Thirst Trap</h1>
         <SplashEntry />
         <p className="rounded bg-slate-500 bg-opacity-50 p-2 font-mono">
-          This page is for party facilitators only; please enjoy the game IRL!
+          This page is for party facilitators only; please enjoy the game IRL.
         </p>
       </div>
     </div>
