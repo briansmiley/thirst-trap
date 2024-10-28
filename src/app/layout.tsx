@@ -3,6 +3,8 @@ import localFont from 'next/font/local'
 import { Satisfy } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import './globals.css'
+import playerService from '@/server/services/player'
+import { AppStoreProvider } from '@/lib/stores/AppStoreProvider'
 import Navbar from '@/components/Navbar'
 import QrScanner from '@/components/QrScanner'
 
@@ -31,11 +33,20 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+async function getInitProps() {
+  'use server'
+  return {
+    players: await playerService.getAll(),
+  }
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const initProps = await getInitProps()
+
   return (
     <html
       lang="en"
@@ -46,9 +57,11 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} flex h-[100dvh] flex-col antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="dark">
-          <Navbar />
-          <QrScanner />
-          {children}
+          <AppStoreProvider initProps={initProps}>
+            <Navbar />
+            <QrScanner />
+            {children}
+          </AppStoreProvider>
         </ThemeProvider>
       </body>
     </html>
