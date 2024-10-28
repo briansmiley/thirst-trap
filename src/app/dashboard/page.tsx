@@ -20,7 +20,6 @@ import {
 } from '@tanstack/react-table'
 import columns from '@/app/dashboard/ProfileTable/columns'
 
-import ProfileTableRow from '@/app/dashboard/ProfileTable/ProfileTableRow'
 import { useAppStore } from '@/lib/stores/AppStoreProvider'
 import {
   DropdownMenu,
@@ -36,11 +35,14 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ArrowDownIcon, ArrowUpIcon, ChevronDownIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useRouter } from 'next/navigation'
 
 export default function ProfileTable() {
   const { players } = useAppStore(({ players }) => ({ players }))
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+
+  const router = useRouter()
 
   const table = useReactTable({
     data: players,
@@ -221,9 +223,21 @@ export default function ProfileTable() {
         </TableHeader>
         <TableBody>
           {table.getRowModel().rows?.length ? (
-            table
-              .getRowModel()
-              .rows.map((row) => <ProfileTableRow key={row.id} row={row} />)
+            table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                onClick={() => router.push(`/profile/${row.original.playerId}`)}
+                className="cursor-pointer"
+              >
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, {
+                      ...cell.getContext(),
+                    })}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))
           ) : (
             <TableRow className="block">
               <TableCell className="h-24 justify-center">No results.</TableCell>
