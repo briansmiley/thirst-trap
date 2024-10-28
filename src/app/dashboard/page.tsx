@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export default function ProfileTable() {
   const { players } = useAppStore(({ players }) => ({ players }))
@@ -63,11 +64,13 @@ export default function ProfileTable() {
               variant="outline"
             >
               Sort:{' '}
-              {sorting.length
-                ? sorting[0].id === 'expirationTime'
-                  ? 'Time'
-                  : sorting[0].id
-                : 'none'}
+              <span className="font-extrabold">
+                {sorting.length
+                  ? sorting[0].id === 'expirationTime'
+                    ? 'Time'
+                    : sorting[0].id
+                  : 'none'}
+              </span>
               {sorting.length ? (
                 sorting[0]?.desc ? (
                   <ArrowDownIcon size={18} />
@@ -79,13 +82,19 @@ export default function ProfileTable() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem
-              className="flex justify-between gap-4"
+              className={cn(
+                'flex justify-between gap-4',
+                !sorting.length ? 'font-extrabold' : ''
+              )}
               onClick={toggleSort()}
             >
               None
             </DropdownMenuItem>
             <DropdownMenuItem
-              className="flex justify-between gap-4"
+              className={cn(
+                'flex justify-between gap-4',
+                sorting[0]?.id === 'kills' ? 'font-extrabold' : ''
+              )}
               onClick={toggleSort('kills')}
             >
               Kills
@@ -98,7 +107,10 @@ export default function ProfileTable() {
               ) : null}
             </DropdownMenuItem>
             <DropdownMenuItem
-              className="flex justify-between gap-4"
+              className={cn(
+                'flex justify-between gap-4',
+                sorting[0]?.id === 'recruits' ? 'font-extrabold' : ''
+              )}
               onClick={toggleSort('recruits')}
             >
               Recruits
@@ -111,7 +123,10 @@ export default function ProfileTable() {
               ) : null}
             </DropdownMenuItem>
             <DropdownMenuItem
-              className="flex justify-between gap-4"
+              className={cn(
+                'flex justify-between gap-4',
+                sorting[0]?.id === 'expirationTime' ? 'font-extrabold' : ''
+              )}
               onClick={toggleSort('expirationTime')}
             >
               Time
