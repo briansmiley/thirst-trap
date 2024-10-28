@@ -76,4 +76,20 @@ export interface ClientToServerEvents {
     settings: Partial<Settings>,
     callback: (response: { success: boolean; message?: string }) => void
   ) => void
+  creditKill: (
+    playerId: Player['playerId'],
+    callback: (response: { success: boolean; message?: string }) => void
+  ) => void
+  creditRecruit: (
+    playerId: Player['playerId'],
+    callback: (response: { success: boolean; message?: string }) => void
+  ) => void
+  removeKill: (
+    playerId: Player['playerId'],
+    callback: (response: { success: boolean; message?: string }) => void
+  ) => void
+  removeRecruit: (
+    playerId: Player['playerId'],
+    callback: (response: { success: boolean; message?: string }) => void
+  ) => void
 }

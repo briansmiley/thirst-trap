@@ -65,20 +65,26 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
     )
   }
 
-  const handleCountChange =
-    (type: 'kills' | 'recruits') => (change: number) => {
-      console.log('EMIT updatePlayer:', {
-        playerId: playerData.playerId,
-        [type]: playerData[type] + change,
-      })
-      socket.emit(
-        'updatePlayer',
-        { playerId: playerData.playerId, [type]: playerData[type] + change },
-        (res) => {
-          console.log('ACK updatePlayer:', res)
-        }
-      )
-    }
+  const creditKill = () => {
+    socket.emit('creditKill', playerData.playerId, (res) => {
+      console.log('ACK creditKill:', res)
+    })
+  }
+  const creditRecruit = () => {
+    socket.emit('creditRecruit', playerData.playerId, (res) => {
+      console.log('ACK creditRecruit:', res)
+    })
+  }
+  const removeKill = () => {
+    socket.emit('removeKill', playerData.playerId, (res) => {
+      console.log('ACK removeKill:', res)
+    })
+  }
+  const removeRecruit = () => {
+    socket.emit('removeRecruit', playerData.playerId, (res) => {
+      console.log('ACK removeRecruit:', res)
+    })
+  }
 
   const pauseOrResume = () => {
     if (playerData.isPaused) {
@@ -161,7 +167,7 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
           className="rounded-full"
           variant="outline"
           size="icon"
-          onClick={() => handleCountChange('kills')(-1)}
+          onClick={removeKill}
           disabled={playerData.kills < 1}
         >
           <MinusIcon />
@@ -171,7 +177,7 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
           className="rounded-full"
           variant="outline"
           size="icon"
-          onClick={() => handleCountChange('kills')(1)}
+          onClick={creditKill}
         >
           <PlusIcon />
         </Button>
@@ -181,7 +187,7 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
           className="rounded-full"
           variant="outline"
           size="icon"
-          onClick={() => handleCountChange('recruits')(-1)}
+          onClick={removeRecruit}
           disabled={playerData.recruits < 1}
         >
           <MinusIcon />
@@ -193,7 +199,7 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
           className="rounded-full"
           variant="outline"
           size="icon"
-          onClick={() => handleCountChange('recruits')(1)}
+          onClick={creditRecruit}
         >
           <PlusIcon />
         </Button>

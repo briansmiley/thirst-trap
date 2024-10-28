@@ -173,7 +173,34 @@ app.prepare().then(() => {
           callback({ success: false, message: err.message })
         })
     })
-
+    socket.on('creditKill', (playerId, callback) => {
+      console.log('ON creditKill:', socket.id, playerId)
+      playerService.creditKill(playerId).then((player) => {
+        io.emit('updatePlayer', player)
+        callback({ success: true })
+      })
+    })
+    socket.on('creditRecruit', (playerId, callback) => {
+      console.log('ON creditRecruit:', socket.id, playerId)
+      playerService.creditRecruit(playerId).then((player) => {
+        io.emit('updatePlayer', player)
+        callback({ success: true })
+      })
+    })
+    socket.on('removeKill', (playerId, callback) => {
+      console.log('ON removeKill:', socket.id, playerId)
+      playerService.removeKill(playerId).then((player) => {
+        io.emit('updatePlayer', player)
+        callback({ success: true })
+      })
+    })
+    socket.on('removeRecruit', (playerId, callback) => {
+      console.log('ON removeRecruit:', socket.id, playerId)
+      playerService.removeRecruit(playerId).then((player) => {
+        io.emit('updatePlayer', player)
+        callback({ success: true })
+      })
+    })
     socket.on('disconnect', () => {
       console.log('User disconnected:', socket.id)
     })

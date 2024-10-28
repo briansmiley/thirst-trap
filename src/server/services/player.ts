@@ -248,23 +248,23 @@ const playerService = {
     //if they are expired, set prevExpirationTime to now so they actually get time
     const prevExpirationTime =
       player.expirationTime < new Date() ? new Date() : player.expirationTime
-    console.log('ADDITIONAL Minutes:', additionalTime / 60000)
-    console.log('MAX TIMER:', maxTimer)
-    console.log('PREVIOUS EXPIRATION TIME:', prevExpirationTime)
-    console.log(
-      'PREVIOUS EXPIRATION TIME + ADDITIONAL TIME:',
-      new Date(prevExpirationTime.getTime() + additionalTime)
-    )
-    console.log('NOW:', new Date())
-    console.log('MAX TIMER + NOW:', new Date(new Date().getTime() + maxTimer))
+    // console.log('ADDITIONAL Minutes:', additionalTime / 60000)
+    // console.log('MAX TIMER:', maxTimer)
+    // console.log('PREVIOUS EXPIRATION TIME:', prevExpirationTime)
+    // console.log(
+    //   'PREVIOUS EXPIRATION TIME + ADDITIONAL TIME:',
+    //   new Date(prevExpirationTime.getTime() + additionalTime)
+    // )
+    // console.log('NOW:', new Date())
+    // console.log('MAX TIMER + NOW:', new Date(new Date().getTime() + maxTimer))
     const newExpirationTime = new Date(
       Math.min(
         prevExpirationTime.getTime() + additionalTime,
         new Date().getTime() + maxTimer
       )
     )
-    console.log('ORIGINAL EXPIRATION TIME:', originalExpirationTime)
-    console.log('NEW EXPIRATION TIME:', newExpirationTime)
+    // console.log('ORIGINAL EXPIRATION TIME:', originalExpirationTime)
+    // console.log('NEW EXPIRATION TIME:', newExpirationTime)
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
       data: { expirationTime: newExpirationTime },
@@ -311,6 +311,22 @@ const playerService = {
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
       data: { recruits: { increment: 1 } },
+      select: selects,
+    })
+    return updatedPlayer
+  },
+  removeRecruit: async (playerId: string) => {
+    const updatedPlayer = await prisma.player.update({
+      where: { playerId },
+      data: { recruits: { decrement: 1 } },
+      select: selects,
+    })
+    return updatedPlayer
+  },
+  removeKill: async (playerId: string) => {
+    const updatedPlayer = await prisma.player.update({
+      where: { playerId },
+      data: { kills: { decrement: 1 } },
       select: selects,
     })
     return updatedPlayer
