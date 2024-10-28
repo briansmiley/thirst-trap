@@ -1,13 +1,10 @@
+'use client'
+
 import SettingsForm from '@/app/settings/edit/SettingsForm'
-import settingService from '@/server/services/setting'
+import { useAppStore } from '@/lib/stores/AppStoreProvider'
 
-async function getSettings() {
-  'use server'
-  return await settingService.get()
-}
-
-export default async function SettingsEdit() {
-  const settings = await getSettings()
+export default function SettingsEdit() {
+  const { settings } = useAppStore(({ settings }) => ({ settings }))
 
   return (
     <div className="flex w-full grow flex-col items-center justify-center">

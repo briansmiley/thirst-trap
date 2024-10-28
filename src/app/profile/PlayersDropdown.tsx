@@ -49,9 +49,9 @@ export function PlayersDropdown({
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." />
+          <CommandInput placeholder="Search player id..." />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>No id found.</CommandEmpty>
             <CommandGroup>
               {playerIds.map((playerId) => (
                 <CommandItem
