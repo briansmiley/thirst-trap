@@ -18,6 +18,7 @@
     "@radix-ui/react-slot": "^1.1.0",
     "@tanstack/react-table": "^8.20.5",
     "class-variance-authority": "^0.7.0",
+    "client-only": "^0.0.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "lucide-react": "^0.453.0",
@@ -27,11 +28,13 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-qr-barcode-scanner": "^2.0.0",
+    "server-only": "^0.0.1",
     "socket.io": "^4.8.0",
     "socket.io-client": "^4.8.0",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "zustand": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^20",
