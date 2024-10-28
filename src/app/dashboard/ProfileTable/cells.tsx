@@ -109,6 +109,7 @@ export function TimerCell(
     const remainingTime = Math.max(expirationTime.getTime() - Date.now(), 0)
     return (
       <div
+        suppressHydrationWarning
         className={`${remainingTime === 0 ? 'animate-pulse text-red-500' : ''}`}
       >
         {toDurationString(remainingTime)}
