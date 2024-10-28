@@ -160,7 +160,8 @@ const playerService = {
   },
   recruit: async (playerId: string, faction: Faction) => {
     const now = new Date()
-    const startingExpirationTime = (await settingService.get()).startingTimer
+    const startingExpirationTime =
+      (await settingService.get()).startingTimer * 60000
     const startingExpirationDate = new Date(
       now.getTime() + startingExpirationTime
     )
