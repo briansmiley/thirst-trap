@@ -2,7 +2,7 @@ import { HeaderContext, type CellContext } from '@tanstack/react-table'
 import { type ExtendedCellContext } from '@/app/dashboard/ProfileTable/ProfileTableRow'
 import { Player } from '@/app/types'
 import { Badge } from '@/components/ui/badge'
-import { ClockIcon } from 'lucide-react'
+import { ClockIcon, HandshakeIcon, SkullIcon } from 'lucide-react'
 import { toDurationString } from '@/utils/timeUtils'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -62,17 +62,40 @@ export function FactionHeader({
 }
 
 export function FactionCell({ row }: CellContext<Player, Player['faction']>) {
-  return <Badge>{row.original.faction}</Badge>
+  return (
+    <Badge
+      className="capitalize"
+      variant={
+        row.original.faction.toLowerCase() as
+          | 'neutral'
+          | 'vampire'
+          | 'jackal'
+          | 'ghost'
+      }
+    >
+      {row.original.faction.toLowerCase()}
+    </Badge>
+  )
 }
 
 export function KillsHeader({
   column,
 }: HeaderContext<Player, Player['kills']>) {
-  return <div>Kills</div>
+  return <SkullIcon size={16} />
 }
 
 export function KillsCell({ row }: CellContext<Player, Player['kills']>) {
   return <div>{row.original.kills}</div>
+}
+
+export function RecruitsHeader({
+  column,
+}: HeaderContext<Player, Player['recruits']>) {
+  return <HandshakeIcon size={16} />
+}
+
+export function RecruitsCell({ row }: CellContext<Player, Player['recruits']>) {
+  return <div>{row.original.recruits}</div>
 }
 
 export function StatusHeader({
@@ -90,7 +113,7 @@ export function TimerHeader({
 }: HeaderContext<Player, Player['expirationTime']>) {
   return (
     <div className="flex items-center justify-end">
-      <ClockIcon size={14} />
+      <ClockIcon size={15} />
     </div>
   )
 }
