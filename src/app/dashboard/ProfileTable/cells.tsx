@@ -1,57 +1,38 @@
 import { HeaderContext, type CellContext } from '@tanstack/react-table'
-import { type ExtendedCellContext } from '@/app/dashboard/ProfileTable/ProfileTableRow'
 import { Player } from '@/app/types'
 import { Badge } from '@/components/ui/badge'
-import { ClockIcon, HandshakeIcon, SkullIcon } from 'lucide-react'
+import {
+  ClockIcon,
+  HandshakeIcon,
+  ImageIcon,
+  PauseIcon,
+  PlayIcon,
+  SkullIcon,
+} from 'lucide-react'
 import { toDurationString } from '@/utils/timeUtils'
-import Link from 'next/link'
-import { useState } from 'react'
+import { cn } from '@/lib/utils'
 
-export function PictureHeader({
+export function PictureNameHeader({
   column,
-}: HeaderContext<Player, Player['picture']>) {
-  return <></>
-}
-
-export function PictureCell({ row }: CellContext<Player, Player['picture']>) {
-  const [showZoomed, setShowZoomed] = useState(false)
-
+}: HeaderContext<Player, Player['name']>) {
   return (
-    <>
-      {showZoomed && (
-        <div
-          className="fixed inset-0 flex h-[100dvh] w-[100dvw] items-center justify-center"
-          onClick={() => setShowZoomed(false)}
-        >
-          <img
-            alt="picture"
-            className="w-[95%] object-cover"
-            src={row.original.picture ?? ''}
-          />
-        </div>
-      )}
-      <img
-        alt="picture"
-        onClick={() => setShowZoomed(true)}
-        className="h-12 w-12 object-cover"
-        src={row.original.picture ?? ''}
-      />
-    </>
+    <div className="flex items-center">
+      <ImageIcon size={16} className="mx-4" />
+      <span className="ms-4">Name</span>
+    </div>
   )
 }
 
-export function NameHeader({ column }: HeaderContext<Player, Player['name']>) {
-  return <div>Name</div>
-}
-
-export function NameCell({ row }: CellContext<Player, Player['name']>) {
+export function PictureNameCell({ row }: CellContext<Player, Player['name']>) {
   return (
-    <Link
-      className="text-cyan-500 underline"
-      href={`/profile/${row.original.playerId}`}
-    >
-      {row.original.name}
-    </Link>
+    <div className="flex items-center gap-4">
+      <img
+        alt="picture"
+        className="h-12 !w-12 shrink-0 object-cover"
+        src={row.original.picture ?? ''}
+      />
+      <div className="font-bold">{row.original.name}</div>
+    </div>
   )
 }
 
@@ -81,31 +62,47 @@ export function FactionCell({ row }: CellContext<Player, Player['faction']>) {
 export function KillsHeader({
   column,
 }: HeaderContext<Player, Player['kills']>) {
-  return <SkullIcon size={16} />
+  return (
+    <div className="flex w-full justify-end">
+      <SkullIcon size={16} />
+    </div>
+  )
 }
 
 export function KillsCell({ row }: CellContext<Player, Player['kills']>) {
-  return <div>{row.original.kills}</div>
+  return <div className="text-right tabular-nums">{row.original.kills}</div>
 }
 
 export function RecruitsHeader({
   column,
 }: HeaderContext<Player, Player['recruits']>) {
-  return <HandshakeIcon size={16} />
+  return (
+    <div className="flex w-full justify-end">
+      <HandshakeIcon size={16} />
+    </div>
+  )
 }
 
 export function RecruitsCell({ row }: CellContext<Player, Player['recruits']>) {
-  return <div>{row.original.recruits}</div>
+  return <div className="text-right tabular-nums">{row.original.recruits}</div>
 }
 
-export function StatusHeader({
+export function PausedHeader({
   column,
 }: HeaderContext<Player, Player['isPaused']>) {
-  return <div>Status</div>
+  return <></>
 }
 
-export function StatusCell({ row }: CellContext<Player, Player['isPaused']>) {
-  return <div>{`${row.original.isPaused}`}</div>
+export function PausedCell({ row }: CellContext<Player, Player['isPaused']>) {
+  return (
+    <div className="flex items-center justify-center">
+      {row.original.isPaused ? (
+        <PauseIcon size={14} fill="currentColor" />
+      ) : (
+        <PlayIcon size={14} fill="currentColor" />
+      )}
+    </div>
+  )
 }
 
 export function TimerHeader({
@@ -118,14 +115,10 @@ export function TimerHeader({
   )
 }
 
-export function TimerCell(
-  props: CellContext<Player, Player['expirationTime']>
-) {
-  const { player } = props as ExtendedCellContext<
-    Player,
-    Player['expirationTime']
-  >
-  const { isPaused, expirationTime } = player
+export function TimerCell({
+  row,
+}: CellContext<Player, Player['expirationTime']>) {
+  const { isPaused, expirationTime } = row.original
 
   if (isPaused && expirationTime) {
     // TODO: calculate remaining time when paused? show blinking
@@ -133,12 +126,15 @@ export function TimerCell(
     return (
       <div
         suppressHydrationWarning
-        className={`${remainingTime === 0 ? 'animate-pulse text-red-500' : ''}`}
+        className={cn(
+          'text-right tabular-nums',
+          remainingTime === 0 ? 'animate-pulse text-red-500' : ''
+        )}
       >
         {toDurationString(remainingTime)}
       </div>
     )
   } else {
-    return <div className="text-center">—</div>
+    return <div className="text-right">—</div>
   }
 }
