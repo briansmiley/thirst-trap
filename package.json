@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "ts-node src/server/server.ts",
-    "network": "npm run dev -- -H \"$(ipconfig getifaddr en0)\"",
+    "network": "HOSTNAME=\"$(ipconfig getifaddr en0)\" npm run dev -- -H \"$(ipconfig getifaddr en0)\"",
     "build": "npx prisma generate && next build",
     "start": "NODE_ENV=production node src/server/server.js",
     "lint": "next lint"
