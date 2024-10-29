@@ -61,7 +61,7 @@ export default function NewProfileForm({ id }: { id: string }) {
       const file = event.target.files?.[0]
       if (file) {
         try {
-          const resizedBase64 = await resizeAndConvertToBase64(file, 800, 800)
+          const resizedBase64 = await resizeAndConvertToBase64(file, 500, 500)
           setImageBase64(resizedBase64)
           setImageUrl(URL.createObjectURL(file))
         } catch (error) {
