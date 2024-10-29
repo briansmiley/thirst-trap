@@ -209,10 +209,11 @@ const playerService = {
     const currentRemainingTime = player.expirationTime
       ? player.expirationTime.getTime() - new Date().getTime()
       : 0
-    const newRemainingTime = Math.max(
-      currentRemainingTime - deductionMs,
-      deductionFloor
-    )
+    //if they are already under the floor, do nothing, otherwise take the larger of removing full deduction or the floor
+    const newRemainingTime =
+      currentRemainingTime < deductionFloor
+        ? currentRemainingTime
+        : Math.max(currentRemainingTime - deductionMs, deductionFloor)
     const newExpirationTime = new Date(new Date().getTime() + newRemainingTime)
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
