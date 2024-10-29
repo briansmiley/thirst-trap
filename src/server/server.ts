@@ -46,7 +46,13 @@ app.prepare().then(() => {
           callback({ success: false, message: err.message })
         })
     })
-
+    socket.on('deletePlayer', (playerId, callback) => {
+      console.log('ON deletePlayer:', socket.id, playerId)
+      playerService.delete(playerId).then(() => {
+        io.emit('deletePlayer', playerId)
+        callback({ success: true })
+      })
+    })
     socket.on('updatePlayer', (player, callback) => {
       console.log('ON updatePlayer:', socket.id, loggable(player))
       const { playerId, ...rest } = player

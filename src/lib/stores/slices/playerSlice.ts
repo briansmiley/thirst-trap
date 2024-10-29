@@ -5,6 +5,7 @@ import { Player } from '@/app/types'
 export interface PlayerSlice {
   players: Player[]
   addPlayer: (player: Player) => void
+  deletePlayer: (playerId: string) => void
   updatePlayer: (player: Pick<Player, 'playerId'> & Partial<Player>) => void
   updateAllPlayers: (
     players: (Pick<Player, 'playerId'> & Partial<Player>)[]
@@ -28,6 +29,12 @@ export const createPlayerSlice: (
             expirationTime: new Date(player.expirationTime),
           },
         ],
+      })
+    },
+    deletePlayer: (playerId) => {
+      const { players } = get()
+      set({
+        players: players.filter((p) => p.playerId !== playerId),
       })
     },
     updatePlayer: (player) => {

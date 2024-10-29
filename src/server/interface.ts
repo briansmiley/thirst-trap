@@ -13,6 +13,7 @@ export interface DefaultServerToClientEvents {
 
 export interface ServerToClientEvents extends DefaultServerToClientEvents {
   addPlayer: (player: Player) => void
+  deletePlayer: (playerId: string) => void
   updatePlayer: (player: Partial<Player> & Pick<Player, 'playerId'>) => void
   updateAllPlayers: (
     players: Partial<Player> & Pick<Player, 'playerId'>[]
@@ -30,6 +31,10 @@ export interface ServerToClientEvents extends DefaultServerToClientEvents {
 export interface ClientToServerEvents {
   addPlayer: (
     player: Pick<Player, 'name' | 'playerId' | 'picture'>,
+    callback: (response: { success: boolean; message?: string }) => void
+  ) => void
+  deletePlayer: (
+    playerId: string,
     callback: (response: { success: boolean; message?: string }) => void
   ) => void
   updatePlayer: (

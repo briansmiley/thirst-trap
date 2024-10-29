@@ -5,19 +5,28 @@ import { useAppStore } from '@/lib/stores/AppStoreProvider'
 import { socket } from '@/socket/client'
 
 export default function StoreUpdater() {
-  const { addPlayer, updatePlayer, updateAllPlayers, updateSettings } =
-    useAppStore((state) => ({
-      addPlayer: state.addPlayer,
-      updatePlayer: state.updatePlayer,
-      updateAllPlayers: state.updateAllPlayers,
-      updateSettings: state.updateSettings,
-    }))
+  const {
+    addPlayer,
+    deletePlayer,
+    updatePlayer,
+    updateAllPlayers,
+    updateSettings,
+  } = useAppStore((state) => ({
+    addPlayer: state.addPlayer,
+    deletePlayer: state.deletePlayer,
+    updatePlayer: state.updatePlayer,
+    updateAllPlayers: state.updateAllPlayers,
+    updateSettings: state.updateSettings,
+  }))
 
   useSocketSubscription('addPlayer', (player) => {
     console.log('ON addPlayer:', socket.id, player)
     addPlayer(player)
   })
-
+  useSocketSubscription('deletePlayer', (playerId) => {
+    console.log('ON deletePlayer:', socket.id, playerId)
+    deletePlayer(playerId)
+  })
   useSocketSubscription('updatePlayer', (player) => {
     console.log('ON updatePlayer:', socket.id, player)
     updatePlayer(player)
