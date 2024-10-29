@@ -10,6 +10,8 @@ import StoreUpdater from '@/lib/stores/StoreUpdater'
 import Navbar from '@/components/Navbar'
 import QrScanner from '@/components/QrScanner'
 
+export const dynamic = 'force-dynamic'
+
 const satisfy = Satisfy({
   subsets: ['latin'],
   variable: '--font-satisfy',
@@ -37,6 +39,7 @@ export const metadata: Metadata = {
 
 async function getInitProps() {
   'use server'
+  console.log('getInitProps')
   return {
     players: await playerService.getAll(),
     settings: await settingService.get(),
