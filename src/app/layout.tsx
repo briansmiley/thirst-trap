@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 
 async function getInitProps() {
   'use server'
-  console.log('getInitProps')
+  console.log('getInitProps log')
   return {
     players: await playerService.getAll(),
     settings: await settingService.get(),
