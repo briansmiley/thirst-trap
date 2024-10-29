@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import { Button } from './ui/button'
-import { LogOut } from 'lucide-react'
+import { CameraIcon, LogOut } from 'lucide-react'
 import { useSocketSubscription } from '@/socket/client'
 import { cn } from '@/lib/utils'
 
@@ -88,6 +88,19 @@ const Navbar = () => {
                 )}`}
               >
                 Admin
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/scan"
+                className={`flex h-full w-[75px] items-center justify-center px-1 sm:w-[100px] sm:px-2 md:w-[125px] md:px-4 ${selectedClass(
+                  '/scan'
+                )}`}
+              >
+                <span className="flex items-center gap-3">
+                  QR
+                  <CameraIcon className="!size-4" />
+                </span>
               </Link>
             </li>
             {/* Consolidated the below into admin */}
