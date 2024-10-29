@@ -26,28 +26,42 @@ export function PictureNameHeader({
 
 export function PictureNameCell({ row }: CellContext<Player, Player['name']>) {
   const [showZoomed, setShowZoomed] = useState(false)
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setShowZoomed(false)
+      }
+    }
+
+    document.addEventListener('keydown', handleEscape)
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [])
 
   return (
     <>
       {showZoomed && (
         <div
-          className="fixed inset-0 flex h-[100dvh] w-[100dvw] items-center justify-center"
+          className="fixed inset-0 flex items-center justify-center bg-black/50"
           onClick={(evt) => {
             evt.stopPropagation()
             setShowZoomed(false)
           }}
         >
-          <img
-            alt="picture"
-            className="w-[95%] object-cover"
-            src={row.original.picture ?? ''}
-          />
+          <div className="aspect-square size-[600px] overflow-hidden">
+            <img
+              alt="picture"
+              className="size-full object-cover"
+              src={row.original.picture ?? ''}
+            />
+          </div>
         </div>
       )}
       <div className="flex items-center gap-4">
         <img
           alt="picture"
-          className="h-12 !w-12 shrink-0 cursor-pointer object-cover"
+          className="size-12 shrink-0 cursor-pointer object-cover"
           src={row.original.picture ?? ''}
           onClick={(e) => {
             e.stopPropagation()
@@ -57,6 +71,20 @@ export function PictureNameCell({ row }: CellContext<Player, Player['name']>) {
         <div className="font-bold">{row.original.name}</div>
       </div>
     </>
+  )
+}
+
+export function PlayerIdHeader({
+  column,
+}: HeaderContext<Player, Player['playerId']>) {
+  return <div>ID</div>
+}
+
+export function PlayerIdCell({ row }: CellContext<Player, Player['playerId']>) {
+  return (
+    <div className="text-sm font-semibold text-neutral-400 opacity-50">
+      {row.original.playerId}
+    </div>
   )
 }
 
