@@ -162,48 +162,55 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
           </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
-      <div className="flex w-48 items-center justify-between gap-2">
-        <Button
-          className="rounded-full"
-          variant="outline"
-          size="icon"
-          onClick={removeKill}
-          disabled={playerData.kills < 1}
-        >
-          <MinusIcon />
-        </Button>
-        <div className="font-semibold">Kills: {playerData.kills} </div>
-        <Button
-          className="rounded-full"
-          variant="outline"
-          size="icon"
-          onClick={creditKill}
-        >
-          <PlusIcon />
-        </Button>
-      </div>
-      <div className="flex w-48 items-center justify-between gap-2">
-        <Button
-          className="rounded-full"
-          variant="outline"
-          size="icon"
-          onClick={removeRecruit}
-          disabled={playerData.recruits < 1}
-        >
-          <MinusIcon />
-        </Button>
-        <div className="font-semibold">
-          Recruits: {playerData.recruits || 0}
+      {['VAMPIRE', 'JACKAL', 'NEUTRAL'].includes(playerData.faction) && (
+        <div className="flex w-48 items-center justify-between gap-2">
+          <Button
+            className="rounded-full"
+            variant="outline"
+            size="icon"
+            onClick={removeKill}
+            disabled={playerData.kills < 1}
+          >
+            <MinusIcon />
+          </Button>
+          <div className="font-semibold">
+            {playerData.faction === 'VAMPIRE' ? 'Bites' : 'Kills'}:{' '}
+            {playerData.kills}{' '}
+          </div>
+          <Button
+            className="rounded-full"
+            variant="outline"
+            size="icon"
+            onClick={creditKill}
+          >
+            <PlusIcon />
+          </Button>
         </div>
-        <Button
-          className="rounded-full"
-          variant="outline"
-          size="icon"
-          onClick={creditRecruit}
-        >
-          <PlusIcon />
-        </Button>
-      </div>
+      )}
+      {playerData.faction === 'JACKAL' && (
+        <div className="flex w-48 items-center justify-between gap-2">
+          <Button
+            className="rounded-full"
+            variant="outline"
+            size="icon"
+            onClick={removeRecruit}
+            disabled={playerData.recruits < 1}
+          >
+            <MinusIcon />
+          </Button>
+          <div className="font-semibold">
+            Recruits: {playerData.recruits || 0}
+          </div>
+          <Button
+            className="rounded-full"
+            variant="outline"
+            size="icon"
+            onClick={creditRecruit}
+          >
+            <PlusIcon />
+          </Button>
+        </div>
+      )}
 
       {hasExpiration && (
         <div className="flex flex-col items-center gap-2">
