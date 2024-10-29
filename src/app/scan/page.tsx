@@ -17,7 +17,7 @@ export default function QrScanner() {
     }
   }
   return (
-    <div className="fixed inset-0 flex size-full items-center justify-center bg-slate-900 bg-opacity-25">
+    <div className="flex size-full items-center justify-center">
       <div className="my_box relative flex size-[600px] flex-col items-center justify-center gap-8">
         <BarcodeScannerComponent
           width={500}
