@@ -18,7 +18,14 @@ export function toDurationString(durationOrMs: Duration | number) {
   return `${duration.minutes}:${String(duration.seconds).padStart(2, '0')}`
 }
 
-export function calcMsLeft(player: Player) {
+/**
+ * @param player - The player to calculate the time left for.
+ * @param floor - Whether to floor the time left at 0.
+ * @returns The time left until (or negative since) player expiration in milliseconds.
+ */
+export function calcMsLeft(player: Player, floor = false) {
   const startingPoint = player.isPaused ? player.pausedAt.getTime() : Date.now()
-  return Math.max(player.expirationTime.getTime() - startingPoint, 0)
+  return floor
+    ? Math.max(Math.floor(player.expirationTime.getTime() - startingPoint), 0)
+    : player.expirationTime.getTime() - startingPoint
 }

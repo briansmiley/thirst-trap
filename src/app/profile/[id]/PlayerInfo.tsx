@@ -125,7 +125,7 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
         src={playerData.picture}
         className="h-72 w-72 border object-cover"
       />
-      <div className="my_box relative flex w-72 flex-col items-center gap-2">
+      <div className="my_box relative flex w-72 flex-col items-center gap-2 text-center">
         <DeletePlayerDialog
           classNames="absolute top-0 right-0"
           deleteFn={deletePlayer}
@@ -265,11 +265,11 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
               </Popover>
               <div className="text-center text-xl" suppressHydrationWarning>
                 Expires:{' '}
-                {msLeft === 0 ? (
-                  <span className="animate-pulse text-red-500">0:00</span>
-                ) : (
-                  toDurationString(msLeft)
-                )}
+                <span
+                  className={msLeft <= 0 ? 'animate-pulse text-red-500' : ''}
+                >
+                  {toDurationString(msLeft)}
+                </span>
               </div>
               <Popover>
                 <PopoverTrigger asChild>

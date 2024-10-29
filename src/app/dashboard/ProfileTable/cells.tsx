@@ -166,11 +166,9 @@ export function TimerCell({
           msLeft === 0 ? 'animate-pulse text-red-500' : ''
         )}
       >
-        {msLeft === 0 ? (
-          <span className="animate-pulse text-red-500">0:00</span>
-        ) : (
-          toDurationString(msLeft)
-        )}
+        <span className={msLeft <= 0 ? 'animate-pulse text-red-500' : ''}>
+          {toDurationString(msLeft)}
+        </span>
       </div>
     )
   } else {
