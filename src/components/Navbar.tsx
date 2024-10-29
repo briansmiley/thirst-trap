@@ -72,6 +72,27 @@ const Navbar = () => {
             </li>
             <li>
               <Link
+                href="/profile"
+                className={`flex h-full w-[75px] items-center justify-center px-1 sm:w-[100px] sm:px-2 md:w-[125px] md:px-4 ${selectedClass(
+                  '/profile'
+                )}`}
+              >
+                Profiles
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/admin"
+                className={`flex h-full w-[75px] items-center justify-center px-1 sm:w-[100px] sm:px-2 md:w-[125px] md:px-4 ${selectedClass(
+                  '/admin'
+                )}`}
+              >
+                Admin
+              </Link>
+            </li>
+            {/* Consolidated the below into admin */}
+            {/* <li>
+              <Link
                 href="/commands"
                 className={`flex h-full w-[75px] items-center justify-center px-1 sm:w-[100px] sm:px-2 md:w-[125px] md:px-4 ${selectedClass(
                   '/commands'
@@ -89,17 +110,7 @@ const Navbar = () => {
               >
                 Settings
               </Link>
-            </li>
-            <li>
-              <Link
-                href="/profile"
-                className={`flex h-full w-[75px] items-center justify-center px-1 sm:w-[100px] sm:px-2 md:w-[125px] md:px-4 ${selectedClass(
-                  '/profile'
-                )}`}
-              >
-                Profiles
-              </Link>
-            </li>
+            </li> */}
           </ul>
         </div>
         <Button
