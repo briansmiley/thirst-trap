@@ -25,15 +25,38 @@ export function PictureNameHeader({
 }
 
 export function PictureNameCell({ row }: CellContext<Player, Player['name']>) {
+  const [showZoomed, setShowZoomed] = useState(false)
+
   return (
-    <div className="flex items-center gap-4">
-      <img
-        alt="picture"
-        className="h-12 !w-12 shrink-0 object-cover"
-        src={row.original.picture ?? ''}
-      />
-      <div className="font-bold">{row.original.name}</div>
-    </div>
+    <>
+      {showZoomed && (
+        <div
+          className="fixed inset-0 flex h-[100dvh] w-[100dvw] items-center justify-center"
+          onClick={(evt) => {
+            evt.stopPropagation()
+            setShowZoomed(false)
+          }}
+        >
+          <img
+            alt="picture"
+            className="w-[95%] object-cover"
+            src={row.original.picture ?? ''}
+          />
+        </div>
+      )}
+      <div className="flex items-center gap-4">
+        <img
+          alt="picture"
+          className="h-12 !w-12 shrink-0 cursor-pointer object-cover"
+          src={row.original.picture ?? ''}
+          onClick={(e) => {
+            e.stopPropagation()
+            setShowZoomed(true)
+          }}
+        />
+        <div className="font-bold">{row.original.name}</div>
+      </div>
+    </>
   )
 }
 
