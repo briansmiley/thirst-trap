@@ -126,6 +126,15 @@ const Navbar = () => {
             </li> */}
           </ul>
         </div>
+        <div className="flex items-center justify-end gap-2 p-2 text-xs text-neutral-400 md:text-sm">
+          <div
+            className={cn(
+              'h-[0.75em] w-[0.75em] rounded-full',
+              connection.connected ? 'bg-green-500' : 'bg-red-500'
+            )}
+          />
+          {connection.label}
+        </div>
         <Button
           size="icon"
           variant="ghost"
@@ -135,15 +144,6 @@ const Navbar = () => {
           <LogOut />
         </Button>
       </nav>
-      <div className="flex items-center justify-end gap-2 p-2 text-xs text-neutral-400 md:text-sm">
-        <div
-          className={cn(
-            'h-[0.75em] w-[0.75em] rounded-full',
-            connection.connected ? 'bg-green-500' : 'bg-red-500'
-          )}
-        />
-        {connection.label}
-      </div>
     </header>
   )
 }
