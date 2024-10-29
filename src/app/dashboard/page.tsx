@@ -67,7 +67,7 @@ export default function ProfileTable() {
 
   return (
     <main>
-      <div className="flex gap-4 px-4 pb-2">
+      <div className="flex gap-4 p-4 pb-2">
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button
@@ -204,7 +204,7 @@ export default function ProfileTable() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Table className='border border-neutral-700'>
+      <Table className="border border-neutral-700">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
