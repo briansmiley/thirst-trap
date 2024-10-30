@@ -373,11 +373,15 @@ const playerService = {
     playerId: string,
     marshmallow: boolean = true
   ) => {
+    const player = await prisma.player.findUnique({ where: { playerId } })
+    if (!player) {
+      throw new Error('Player not found')
+    }
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
       data: {
         marshmallow: marshmallow,
-        expirationTime: new Date(),
+        expirationTime: player.faction === 'HUMAN' ? new Date() : undefined,
         isPaused: false,
       },
       select: baseSelects,
