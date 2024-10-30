@@ -185,6 +185,7 @@ const playerService = {
       data: {
         faction,
         expirationTime: startingExpirationDate,
+        pausedAt: new Date(),
       },
       select: baseSelects,
     })
