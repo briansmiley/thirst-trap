@@ -46,19 +46,25 @@ export default function ProfileTable() {
     columnVisibility,
     setColumnVisibility,
     initializeFromStorage,
+    columnFilters,
+    setColumnFilters,
+    columnSorting,
+    setColumnSorting,
   } = useAppStore((state) => ({
     players: state.players,
     columnVisibility: state.columnVisibility,
     setColumnVisibility: state.setColumnVisibility,
+    columnFilters: state.columnFilters,
+    setColumnFilters: state.setColumnFilters,
+    columnSorting: state.columnSorting,
+    setColumnSorting: state.setColumnSorting,
     initializeFromStorage: state.initializeFromStorage,
   }))
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const router = useRouter()
 
   useEffect(() => {
     initializeFromStorage()
-    setSorting([{ id: 'expirationTime', desc: false }])
+    setColumnSorting([{ id: 'expirationTime', desc: false }])
   }, [initializeFromStorage])
 
   const handleVisibilityChange: OnChangeFn<VisibilityState> = (
@@ -71,26 +77,49 @@ export default function ProfileTable() {
     setColumnVisibility(newValue)
   }
 
+  const handleSortingChange: OnChangeFn<SortingState> = (updaterOrValue) => {
+    const newValue =
+      typeof updaterOrValue === 'function'
+        ? updaterOrValue(columnSorting)
+        : updaterOrValue
+    setColumnSorting(newValue)
+  }
+
+  const handleFiltersChange: OnChangeFn<ColumnFiltersState> = (
+    updaterOrValue
+  ) => {
+    const newValue =
+      typeof updaterOrValue === 'function'
+        ? updaterOrValue(columnFilters)
+        : updaterOrValue
+    setColumnFilters(newValue)
+  }
+
   const table = useReactTable({
     data: players,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
+    onSortingChange: handleSortingChange,
+    onColumnFiltersChange: handleFiltersChange,
     onColumnVisibilityChange: handleVisibilityChange,
     state: {
-      sorting,
+      sorting: columnSorting,
       columnFilters,
       columnVisibility,
     },
   })
 
   const toggleSort = (label?: string) => () =>
-    setSorting(
+    handleSortingChange(
       label
-        ? [{ id: label, desc: !(sorting[0]?.id !== label || sorting[0]?.desc) }]
+        ? [
+            {
+              id: label,
+              desc: !(columnSorting[0]?.id !== label || columnSorting[0]?.desc),
+            },
+          ]
         : []
     )
   return (
@@ -105,15 +134,15 @@ export default function ProfileTable() {
             >
               Sort:
               <span className="font-extrabold">
-                {sorting.length
-                  ? sorting[0].id === 'expirationTime'
+                {columnSorting.length
+                  ? columnSorting[0].id === 'expirationTime'
                     ? 'Time'
-                    : sorting[0].id
+                    : columnSorting[0].id
                   : 'none'}
               </span>
               <ChevronDownIcon size={18} />
-              {sorting.length ? (
-                sorting[0]?.desc ? (
+              {columnSorting.length ? (
+                columnSorting[0]?.desc ? (
                   <ArrowDownIcon size={18} />
                 ) : (
                   <ArrowUpIcon size={18} />
@@ -125,7 +154,7 @@ export default function ProfileTable() {
             <DropdownMenuItem
               className={cn(
                 'flex justify-between gap-4',
-                !sorting.length ? 'font-extrabold' : ''
+                !columnSorting.length ? 'font-extrabold' : ''
               )}
               onClick={toggleSort()}
             >
@@ -134,13 +163,13 @@ export default function ProfileTable() {
             <DropdownMenuItem
               className={cn(
                 'flex justify-between gap-4',
-                sorting[0]?.id === 'kills' ? 'font-extrabold' : ''
+                columnSorting[0]?.id === 'kills' ? 'font-extrabold' : ''
               )}
               onClick={toggleSort('kills')}
             >
               Kills
-              {sorting[0]?.id === 'kills' ? (
-                sorting[0]?.desc ? (
+              {columnSorting[0]?.id === 'kills' ? (
+                columnSorting[0]?.desc ? (
                   <ArrowDownIcon size={18} />
                 ) : (
                   <ArrowUpIcon size={18} />
@@ -150,13 +179,13 @@ export default function ProfileTable() {
             <DropdownMenuItem
               className={cn(
                 'flex justify-between gap-4',
-                sorting[0]?.id === 'recruits' ? 'font-extrabold' : ''
+                columnSorting[0]?.id === 'recruits' ? 'font-extrabold' : ''
               )}
               onClick={toggleSort('recruits')}
             >
               Recruits
-              {sorting[0]?.id === 'recruits' ? (
-                sorting[0]?.desc ? (
+              {columnSorting[0]?.id === 'recruits' ? (
+                columnSorting[0]?.desc ? (
                   <ArrowDownIcon size={18} />
                 ) : (
                   <ArrowUpIcon size={18} />
@@ -166,13 +195,15 @@ export default function ProfileTable() {
             <DropdownMenuItem
               className={cn(
                 'flex justify-between gap-4',
-                sorting[0]?.id === 'expirationTime' ? 'font-extrabold' : ''
+                columnSorting[0]?.id === 'expirationTime'
+                  ? 'font-extrabold'
+                  : ''
               )}
               onClick={toggleSort('expirationTime')}
             >
               Time
-              {sorting[0]?.id === 'expirationTime' ? (
-                sorting[0]?.desc ? (
+              {columnSorting[0]?.id === 'expirationTime' ? (
+                columnSorting[0]?.desc ? (
                   <ArrowDownIcon size={18} />
                 ) : (
                   <ArrowUpIcon size={18} />
