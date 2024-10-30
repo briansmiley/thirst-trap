@@ -20,8 +20,8 @@ export default function QrScanner() {
     <div className="flex size-full items-center justify-center">
       <div className="my_box relative flex size-[600px] flex-col items-center justify-center gap-8">
         <BarcodeScannerComponent
-          width={500}
-          height={500}
+          width={400}
+          height={400}
           facingMode="environment"
           onUpdate={(err, result) => {
             if (result) {
