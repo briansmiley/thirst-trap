@@ -3,19 +3,21 @@ import { Player } from '@/app/types'
 export type Duration = {
   minutes: number
   seconds: number
+  sign: '' | '-'
 }
 
 export function toDuration(ms: number): Duration {
-  const totalSeconds = Math.floor(ms / 1000)
+  const totalSeconds = Math.floor(Math.abs(ms) / 1000)
   const minutes = Math.floor(totalSeconds / 60)
   const seconds = totalSeconds - minutes * 60
-  return { minutes, seconds }
+  return { minutes, seconds, sign: ms < 0 ? '-' : '' }
 }
 
 export function toDurationString(durationOrMs: Duration | number) {
+  console.log(durationOrMs)
   const duration =
     typeof durationOrMs === 'number' ? toDuration(durationOrMs) : durationOrMs
-  return `${duration.minutes}:${String(duration.seconds).padStart(2, '0')}`
+  return `${duration.sign}${duration.minutes}:${String(duration.seconds).padStart(2, '0')}`
 }
 
 /**
