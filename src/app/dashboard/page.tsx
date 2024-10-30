@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {
   Table,
   TableBody,
@@ -13,6 +13,7 @@ import {
   type SortingState,
   type ColumnFiltersState,
   getFilteredRowModel,
+  VisibilityState,
   getSortedRowModel,
   useReactTable,
   flexRender,
@@ -23,6 +24,7 @@ import columns from '@/app/dashboard/ProfileTable/columns'
 import { useAppStore } from '@/lib/stores/AppStoreProvider'
 import {
   DropdownMenu,
+  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
   DropdownMenuItem,
@@ -41,7 +43,8 @@ export default function ProfileTable() {
   const { players } = useAppStore(({ players }) => ({ players }))
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({})
   const router = useRouter()
 
   const table = useReactTable({
@@ -52,9 +55,12 @@ export default function ProfileTable() {
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+
     state: {
       sorting,
       columnFilters,
+      columnVisibility,
     },
   })
 
@@ -68,6 +74,7 @@ export default function ProfileTable() {
   return (
     <main>
       <div className="flex gap-4 p-4 pb-2">
+        {/* Sorting */}
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button
@@ -151,6 +158,7 @@ export default function ProfileTable() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+        {/* Filtering */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline">
@@ -197,6 +205,33 @@ export default function ProfileTable() {
                 <Badge variant="ghost">Ghost</Badge>
               </DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        {/* Visibility   */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="">
+              Columns
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                )
+              })}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
