@@ -147,21 +147,21 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
       <img
         alt={`Profile photo for ${playerData.name}`}
         src={playerData.picture}
-        className="h-72 w-72 border object-cover"
+        className="h-80 w-80 border object-cover"
       />
-      <div className="my_box relative flex w-72 flex-col items-center gap-2 text-center">
+      <div className="my_box relative flex w-80 flex-col items-center gap-2 text-center">
         <FlagDialog
           addNote={addNote}
           existingFlags={playerData.flags}
-          classNames="absolute top-0 left-0"
+          classNames="absolute top-1 left-1"
         />
         <DeletePlayerDialog
-          classNames="absolute top-0 right-0"
+          classNames="absolute top-1 right-1"
           deleteFn={deletePlayer}
         />
         {playerData.marshmallow && (
           <MarshmallowRestoreDialog
-            classNames="absolute bottom-0 right-0"
+            classNames="absolute bottom-1 right-1"
             restoreFn={() => marshmallowProtocol(false)}
           />
         )}
