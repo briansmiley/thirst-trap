@@ -92,7 +92,6 @@ export default function ProfileTable() {
         ? [{ id: label, desc: !(sorting[0]?.id !== label || sorting[0]?.desc) }]
         : []
     )
-
   return (
     <main>
       <div className="flex gap-4 p-4 pb-2">
@@ -103,7 +102,7 @@ export default function ProfileTable() {
               className="flex justify-between gap-2 capitalize"
               variant="outline"
             >
-              Sort:{' '}
+              Sort:
               <span className="font-extrabold">
                 {sorting.length
                   ? sorting[0].id === 'expirationTime'
@@ -111,6 +110,7 @@ export default function ProfileTable() {
                     : sorting[0].id
                   : 'none'}
               </span>
+              <ChevronDownIcon size={18} />
               {sorting.length ? (
                 sorting[0]?.desc ? (
                   <ArrowDownIcon size={18} />
@@ -262,7 +262,14 @@ export default function ProfileTable() {
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
+                <TableHead
+                  key={header.id}
+                  style={{
+                    width: header.column.columnDef.size
+                      ? `${header.column.columnDef.size}px`
+                      : 'auto',
+                  }}
+                >
                   {header.isPlaceholder
                     ? null
                     : flexRender(
@@ -283,7 +290,14 @@ export default function ProfileTable() {
                 className="cursor-pointer"
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
+                  <TableCell
+                    key={cell.id}
+                    style={{
+                      width: cell.column.columnDef.size
+                        ? `${cell.column.columnDef.size}px`
+                        : 'auto',
+                    }}
+                  >
                     {flexRender(cell.column.columnDef.cell, {
                       ...cell.getContext(),
                     })}
