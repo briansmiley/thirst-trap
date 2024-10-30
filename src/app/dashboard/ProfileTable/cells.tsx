@@ -172,7 +172,7 @@ export function FactionCell({ row }: CellContext<Player, Player['faction']>) {
       className="capitalize"
       variant={
         row.original.faction.toLowerCase() as
-          | 'neutral'
+          | 'human'
           | 'vampire'
           | 'jackal'
           | 'ghost'
@@ -244,7 +244,9 @@ export function TimerCell({
 }: CellContext<Player, Player['expirationTime']>) {
   const [msLeft, setMsLeft] = useState(calcMsLeft(row.original))
   const hasExpiration =
-    row.original.faction === 'VAMPIRE' || row.original.faction === 'JACKAL'
+    row.original.faction === 'VAMPIRE' ||
+    row.original.faction === 'JACKAL' ||
+    (row.original.faction === 'HUMAN' && row.original.marshmallow)
 
   useEffect(() => {
     let interval: NodeJS.Timeout
