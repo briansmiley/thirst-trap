@@ -25,18 +25,17 @@ import {
 import { calcMsLeft, toDurationString } from '@/utils/timeUtils'
 import { cn } from '@/lib/utils'
 
-export function PictureNameHeader({
+export function PictureHeader({
   column,
-}: HeaderContext<Player, Player['name']>) {
+}: HeaderContext<Player, Player['picture']>) {
   return (
     <div className="flex items-center">
       <ImageIcon size={16} className="mx-4" />
-      <span className="ms-4">Name</span>
     </div>
   )
 }
 
-export function PictureNameCell({ row }: CellContext<Player, Player['name']>) {
+export function PictureCell({ row }: CellContext<Player, Player['picture']>) {
   const [showZoomed, setShowZoomed] = useState(false)
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
@@ -76,20 +75,25 @@ export function PictureNameCell({ row }: CellContext<Player, Player['name']>) {
           </div>
         </div>
       )}
-      <div className="flex items-center gap-4">
-        <img
-          alt="picture"
-          className="size-12 shrink-0 cursor-pointer object-cover"
-          src={row.original.picture ?? ''}
-          onClick={(e) => {
-            e.stopPropagation()
-            setShowZoomed(true)
-          }}
-        />
-        <div className="font-bold">{row.original.name}</div>
-      </div>
+      <img
+        alt="picture"
+        className="size-12 shrink-0 cursor-pointer object-cover"
+        src={row.original.picture ?? ''}
+        onClick={(e) => {
+          e.stopPropagation()
+          setShowZoomed(true)
+        }}
+      />
     </>
   )
+}
+
+export function NameHeader({ column }: HeaderContext<Player, Player['name']>) {
+  return <div>Name</div>
+}
+
+export function NameCell({ row }: CellContext<Player, Player['name']>) {
+  return <div className="font-bold">{row.original.name}</div>
 }
 
 export function PlayerIdHeader({
@@ -248,15 +252,14 @@ export function TimerHeader({
 export function TimerCell({
   row,
 }: CellContext<Player, Player['expirationTime']>) {
-  const [msLeft, setMsLeft] = useState(calcMsLeft(row.original))
-  const hasExpiration =
-    row.original.faction === 'VAMPIRE' ||
-    row.original.faction === 'JACKAL' ||
-    (row.original.faction === 'HUMAN' && row.original.marshmallow)
+  const [mounted, setMounted] = useState(false)
+  const [msLeft, setMsLeft] = useState(0)
 
   useEffect(() => {
-    let interval: NodeJS.Timeout
+    setMounted(true)
     setMsLeft(calcMsLeft(row.original))
+
+    let interval: NodeJS.Timeout
     if (!row.original.isPaused) {
       interval = setInterval(() => {
         setMsLeft(calcMsLeft(row.original))
@@ -265,17 +268,21 @@ export function TimerCell({
     return () => clearInterval(interval)
   }, [row.original.isPaused, row.original.expirationTime])
 
+  const hasExpiration =
+    row.original.faction === 'VAMPIRE' ||
+    row.original.faction === 'JACKAL' ||
+    (row.original.faction === 'HUMAN' && row.original.marshmallow)
+
   if (hasExpiration) {
     return (
       <div
-        suppressHydrationWarning
         className={cn(
           'text-right tabular-nums',
           msLeft === 0 ? 'animate-pulse text-red-500' : ''
         )}
       >
         <span className={msLeft <= 0 ? 'animate-pulse text-red-500' : ''}>
-          {toDurationString(msLeft)}
+          {mounted ? toDurationString(msLeft) : '...'}
         </span>
       </div>
     )

@@ -2,8 +2,6 @@ import { createColumnHelper } from '@tanstack/react-table'
 import { type Player } from '@/app/types'
 
 import {
-  PictureNameHeader,
-  PictureNameCell,
   FactionHeader,
   FactionCell,
   KillsHeader,
@@ -18,15 +16,24 @@ import {
   PlayerIdHeader,
   FlagsHeader,
   FlagsCell,
+  NameCell,
+  NameHeader,
+  PictureCell,
+  PictureHeader,
 } from '@/app/dashboard/ProfileTable/cells'
 
 const columnHelper = createColumnHelper<Player>()
 
 const columns = [
-  columnHelper.accessor('name', {
-    header: PictureNameHeader,
-    cell: PictureNameCell,
+  columnHelper.accessor('picture', {
+    header: PictureHeader,
+    cell: PictureCell,
   }),
+  columnHelper.accessor('name', {
+    header: NameHeader,
+    cell: NameCell,
+  }),
+
   columnHelper.accessor('expirationTime', {
     sortingFn: 'datetime',
     header: TimerHeader,
