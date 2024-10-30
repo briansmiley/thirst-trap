@@ -173,9 +173,7 @@ const playerService = {
       where: { playerId },
       data: {
         faction,
-        expirationTime: ['HUMAN', 'GHOST'].includes(faction)
-          ? undefined
-          : startingExpirationDate,
+        expirationTime: startingExpirationDate,
       },
       select: baseSelects,
     })
