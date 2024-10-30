@@ -356,7 +356,11 @@ const playerService = {
   ) => {
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
-      data: { marshmallow: marshmallow, expirationTime: new Date() },
+      data: {
+        marshmallow: marshmallow,
+        expirationTime: new Date(),
+        isPaused: false,
+      },
       select: baseSelects,
     })
     return updatedPlayer

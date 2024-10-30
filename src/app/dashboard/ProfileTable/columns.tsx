@@ -1,5 +1,6 @@
 import { createColumnHelper } from '@tanstack/react-table'
 import { type Player } from '@/app/types'
+import { calcMsLeft, hasExpiration } from '@/utils/timeUtils'
 
 import {
   FactionHeader,
@@ -35,7 +36,17 @@ const columns = [
   }),
 
   columnHelper.accessor('expirationTime', {
-    sortingFn: 'datetime',
+    sortingFn: (rowA, rowB) => {
+      const hasExpirationA = hasExpiration(rowA.original)
+      const hasExpirationB = hasExpiration(rowB.original)
+
+      if (!hasExpirationA && hasExpirationB) return 1
+      if (hasExpirationA && !hasExpirationB) return -1
+
+      const timeLeftA = calcMsLeft(rowA.original)
+      const timeLeftB = calcMsLeft(rowB.original)
+      return timeLeftA - timeLeftB
+    },
     header: TimerHeader,
     cell: TimerCell,
   }),

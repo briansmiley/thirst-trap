@@ -22,7 +22,7 @@ import {
   ShieldAlertIcon,
   SkullIcon,
 } from 'lucide-react'
-import { calcMsLeft, toDurationString } from '@/utils/timeUtils'
+import { calcMsLeft, hasExpiration, toDurationString } from '@/utils/timeUtils'
 import { cn } from '@/lib/utils'
 
 export function PictureHeader({
@@ -269,12 +269,7 @@ export function TimerCell({
     return () => clearInterval(interval)
   }, [row.original.isPaused, row.original.expirationTime])
 
-  const hasExpiration =
-    row.original.faction === 'VAMPIRE' ||
-    row.original.faction === 'JACKAL' ||
-    (row.original.faction === 'HUMAN' && row.original.marshmallow)
-
-  if (hasExpiration) {
+  if (hasExpiration(row.original)) {
     return (
       <div
         className={cn(

@@ -32,3 +32,8 @@ export function calcMsLeft(player: Player, floor = false) {
     ? Math.max(Math.floor(player.expirationTime.getTime() - startingPoint), 0)
     : player.expirationTime.getTime() - startingPoint
 }
+
+export const hasExpiration = (player: Player) =>
+  player.faction === 'VAMPIRE' ||
+  player.faction === 'JACKAL' ||
+  (player.faction === 'HUMAN' && player.marshmallow)
