@@ -214,6 +214,13 @@ app.prepare().then(() => {
         callback({ success: true })
       })
     })
+    socket.on('updateFlags', (playerId, flags, callback) => {
+      console.log('ON updateFlags:', socket.id, playerId, flags)
+      playerService.updateFlags(playerId, flags).then((player) => {
+        io.emit('updatePlayer', player)
+        callback({ success: true })
+      })
+    })
     socket.on('marshmallowProtocol', (playerId, marshmallow, callback) => {
       console.log('ON marshmallowProtocol:', socket.id, playerId, marshmallow)
       playerService

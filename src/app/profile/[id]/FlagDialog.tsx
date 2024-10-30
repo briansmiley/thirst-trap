@@ -12,21 +12,45 @@ import {
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { ShieldAlertIcon } from 'lucide-react'
+import { useToast } from '@/hooks/use-toast'
+import { socket, useSocketSubscription } from '@/socket/client'
+import { ShieldAlertIcon, XIcon } from 'lucide-react'
 import { useState } from 'react'
 
 type FlagDialogProps = {
   addNote: (note: string) => void
   existingFlags: string[]
+  playerId: string
   classNames?: string
 }
 export default function FlagDialog({
   addNote,
   existingFlags,
+  playerId,
   classNames,
 }: FlagDialogProps) {
   const [note, setNote] = useState('')
-
+  const [flags, setFlags] = useState(existingFlags)
+  const { toast } = useToast()
+  const removeFlag = (flag: string) => {
+    socket.emit(
+      'updateFlags',
+      playerId,
+      flags.filter((f) => f !== flag),
+      (response) => {
+        console.log('ON updateFlags:', response)
+        toast({
+          title: `Flag removed`,
+          description: `The flag "${flag}" has been removed from the player`,
+        })
+      }
+    )
+  }
+  useSocketSubscription('updatePlayer', (player) => {
+    if (player.playerId === playerId) {
+      setFlags(player.flags || [])
+    }
+  })
   return (
     <div className={classNames}>
       <Dialog>
@@ -68,8 +92,18 @@ export default function FlagDialog({
             <div className="rounded-md border border-red-200 p-1 text-sm text-red-400">
               <h3 className="font-semibold">Priors</h3>
               <ul>
-                {existingFlags.map((flag, index) => (
-                  <li key={index}>• {flag}</li>
+                {flags.map((flag, index) => (
+                  <li className="flex items-center" key={index}>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className="!size-6"
+                      onClick={() => removeFlag(flag)}
+                    >
+                      <XIcon className="!size-4" />
+                    </Button>
+                    <span>• {flag} </span>
+                  </li>
                 ))}
               </ul>
             </div>

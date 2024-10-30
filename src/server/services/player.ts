@@ -361,6 +361,14 @@ const playerService = {
     })
     return updatedPlayer
   },
+  updateFlags: async (playerId: string, flags: string[]) => {
+    const updatedPlayer = await prisma.player.update({
+      where: { playerId },
+      data: { flags },
+      select: baseSelects,
+    })
+    return updatedPlayer
+  },
   marshmallowProtocol: async (
     playerId: string,
     marshmallow: boolean = true

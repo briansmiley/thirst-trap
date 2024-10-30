@@ -153,6 +153,7 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
         <FlagDialog
           addNote={addNote}
           existingFlags={playerData.flags}
+          playerId={playerData.playerId}
           classNames="absolute top-1 left-1"
         />
         <DeletePlayerDialog
