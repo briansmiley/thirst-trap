@@ -14,7 +14,6 @@ export function toDuration(ms: number): Duration {
 }
 
 export function toDurationString(durationOrMs: Duration | number) {
-  console.log(durationOrMs)
   const duration =
     typeof durationOrMs === 'number' ? toDuration(durationOrMs) : durationOrMs
   return `${duration.sign}${duration.minutes}:${String(duration.seconds).padStart(2, '0')}`
