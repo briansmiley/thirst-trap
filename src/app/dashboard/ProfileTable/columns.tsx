@@ -29,6 +29,7 @@ const columns = [
   columnHelper.accessor('picture', {
     header: PictureHeader,
     cell: PictureCell,
+    size: 75,
   }),
   columnHelper.accessor('name', {
     header: NameHeader,
@@ -49,6 +50,7 @@ const columns = [
     },
     header: TimerHeader,
     cell: TimerCell,
+    size: 100,
   }),
   columnHelper.accessor('playerId', {
     header: PlayerIdHeader,
@@ -57,18 +59,22 @@ const columns = [
   columnHelper.accessor('faction', {
     header: FactionHeader,
     cell: FactionCell,
+    size: 100,
   }),
   columnHelper.accessor('flags', {
     header: FlagsHeader,
     cell: FlagsCell,
+    size: 40,
   }),
   columnHelper.accessor('kills', {
     header: KillsHeader,
     cell: KillsCell,
+    size: 40,
   }),
   columnHelper.accessor('recruits', {
     header: RecruitsHeader,
     cell: RecruitsCell,
+    size: 40,
   }),
   columnHelper.accessor('isPaused', {
     header: PausedHeader,
