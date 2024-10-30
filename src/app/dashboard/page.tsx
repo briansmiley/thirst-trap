@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Table,
   TableBody,
@@ -18,6 +18,7 @@ import {
   useReactTable,
   flexRender,
   getCoreRowModel,
+  OnChangeFn,
 } from '@tanstack/react-table'
 import columns from '@/app/dashboard/ProfileTable/columns'
 
@@ -40,12 +41,34 @@ import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 
 export default function ProfileTable() {
-  const { players } = useAppStore(({ players }) => ({ players }))
+  const {
+    players,
+    columnVisibility,
+    setColumnVisibility,
+    initializeFromStorage,
+  } = useAppStore((state) => ({
+    players: state.players,
+    columnVisibility: state.columnVisibility,
+    setColumnVisibility: state.setColumnVisibility,
+    initializeFromStorage: state.initializeFromStorage,
+  }))
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({})
   const router = useRouter()
+
+  useEffect(() => {
+    initializeFromStorage()
+  }, [initializeFromStorage])
+
+  const handleVisibilityChange: OnChangeFn<VisibilityState> = (
+    updaterOrValue
+  ) => {
+    const newValue =
+      typeof updaterOrValue === 'function'
+        ? updaterOrValue(columnVisibility)
+        : updaterOrValue
+    setColumnVisibility(newValue)
+  }
 
   const table = useReactTable({
     data: players,
@@ -55,8 +78,7 @@ export default function ProfileTable() {
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-
+    onColumnVisibilityChange: handleVisibilityChange,
     state: {
       sorting,
       columnFilters,
@@ -211,7 +233,7 @@ export default function ProfileTable() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="">
-              Columns
+              Visibility <ChevronDownIcon size={18} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
