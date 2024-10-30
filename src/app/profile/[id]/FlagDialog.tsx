@@ -41,7 +41,7 @@ export default function FlagDialog({
         console.log('ON updateFlags:', response)
         toast({
           title: `Flag removed`,
-          description: `The flag "${flag}" has been removed from the player`,
+          description: `The flag "${flag}" has been removed`,
         })
       }
     )
