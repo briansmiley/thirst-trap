@@ -30,7 +30,7 @@ export default function MarshmallowDialog({
             <span className="satisfy text-xs">MP</span>
           </Button>
         </AlertDialogTrigger>
-        <AlertDialogContent>
+        <AlertDialogContent className="max-w-[80%]">
           <AlertDialogHeader>
             <AlertDialogTitle>
               <span className="flex w-full items-center justify-center gap-2 text-red-400">

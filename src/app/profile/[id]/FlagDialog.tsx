@@ -42,7 +42,7 @@ export default function FlagDialog({
             )}
           </Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="max-w-[80%]">
           <DialogHeader>
             <DialogTitle>Add flag</DialogTitle>
             <DialogDescription>

@@ -144,11 +144,12 @@ export function FlagsCell({ row }: CellContext<Player, Player['flags']>) {
               onClick={(event) => {
                 event.stopPropagation()
               }}
+              className="max-w-[80%]"
             >
               <DialogHeader>
                 <DialogTitle>Flags</DialogTitle>
                 <DialogDescription>
-                  <ul className="list-disc pl-5">
+                  <ul className="list-disc pl-5 text-start">
                     {row.original.flags.map((flag, index) => (
                       <li key={index}>{flag}</li>
                     ))}

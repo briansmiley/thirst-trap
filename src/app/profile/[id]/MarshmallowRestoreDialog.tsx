@@ -29,7 +29,7 @@ export default function MarshmallowRestoreDialog({
             <RotateCcwIcon className="!size-5" />
           </Button>
         </AlertDialogTrigger>
-        <AlertDialogContent>
+        <AlertDialogContent className="max-w-[80%]">
           <AlertDialogHeader>
             <AlertDialogTitle>
               <span className="flex w-full items-center justify-center">

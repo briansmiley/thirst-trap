@@ -166,8 +166,10 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
           />
         )}
         <div className="flex flex-col items-center">
-          <h1 className="text-3xl font-semibold">{playerData.name}</h1>
-          <h2 className="text-sm font-semibold text-neutral-400 opacity-50">
+          <h1 className="text-xl font-semibold sm:text-3xl">
+            {playerData.name}
+          </h1>
+          <h2 className="text-sm font-semibold text-neutral-400 opacity-50 sm:text-base">
             id: {playerData.playerId}
           </h2>
         </div>
@@ -299,7 +301,10 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
                   </Button>
                 </PopoverContent>
               </Popover>
-              <div className="text-center text-xl" suppressHydrationWarning>
+              <div
+                className="text-center text-lg sm:text-xl"
+                suppressHydrationWarning
+              >
                 Expires:{' '}
                 <span
                   className={msLeft <= 0 ? 'animate-pulse text-red-500' : ''}
