@@ -66,10 +66,10 @@ export function PictureCell({ row }: CellContext<Player, Player['picture']>) {
               className="z-10 size-full object-cover"
               src={row.original.picture ?? ''}
             />
-            <div className="satisfy absolute bottom-0 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center bg-black bg-opacity-75 px-10 py-5 text-4xl">
-              <span>{row.original.name}</span>
+            <div className="satisfy absolute bottom-0 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center bg-black bg-opacity-75 px-10 py-5 text-center text-4xl">
+              <span className="text-center">{row.original.name}</span>
               <span className="text-lg text-neutral-300">
-                {row.original.playerId}
+                id: {row.original.playerId}
               </span>
             </div>
           </div>
