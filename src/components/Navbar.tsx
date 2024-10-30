@@ -103,27 +103,6 @@ const Navbar = () => {
                 </span>
               </Link>
             </li>
-            {/* Consolidated the below into admin */}
-            {/* <li>
-              <Link
-                href="/commands"
-                className={`flex h-full w-[75px] items-center justify-center px-1 sm:w-[100px] sm:px-2 md:w-[125px] md:px-4 ${selectedClass(
-                  '/commands'
-                )}`}
-              >
-                Commands
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/settings"
-                className={`flex h-full w-[75px] items-center justify-center px-1 sm:w-[100px] sm:px-2 md:w-[125px] md:px-4 ${selectedClass(
-                  '/settings'
-                )}`}
-              >
-                Settings
-              </Link>
-            </li> */}
           </ul>
         </div>
         <div className="flex items-center justify-end gap-2 p-2 text-xs text-neutral-400 md:text-sm">
