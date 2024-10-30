@@ -80,12 +80,23 @@ export default function FlagDialog({
           />
           <DialogFooter>
             <DialogClose asChild>
-              <Button type="button" variant="secondary">
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setNote('')}
+              >
                 Cancel
               </Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button onClick={() => addNote(note)}>Save</Button>
+              <Button
+                onClick={() => {
+                  addNote(note)
+                  setNote('')
+                }}
+              >
+                Save
+              </Button>
             </DialogClose>
           </DialogFooter>
           {existingFlags.length > 0 && (
