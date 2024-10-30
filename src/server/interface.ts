@@ -97,4 +97,9 @@ export interface ClientToServerEvents {
     playerId: Player['playerId'],
     callback: (response: { success: boolean; message?: string }) => void
   ) => void
+  addFlag: (
+    playerId: Player['playerId'],
+    flag: string,
+    callback: (response: { success: boolean; message?: string }) => void
+  ) => void
 }

@@ -16,6 +16,8 @@ import {
   TimerCell,
   PlayerIdCell,
   PlayerIdHeader,
+  FlagsHeader,
+  FlagsCell,
 } from '@/app/dashboard/ProfileTable/cells'
 
 const columnHelper = createColumnHelper<Player>()
@@ -32,6 +34,10 @@ const columns = [
   columnHelper.accessor('faction', {
     header: FactionHeader,
     cell: FactionCell,
+  }),
+  columnHelper.accessor('flags', {
+    header: FlagsHeader,
+    cell: FlagsCell,
   }),
   columnHelper.accessor('kills', {
     header: KillsHeader,

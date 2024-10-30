@@ -32,6 +32,7 @@ import {
 import { Input } from '@/components/ui/input'
 import DeletePlayerDialog from './DeleteDialog'
 import { useRouter } from 'next/navigation'
+import FlagDialog from './FlagDialog'
 
 type PlayerInfoProps = {
   playerData: Player
@@ -118,6 +119,11 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
       console.log('ACK takeTime:', res)
     })
   }
+  const addNote = (note: string) => {
+    socket.emit('addFlag', playerData.playerId, note, (res) => {
+      console.log('ACK addNote:', res)
+    })
+  }
   return (
     <div className="flex flex-col items-center p-8">
       <img
@@ -126,6 +132,7 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
         className="h-72 w-72 border object-cover"
       />
       <div className="my_box relative flex w-72 flex-col items-center gap-2 text-center">
+        <FlagDialog addNote={addNote} classNames="absolute top-0 left-0" />
         <DeletePlayerDialog
           classNames="absolute top-0 right-0"
           deleteFn={deletePlayer}

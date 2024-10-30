@@ -18,6 +18,7 @@ const selects: PlayerSelect = {
   expirationTime: true,
   kills: true,
   recruits: true,
+  flags: true,
 }
 const baseSelects = {
   name: true,
@@ -28,6 +29,7 @@ const baseSelects = {
   expirationTime: true,
   kills: true,
   recruits: true,
+  flags: true,
 }
 const playerService = {
   create: async (
@@ -329,6 +331,14 @@ const playerService = {
       where: { playerId },
       data: { kills: { decrement: 1 } },
       select: selects,
+    })
+    return updatedPlayer
+  },
+  addFlag: async (playerId: string, flag: string) => {
+    const updatedPlayer = await prisma.player.update({
+      where: { playerId },
+      data: { flags: { push: flag } },
+      select: baseSelects,
     })
     return updatedPlayer
   },

@@ -3,11 +3,23 @@ import { HeaderContext, type CellContext } from '@tanstack/react-table'
 import { Player } from '@/app/types'
 import { Badge } from '@/components/ui/badge'
 import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from '@/components/ui/dialog'
+import { Button } from '@/components/ui/button'
+import {
   ClockIcon,
   HandshakeIcon,
   ImageIcon,
   PauseIcon,
   PlayIcon,
+  ShieldAlertIcon,
   SkullIcon,
 } from 'lucide-react'
 import { calcMsLeft, toDurationString } from '@/utils/timeUtils'
@@ -84,6 +96,66 @@ export function PlayerIdCell({ row }: CellContext<Player, Player['playerId']>) {
   return (
     <div className="text-sm font-semibold text-neutral-400 opacity-50">
       {row.original.playerId}
+    </div>
+  )
+}
+
+export function FlagsHeader({
+  column,
+}: HeaderContext<Player, Player['flags']>) {
+  return (
+    <div className="flex items-center justify-center">
+      <ShieldAlertIcon />
+    </div>
+  )
+}
+
+export function FlagsCell({ row }: CellContext<Player, Player['flags']>) {
+  return (
+    <div className="text-center">
+      {row.original.flags.length > 0 ? (
+        <>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button
+                variant="link"
+                onClick={(event) => {
+                  event.stopPropagation()
+                }}
+              >
+                {row.original.flags.length}
+              </Button>
+            </DialogTrigger>
+            <DialogContent
+              onClick={(event) => {
+                event.stopPropagation()
+              }}
+            >
+              <DialogHeader>
+                <DialogTitle>Flags</DialogTitle>
+                <DialogDescription>
+                  <ul className="list-disc pl-5">
+                    {row.original.flags.map((flag, index) => (
+                      <li key={index}>{flag}</li>
+                    ))}
+                  </ul>
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button variant="secondary">Close</Button>
+                </DialogClose>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </>
+      ) : (
+        <div
+          className={`${row.original.flags.length > 0 ? 'text-blue-500 underline' : ''}`}
+        >
+          {row.original.flags.length}
+        </div>
+      )}
     </div>
   )
 }

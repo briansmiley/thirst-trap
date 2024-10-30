@@ -207,6 +207,13 @@ app.prepare().then(() => {
         callback({ success: true })
       })
     })
+    socket.on('addFlag', (playerId, flag, callback) => {
+      console.log('ON addFlag:', socket.id, playerId, flag)
+      playerService.addFlag(playerId, flag).then((player) => {
+        io.emit('updatePlayer', player)
+        callback({ success: true })
+      })
+    })
     socket.on('disconnect', () => {
       console.log('User disconnected:', socket.id)
     })
