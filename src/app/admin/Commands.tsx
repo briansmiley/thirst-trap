@@ -4,33 +4,58 @@ import { Pause, Play } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { socket } from '@/socket/client'
 import { useState } from 'react'
+import { useToast } from '@/hooks/use-toast'
 
 export default function Commands() {
   const [additionTime, setAdditionTime] = useState(5)
   const [deductionTime, setDeductionTime] = useState(5)
-
+  const { toast } = useToast()
   const addTimeToAll = () => {
     console.log('ADDITION TIME:', additionTime)
     socket.emit('grantTimeToAll', additionTime, (res) => {
       console.log('ACK grantTimeToAll:', res)
+      toast({
+        title: res.success ? 'Success' : 'Error',
+        description: res.success
+          ? `Players given ${additionTime} minutes`
+          : res.message,
+        variant: res.success ? 'default' : 'destructive',
+      })
     })
   }
 
   const takeTimeFromAll = () => {
     socket.emit('takeTimeFromAll', deductionTime, (res) => {
       console.log('ACK takeTimeFromAll:', res)
+      toast({
+        title: res.success ? 'Success' : 'Error',
+        description: res.success
+          ? `Players deducted ${deductionTime} minutes`
+          : res.message,
+        variant: res.success ? 'default' : 'destructive',
+      })
     })
   }
 
   const pauseAll = () => {
     socket.emit('pauseAll', (res) => {
       console.log('ACK pauseAllPlayers:', res)
+      toast({
+        title: res.success ? 'Success' : 'Error',
+        description: res.success ? 'All players paused' : res.message,
+        variant: res.success ? 'default' : 'destructive',
+      })
     })
   }
 
   const resumeAll = () => {
     socket.emit('resumeAll', (res) => {
       console.log('ACK resumeAllPlayers:', res)
+      toast({
+        title: res.success ? 'Success' : 'Error',
+        description: res.success ? 'All players resumed' : res.message,
+        variant: res.success ? 'default' : 'destructive',
+      })
     })
   }
 

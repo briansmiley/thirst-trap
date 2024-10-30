@@ -9,6 +9,7 @@ import { AppStoreProvider } from '@/lib/stores/AppStoreProvider'
 import StoreUpdater from '@/lib/stores/StoreUpdater'
 import Navbar from '@/components/Navbar'
 import QrScanner from '@/components/QrScanner'
+import { Toaster } from '@/components/ui/toaster'
 
 export const dynamic = 'force-dynamic'
 
@@ -68,6 +69,7 @@ export default async function RootLayout({
             <Navbar />
             {/* <QrScanner /> */}
             {children}
+            <Toaster />
           </AppStoreProvider>
         </ThemeProvider>
       </body>
