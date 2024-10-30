@@ -38,11 +38,9 @@ export default function DeletePlayerDialog({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction asChild>
-              <Button variant="destructive" onClick={deleteFn}>
-                Delete
-              </Button>
+            <AlertDialogCancel variant="default">Cancel</AlertDialogCancel>
+            <AlertDialogAction variant="destructive" onClick={deleteFn}>
+              Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
