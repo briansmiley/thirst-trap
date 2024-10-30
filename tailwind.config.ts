@@ -19,6 +19,15 @@ const config: Config = {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      keyframes: {
+        alertFlash: {
+          '0%, 100%': { color: '#ff0000' },
+          '50%': { color: '#8b0000' },
+        },
+      },
+      animation: {
+        alertFlash: 'alertFlash 1s step-end infinite',
+      },
     },
   },
   plugins: [animate],
