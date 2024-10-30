@@ -27,7 +27,7 @@ export default function FlagDialog({ addNote, classNames }: FlagDialogProps) {
       <Dialog>
         <DialogTrigger asChild>
           <Button variant="ghost" size="icon">
-            <ShieldAlertIcon />
+            <ShieldAlertIcon className="!size-5" />
           </Button>
         </DialogTrigger>
         <DialogContent>

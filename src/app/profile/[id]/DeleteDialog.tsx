@@ -26,7 +26,7 @@ export default function DeletePlayerDialog({
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button variant="ghost" size="icon">
-            <TrashIcon />
+            <TrashIcon className="!size-5" />
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
