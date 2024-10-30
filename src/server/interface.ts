@@ -104,6 +104,7 @@ export interface ClientToServerEvents {
   ) => void
   marshmallowProtocol: (
     playerId: Player['playerId'],
+    marshmallow: boolean,
     callback: (response: { success: boolean; message?: string }) => void
   ) => void
 }

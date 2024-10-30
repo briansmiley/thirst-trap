@@ -11,6 +11,7 @@ export type Player = {
   kills: number
   recruits: number
   flags: string[]
+  marshmallow: boolean
 }
 
 export type Settings = {

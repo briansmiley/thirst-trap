@@ -8,6 +8,8 @@ import {
   PauseIcon,
   PlayIcon,
   PlusIcon,
+  RotateCcwIcon,
+  SkullIcon,
   TrashIcon,
 } from 'lucide-react'
 import { socket } from '@/socket/client'
@@ -33,6 +35,8 @@ import { Input } from '@/components/ui/input'
 import DeletePlayerDialog from './DeleteDialog'
 import { useRouter } from 'next/navigation'
 import FlagDialog from './FlagDialog'
+import MarshmallowDialog from './MarshmallowDialog'
+import MarshmallowRestoreDialog from './MarshmallowRestoreDialog'
 
 type PlayerInfoProps = {
   playerData: Player
@@ -42,9 +46,6 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
   const [timeGrant, setTimeGrant] = useState(10)
   const [timeTake, setTimeTake] = useState(10)
   const router = useRouter()
-
-  const hasExpiration =
-    playerData.faction === 'VAMPIRE' || playerData.faction === 'JACKAL'
   useEffect(() => {
     let interval: NodeJS.Timeout
     setMsLeft(calcMsLeft(playerData))
@@ -55,7 +56,9 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
     }
     return () => clearInterval(interval)
   }, [playerData.isPaused, playerData.expirationTime])
-
+  useEffect(() => {
+    console.log('playerData', playerData)
+  }, [playerData])
   const handleFactionChange = (faction: Faction) => {
     console.log('EMIT recruitPlayer:', {
       playerId: playerData.playerId,
@@ -124,6 +127,21 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
       console.log('ACK addNote:', res)
     })
   }
+  const marshmallowProtocol = (marshmallow = true) => {
+    socket.emit(
+      'marshmallowProtocol',
+      playerData.playerId,
+      marshmallow,
+      (res) => {
+        console.log('ACK marshmallowProtocol:', res)
+      }
+    )
+  }
+  const showMPButton = playerData.faction === 'HUMAN' && !playerData.marshmallow
+  const showTimer =
+    playerData.faction === 'JACKAL' ||
+    playerData.faction === 'VAMPIRE' ||
+    (playerData.faction === 'HUMAN' && playerData.marshmallow)
   return (
     <div className="flex flex-col items-center p-8">
       <img
@@ -141,6 +159,12 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
           classNames="absolute top-0 right-0"
           deleteFn={deletePlayer}
         />
+        {playerData.marshmallow && (
+          <MarshmallowRestoreDialog
+            classNames="absolute bottom-0 right-0"
+            restoreFn={() => marshmallowProtocol(false)}
+          />
+        )}
         <div className="flex flex-col items-center">
           <h1 className="text-3xl font-semibold">{playerData.name}</h1>
           <h2 className="text-sm font-semibold text-neutral-400 opacity-50">
@@ -238,7 +262,8 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
             </Button>
           </div>
         )}
-        {hasExpiration && (
+        {showMPButton && <MarshmallowDialog executeFn={marshmallowProtocol} />}
+        {showTimer && (
           <div className="flex flex-col items-center gap-2">
             <Button
               variant="outline"

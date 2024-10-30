@@ -19,6 +19,7 @@ const selects: PlayerSelect = {
   kills: true,
   recruits: true,
   flags: true,
+  marshmallow: true,
 }
 const baseSelects = {
   name: true,
@@ -30,6 +31,7 @@ const baseSelects = {
   kills: true,
   recruits: true,
   flags: true,
+  marshmallow: true,
 }
 const playerService = {
   create: async (
@@ -171,8 +173,9 @@ const playerService = {
       where: { playerId },
       data: {
         faction,
-        expirationTime:
-          faction === 'HUMAN' ? undefined : startingExpirationDate,
+        expirationTime: ['HUMAN', 'GHOST'].includes(faction)
+          ? undefined
+          : startingExpirationDate,
       },
       select: baseSelects,
     })
@@ -349,10 +352,13 @@ const playerService = {
     })
     return updatedPlayer
   },
-  marshmallowProtocol: async (playerId: string) => {
+  marshmallowProtocol: async (
+    playerId: string,
+    marshmallow: boolean = true
+  ) => {
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
-      data: { expirationTime: new Date(), isPaused: false },
+      data: { marshmallow: marshmallow, expirationTime: new Date() },
       select: baseSelects,
     })
     return updatedPlayer
