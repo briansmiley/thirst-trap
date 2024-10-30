@@ -1,6 +1,7 @@
 import { Player } from '@/app/types'
 
 export type Duration = {
+  hours: number
   minutes: number
   seconds: number
   sign: '' | '-'
@@ -8,15 +9,16 @@ export type Duration = {
 
 export function toDuration(ms: number): Duration {
   const totalSeconds = Math.floor(Math.abs(ms) / 1000)
-  const minutes = Math.floor(totalSeconds / 60)
-  const seconds = totalSeconds - minutes * 60
-  return { minutes, seconds, sign: ms < 0 ? '-' : '' }
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds - hours * 3600) / 60)
+  const seconds = totalSeconds - hours * 3600 - minutes * 60
+  return { hours, minutes, seconds, sign: ms < 0 ? '-' : '' }
 }
 
 export function toDurationString(durationOrMs: Duration | number) {
   const duration =
     typeof durationOrMs === 'number' ? toDuration(durationOrMs) : durationOrMs
-  return `${duration.sign}${duration.minutes}:${String(duration.seconds).padStart(2, '0')}`
+  return `${duration.sign}${duration.hours ? `${String(duration.hours).padStart(2, '0')}:` : ''}${String(duration.minutes).padStart(2, '0')}:${String(duration.seconds).padStart(2, '0')}`
 }
 
 /**
