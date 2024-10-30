@@ -43,7 +43,6 @@ const Navbar = () => {
       ? 'bg-neutral-800 font-semibold'
       : 'hover:text-neutral-300 hover:bg-neutral-700'
   }
-
   if (isSplashRoute) {
     return null
   }
@@ -97,9 +96,12 @@ const Navbar = () => {
                   '/scan'
                 )}`}
               >
-                <span className="flex items-center gap-3">
+                <span className="flex items-center gap-2">
                   QR
-                  <CameraIcon className="!size-4" />
+                  <CameraIcon
+                    className="!size-5"
+                    strokeWidth={pathname.startsWith('/scan') ? 3 : 1}
+                  />
                 </span>
               </Link>
             </li>
