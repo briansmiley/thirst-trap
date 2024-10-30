@@ -58,6 +58,7 @@ export default function ProfileTable() {
 
   useEffect(() => {
     initializeFromStorage()
+    setSorting([{ id: 'expirationTime', desc: false }])
   }, [initializeFromStorage])
 
   const handleVisibilityChange: OnChangeFn<VisibilityState> = (
