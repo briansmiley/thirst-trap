@@ -44,8 +44,8 @@ export default function MarshmallowRestoreDialog({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <div className="flex w-full items-center justify-center gap-2">
-              <AlertDialogCancel variant="default">Cancel</AlertDialogCancel>
-              <AlertDialogAction variant="destructive" onClick={restoreFn}>
+              <AlertDialogCancel variant="secondary">Cancel</AlertDialogCancel>
+              <AlertDialogAction variant="default" onClick={restoreFn}>
                 Restore
               </AlertDialogAction>
             </div>
