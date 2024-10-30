@@ -88,7 +88,10 @@ export default function NewProfileForm({ id }: { id: string }) {
   )
 
   return (
-    <form className="flex flex-col gap-4 p-8" onSubmit={handleSubmit}>
+    <form
+      className="flex max-w-[500px] flex-col gap-4 self-center p-8"
+      onSubmit={handleSubmit}
+    >
       <h1 className="text-center text-3xl font-semibold">New Profile</h1>
       <div
         onClick={() => fileInputRef.current?.click()}
