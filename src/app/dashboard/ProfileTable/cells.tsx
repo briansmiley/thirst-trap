@@ -55,18 +55,24 @@ export function PictureNameCell({ row }: CellContext<Player, Player['name']>) {
     <>
       {showZoomed && (
         <div
-          className="fixed inset-0 flex items-center justify-center bg-black/50"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
           onClick={(evt) => {
             evt.stopPropagation()
             setShowZoomed(false)
           }}
         >
-          <div className="aspect-square size-[600px] overflow-hidden">
+          <div className="relative flex aspect-square size-[600px] flex-col items-center overflow-hidden">
             <img
               alt="picture"
-              className="size-full object-cover"
+              className="z-10 size-full object-cover"
               src={row.original.picture ?? ''}
             />
+            <div className="satisfy absolute bottom-0 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center bg-black bg-opacity-50 px-10 py-5 text-4xl">
+              <span>{row.original.name}</span>
+              <span className="text-lg text-neutral-400 opacity-50">
+                {row.original.playerId}
+              </span>
+            </div>
           </div>
         </div>
       )}
@@ -105,7 +111,7 @@ export function FlagsHeader({
 }: HeaderContext<Player, Player['flags']>) {
   return (
     <div className="flex items-center justify-center">
-      <ShieldAlertIcon />
+      <ShieldAlertIcon size={16} />
     </div>
   )
 }

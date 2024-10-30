@@ -27,6 +27,11 @@ const columns = [
     header: PictureNameHeader,
     cell: PictureNameCell,
   }),
+  columnHelper.accessor('expirationTime', {
+    sortingFn: 'datetime',
+    header: TimerHeader,
+    cell: TimerCell,
+  }),
   columnHelper.accessor('playerId', {
     header: PlayerIdHeader,
     cell: PlayerIdCell,
@@ -50,11 +55,6 @@ const columns = [
   columnHelper.accessor('isPaused', {
     header: PausedHeader,
     cell: PausedCell,
-  }),
-  columnHelper.accessor('expirationTime', {
-    sortingFn: 'datetime',
-    header: TimerHeader,
-    cell: TimerCell,
   }),
 ]
 
