@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import { Button } from './ui/button'
-import { CameraIcon, LogOut } from 'lucide-react'
+import { CameraIcon, CheckIcon, LogOut, XIcon } from 'lucide-react'
 import { useSocketSubscription } from '@/socket/client'
 import { cn } from '@/lib/utils'
 
@@ -15,23 +15,12 @@ interface Connection {
   label: string
 }
 
-const CONNECTED = {
-  true: {
-    connected: true,
-    label: 'Connected',
-  },
-  false: {
-    connected: false,
-    label: 'Disconnected',
-  },
-}
-
 const Navbar = () => {
-  const [connection, setConnection] = useState<Connection>(CONNECTED.false)
+  const [isConnected, setIsConnected] = useState(false)
 
-  useSocketSubscription('connect', () => setConnection(CONNECTED.true))
+  useSocketSubscription('connect', () => setIsConnected(true))
   useSocketSubscription('connect_error', (error) => console.error(error))
-  useSocketSubscription('disconnect', () => setConnection(CONNECTED.false))
+  useSocketSubscription('disconnect', () => setIsConnected(false))
 
   const pathname = usePathname()
   const router = useRouter()
@@ -111,10 +100,10 @@ const Navbar = () => {
           <div
             className={cn(
               'h-[0.75em] w-[0.75em] rounded-full',
-              connection.connected ? 'bg-green-500' : 'bg-red-500'
+              isConnected ? 'bg-green-500' : 'bg-red-500'
             )}
           />
-          {connection.label}
+          {/* {isConnected ? <CheckIcon size={8} /> : <XIcon size={8} />} */}
         </div>
         <Button
           size="icon"
