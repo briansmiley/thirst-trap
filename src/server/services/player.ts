@@ -169,7 +169,11 @@ const playerService = {
     )
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
-      data: { faction, expirationTime: startingExpirationDate },
+      data: {
+        faction,
+        expirationTime:
+          faction === 'HUMAN' ? undefined : startingExpirationDate,
+      },
       select: baseSelects,
     })
     return updatedPlayer
@@ -226,7 +230,10 @@ const playerService = {
   },
   grantTimeToAll: async (minutes: number) => {
     const players = await prisma.player.findMany({
-      where: { faction: { in: ['JACKAL', 'VAMPIRE'] } },
+      where: {
+        faction: { in: ['JACKAL', 'VAMPIRE'] },
+        expirationTime: { gt: new Date() }, //Only grant time to players that are not expired
+      },
     })
     const updatedPlayers = await Promise.all(
       players.map((player) => playerService.grantTime(player.playerId, minutes))
@@ -338,6 +345,14 @@ const playerService = {
     const updatedPlayer = await prisma.player.update({
       where: { playerId },
       data: { flags: { push: flag } },
+      select: baseSelects,
+    })
+    return updatedPlayer
+  },
+  marshmallowProtocol: async (playerId: string) => {
+    const updatedPlayer = await prisma.player.update({
+      where: { playerId },
+      data: { expirationTime: new Date(), isPaused: false },
       select: baseSelects,
     })
     return updatedPlayer

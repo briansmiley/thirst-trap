@@ -161,11 +161,7 @@ export default function ProfileTable() {
                   variant={
                     String(
                       table.getColumn('faction')?.getFilterValue()
-                    ).toLowerCase() as
-                      | 'neutral'
-                      | 'vampire'
-                      | 'jackal'
-                      | 'ghost'
+                    ).toLowerCase() as 'human' | 'vampire' | 'jackal' | 'ghost'
                   }
                 >
                   {String(
@@ -188,8 +184,8 @@ export default function ProfileTable() {
               }}
             >
               <DropdownMenuRadioItem value="">None</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="NEUTRAL">
-                <Badge variant="neutral">Neutral</Badge>
+              <DropdownMenuRadioItem value="HUMAN">
+                <Badge variant="human">Human</Badge>
               </DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="VAMPIRE">
                 <Badge variant="vampire">Vampire</Badge>

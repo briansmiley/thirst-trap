@@ -123,7 +123,11 @@ export function FlagsCell({ row }: CellContext<Player, Player['flags']>) {
                   event.stopPropagation()
                 }}
               >
-                {row.original.flags.length}
+                <div
+                  className={`underline ${row.original.flags.length > 1 ? 'animate-alertFlash' : 'text-yellow-500'}`}
+                >
+                  {row.original.flags.length}
+                </div>
               </Button>
             </DialogTrigger>
             <DialogContent
@@ -150,11 +154,7 @@ export function FlagsCell({ row }: CellContext<Player, Player['flags']>) {
           </Dialog>
         </>
       ) : (
-        <div
-          className={`${row.original.flags.length > 0 ? 'text-blue-500 underline' : ''}`}
-        >
-          {row.original.flags.length}
-        </div>
+        row.original.flags.length
       )}
     </div>
   )

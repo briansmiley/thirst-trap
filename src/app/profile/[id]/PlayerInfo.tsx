@@ -132,7 +132,11 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
         className="h-72 w-72 border object-cover"
       />
       <div className="my_box relative flex w-72 flex-col items-center gap-2 text-center">
-        <FlagDialog addNote={addNote} classNames="absolute top-0 left-0" />
+        <FlagDialog
+          addNote={addNote}
+          existingFlags={playerData.flags}
+          classNames="absolute top-0 left-0"
+        />
         <DeletePlayerDialog
           classNames="absolute top-0 right-0"
           deleteFn={deletePlayer}
@@ -150,7 +154,7 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
                 className="capitalize"
                 variant={
                   playerData.faction.toLowerCase() as
-                    | 'neutral'
+                    | 'human'
                     | 'vampire'
                     | 'jackal'
                     | 'ghost'
@@ -170,8 +174,8 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
                 handleFactionChange(value as Faction)
               }}
             >
-              <DropdownMenuRadioItem value="NEUTRAL">
-                <Badge variant="neutral">Neutral</Badge>
+              <DropdownMenuRadioItem value="HUMAN">
+                <Badge variant="human">Human</Badge>
               </DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="VAMPIRE">
                 <Badge variant="vampire">Vampire</Badge>
@@ -185,7 +189,7 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
-        {['VAMPIRE', 'JACKAL', 'NEUTRAL'].includes(playerData.faction) && (
+        {['VAMPIRE', 'JACKAL', 'HUMAN'].includes(playerData.faction) && (
           <div className="flex w-48 items-center justify-between gap-2">
             <Button
               className="rounded-full"

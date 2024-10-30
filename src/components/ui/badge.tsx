@@ -15,10 +15,12 @@ const badgeVariants = cva(
         destructive:
           'border-transparent bg-red-500 text-neutral-50 hover:bg-red-500/80 dark:bg-red-900 dark:text-neutral-50 dark:hover:bg-red-900/80',
         outline: 'text-neutral-950 dark:text-neutral-50',
-        neutral: 'dark:text-neutral-50 dark:bg-neutral-700/50 dark:border-neutral-600',
+        human:
+          'dark:text-neutral-50 dark:bg-neutral-700/50 dark:border-neutral-600',
         vampire: 'dark:text-neutral-50 dark:bg-red-700/50 dark:border-red-800',
         jackal: 'dark:text-neutral-50 dark:bg-blue-700/50 dark:border-blue-800',
-        ghost: 'dark:text-neutral-50 dark:bg-neutral-300/50 dark:border-neutral-400',
+        ghost:
+          'dark:text-neutral-50 dark:bg-neutral-300/50 dark:border-neutral-400',
       },
     },
     defaultVariants: {

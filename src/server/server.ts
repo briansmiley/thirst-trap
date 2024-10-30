@@ -214,6 +214,13 @@ app.prepare().then(() => {
         callback({ success: true })
       })
     })
+    socket.on('marshmallowProtocol', (playerId, callback) => {
+      console.log('ON marshmallowProtocol:', socket.id, playerId)
+      playerService.marshmallowProtocol(playerId).then((player) => {
+        io.emit('updatePlayer', player)
+        callback({ success: true })
+      })
+    })
     socket.on('disconnect', () => {
       console.log('User disconnected:', socket.id)
     })

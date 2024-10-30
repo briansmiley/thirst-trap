@@ -17,7 +17,7 @@ datasource db {
 enum Faction {
   VAMPIRE
   JACKAL
-  NEUTRAL
+  HUMAN
   GHOST
 }
 
@@ -29,7 +29,7 @@ model Player {
   name           String
   playerId       String   @unique
   picture        String
-  faction        Faction  @default(NEUTRAL)
+  faction        Faction  @default(HUMAN)
   isPaused       Boolean  @default(true)
   pausedAt       DateTime
   expirationTime DateTime

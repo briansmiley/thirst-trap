@@ -1,4 +1,4 @@
-export type Faction = 'VAMPIRE' | 'JACKAL' | 'NEUTRAL' | 'GHOST'
+export type Faction = 'VAMPIRE' | 'JACKAL' | 'HUMAN' | 'GHOST'
 
 export type Player = {
   name: string
@@ -10,6 +10,7 @@ export type Player = {
   expirationTime: Date
   kills: number
   recruits: number
+  flags: string[]
 }
 
 export type Settings = {
