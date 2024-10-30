@@ -41,9 +41,9 @@ const Navbar = () => {
   }
 
   return (
-    <header className="flex flex-col">
+    <header className="sticky top-0 z-50 flex w-full flex-col">
       <nav className="flex min-h-16 items-center bg-neutral-900 text-xs text-neutral-50 sm:text-sm md:text-base">
-        <div className="flex h-full w-full items-center justify-start gap-2 px-2">
+        <div className="flex h-full w-full items-center justify-start gap-1 px-2 sm:gap-2">
           <Link href="/">
             <img alt="logo" src="/images/favicon.svg" width={24} height={24} />
           </Link>
@@ -51,7 +51,7 @@ const Navbar = () => {
             <li>
               <Link
                 href="/dashboard"
-                className={`flex h-full w-[75px] items-center justify-center px-1 sm:w-[100px] sm:px-2 md:w-[125px] md:px-4 ${selectedClass(
+                className={`flex h-full items-center justify-center px-3.5 sm:px-5 md:px-8 ${selectedClass(
                   '/dashboard'
                 )}`}
               >
@@ -61,7 +61,7 @@ const Navbar = () => {
             <li>
               <Link
                 href="/profile"
-                className={`flex h-full w-[75px] items-center justify-center px-1 sm:w-[100px] sm:px-2 md:w-[125px] md:px-4 ${selectedClass(
+                className={`flex h-full items-center justify-center px-3.5 sm:px-5 md:px-8 ${selectedClass(
                   '/profile'
                 )}`}
               >
@@ -71,7 +71,7 @@ const Navbar = () => {
             <li>
               <Link
                 href="/admin"
-                className={`flex h-full w-[75px] items-center justify-center px-1 sm:w-[100px] sm:px-2 md:w-[125px] md:px-4 ${selectedClass(
+                className={`flex h-full items-center justify-center px-3.5 sm:px-5 md:px-8 ${selectedClass(
                   '/admin'
                 )}`}
               >
@@ -81,7 +81,7 @@ const Navbar = () => {
             <li>
               <Link
                 href="/scan"
-                className={`flex h-full w-[75px] items-center justify-center px-1 sm:w-[100px] sm:px-2 md:w-[125px] md:px-4 ${selectedClass(
+                className={`flex h-full items-center justify-center px-3.5 sm:px-5 md:px-8 ${selectedClass(
                   '/scan'
                 )}`}
               >
@@ -99,8 +99,8 @@ const Navbar = () => {
         <div className="flex items-center justify-end gap-2 p-2 text-xs text-neutral-400 md:text-sm">
           <div
             className={cn(
-              'h-[0.75em] w-[0.75em] rounded-full',
-              isConnected ? 'bg-green-500' : 'bg-red-500'
+              'h-[0.75em] w-[0.75em] animate-pulse rounded-full',
+              isConnected ? 'bg-green-500' : 'bg-red-500 duration-300'
             )}
           />
           {/* {isConnected ? <CheckIcon size={8} /> : <XIcon size={8} />} */}

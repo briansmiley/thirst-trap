@@ -60,7 +60,7 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body
-        className={`${geistSans.variable} ${geistMono.variable} flex h-[100dvh] flex-col antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} flex h-[100dvh] w-full flex-col antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="dark">
           <AppStoreProvider initProps={initProps}>

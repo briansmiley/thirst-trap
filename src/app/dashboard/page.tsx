@@ -94,12 +94,12 @@ export default function ProfileTable() {
     )
   return (
     <main>
-      <div className="flex gap-4 p-4 pb-2">
+      <div className="flex gap-1 px-1 py-4 sm:gap-4 sm:p-4">
         {/* Sorting */}
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button
-              className="flex justify-between gap-2 capitalize"
+              className="flex justify-between gap-2 border capitalize"
               variant="outline"
             >
               Sort:
