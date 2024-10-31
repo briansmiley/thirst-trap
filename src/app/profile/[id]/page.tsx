@@ -5,7 +5,9 @@ import PlayerInfo from './PlayerInfo'
 
 export default function ProfilePage({ params }: { params: { id: string } }) {
   const { player } = useAppStore((state) => ({
-    player: state.players.find((p) => p.playerId === params.id),
+    player: state.players.find(
+      (p) => p.playerId.toLowerCase() === params.id.toLowerCase()
+    ),
   }))
 
   return player ? (
