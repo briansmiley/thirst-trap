@@ -4,6 +4,7 @@ import { io, type Socket } from 'socket.io-client'
 import {
   type ServerToClientEvents,
   type ClientToServerEvents,
+  type EvtId,
 } from '@/server/interface'
 import {
   type DefaultEventsMap,
@@ -12,12 +13,16 @@ import {
 } from '@socket.io/component-emitter'
 import { useEffect } from 'react'
 
-export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io()
-//   `http://localhost:3000`,
-//   {
-//     autoConnect: true,
-//     transports: ["websocket", "polling"],
-//   }
+export const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io({
+  auth: {
+    offset: undefined,
+  },
+})
+
+export function updateSocketOffset(evtId: EvtId) {
+  // @ts-expect-error: Socket.io docs recommendation causes type error
+  socket.auth.offset = evtId
+}
 
 function createUseSocketSubscription<STCE extends EventsMap = DefaultEventsMap>(
   socket: Socket<STCE>

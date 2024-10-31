@@ -37,6 +37,7 @@ import { useRouter } from 'next/navigation'
 import FlagDialog from './FlagDialog'
 import MarshmallowDialog from './MarshmallowDialog'
 import MarshmallowRestoreDialog from './MarshmallowRestoreDialog'
+import { toast } from '@/hooks/use-toast'
 
 type PlayerInfoProps = {
   playerData: Player
@@ -97,6 +98,10 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
   const deletePlayer = () => {
     socket.emit('deletePlayer', playerData.playerId, (res) => {
       console.log('ACK deletePlayer:', res)
+      toast({
+        title: 'Player deleted',
+        description: `The player ${playerData.name} has been deleted`,
+      })
       router.push('/dashboard')
     })
   }
@@ -124,6 +129,10 @@ export default function PlayerInfo({ playerData }: PlayerInfoProps) {
   }
   const addNote = (note: string) => {
     socket.emit('addFlag', playerData.playerId, note, (res) => {
+      toast({
+        title: 'Flag added',
+        description: `The flag "${note}" has been added to ${playerData.name}`,
+      })
       console.log('ACK addNote:', res)
     })
   }

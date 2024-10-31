@@ -10,7 +10,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useToast } from '@/hooks/use-toast'
 import { socket, useSocketSubscription } from '@/socket/client'
@@ -51,6 +50,18 @@ export default function FlagDialog({
       setFlags(player.flags || [])
     }
   })
+  const handleSave = () => {
+    if (note.length === 0) {
+      toast({
+        title: 'Flag empty',
+        description: 'Nothing saved',
+        variant: 'destructive',
+      })
+      return
+    }
+    addNote(note)
+    setNote('')
+  }
   return (
     <div className={classNames}>
       <Dialog>
@@ -89,14 +100,7 @@ export default function FlagDialog({
               </Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button
-                onClick={() => {
-                  addNote(note)
-                  setNote('')
-                }}
-              >
-                Save
-              </Button>
+              <Button onClick={handleSave}>Save</Button>
             </DialogClose>
           </DialogFooter>
           {existingFlags.length > 0 && (
