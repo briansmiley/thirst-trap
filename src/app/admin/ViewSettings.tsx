@@ -1,4 +1,3 @@
-import { useAppStore } from '@/lib/stores/AppStoreProvider'
 import { Settings } from '../types'
 
 type ViewSettingsProps = {
