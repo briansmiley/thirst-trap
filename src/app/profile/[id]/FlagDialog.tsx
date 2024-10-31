@@ -45,11 +45,6 @@ export default function FlagDialog({
       }
     )
   }
-  useSocketSubscription('updatePlayer', (player) => {
-    if (player.playerId === playerId) {
-      setFlags(player.flags || [])
-    }
-  })
   const handleSave = () => {
     if (note.length === 0) {
       toast({
