@@ -29,8 +29,8 @@ export function toDurationString(durationOrMs: Duration | number) {
 export function calcMsLeft(player: Player, floor = false) {
   const startingPoint = player.isPaused ? player.pausedAt.getTime() : Date.now()
   return floor
-    ? Math.max(Math.floor(player.expirationTime.getTime() - startingPoint), 0)
-    : player.expirationTime.getTime() - startingPoint
+    ? Math.max(Math.ceil(player.expirationTime.getTime() - startingPoint), 0)
+    : Math.ceil(player.expirationTime.getTime() - startingPoint)
 }
 
 export const hasExpiration = (player: Player) =>
