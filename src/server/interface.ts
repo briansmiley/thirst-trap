@@ -1,6 +1,8 @@
-import { Faction, type Player, type Settings } from '@/app/types'
+import { type Player, type Settings } from '@/app/types'
 import { type DisconnectDescription } from 'socket.io-client/build/esm/socket'
 import { type Socket } from 'socket.io-client'
+
+export type EvtId = number
 
 export interface DefaultServerToClientEvents {
   connect: () => void
@@ -12,20 +14,44 @@ export interface DefaultServerToClientEvents {
 }
 
 export interface ServerToClientEvents extends DefaultServerToClientEvents {
-  addPlayer: (player: Player) => void
-  deletePlayer: (playerId: string) => void
-  updatePlayer: (player: Partial<Player> & Pick<Player, 'playerId'>) => void
-  updateAllPlayers: (
+  addPlayer: ({ evtId, player }: { evtId: EvtId; player: Player }) => void
+  deletePlayer: ({
+    evtId,
+    playerId,
+  }: {
+    evtId: EvtId
+    playerId: string
+  }) => void
+  updatePlayer: ({
+    evtId,
+    player,
+  }: {
+    evtId: EvtId
+    player: Partial<Player> & Pick<Player, 'playerId'>
+  }) => void
+  updateAllPlayers: ({
+    evtId,
+    players,
+  }: {
+    evtId: EvtId
     players: Partial<Player> & Pick<Player, 'playerId'>[]
-  ) => void
-  // pausePlayer: (player: Omit<Player, 'picture'>) => void
-  // pauseAll: (players: Omit<Player, 'picture'>[]) => void
-  // resumePlayer: (player: Omit<Player, 'picture'>) => void
-  // resumeAll: (players: Omit<Player, 'picture'>[]) => void
-  // recruitPlayer: (
-  //   player: Omit<Player, 'picture' | 'kills' | 'recruits'>
-  // ) => void
-  updateSettings: (settings: Partial<Settings>) => void
+  }) => void
+  updateSettings: ({
+    evtId,
+    settings,
+  }: {
+    evtId: EvtId
+    settings: Partial<Settings>
+  }) => void
+  reStore: ({
+    evtId,
+    players,
+    settings,
+  }: {
+    evtId: EvtId
+    players: Player[]
+    settings: Settings
+  }) => void
 }
 
 export interface ClientToServerEvents {

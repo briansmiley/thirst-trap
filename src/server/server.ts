@@ -8,6 +8,7 @@ import {
   type ServerToClientEvents,
 } from './interface'
 import { loggable } from './utils'
+import { type Player } from '@/app/types'
 
 const dev = process.env.NODE_ENV !== 'production'
 const hostname = process.env.HOSTNAME || 'localhost'
@@ -19,18 +20,22 @@ const handler = app.getRequestHandler()
 app.prepare().then(() => {
   const httpServer = createServer(handler)
 
-  const io = new Server<ClientToServerEvents, ServerToClientEvents>(
-    httpServer
-    //   , {
-    //   cors: {
-    //     origin: "*",
-    //     methods: ["GET", "POST"]
-    //   }
-    // }
-  )
+  const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer)
 
-  io.on('connection', (socket) => {
-    console.log('ON connected:', socket.id)
+  let lastEvtId = new Date().getTime()
+
+  io.on('connection', async (socket) => {
+    const offset = socket.handshake.auth.offset
+    console.log('ON connected:', socket.id, offset)
+
+    if (offset !== lastEvtId) {
+      console.log('EMIT reStore to', socket.id)
+      socket.emit('reStore', {
+        evtId: lastEvtId,
+        players: (await playerService.getAll()) as Player[],
+        settings: await settingService.get(),
+      })
+    }
 
     socket.on('addPlayer', (player, callback) => {
       console.log('ON addPlayer:', socket.id, loggable(player))
@@ -38,7 +43,9 @@ app.prepare().then(() => {
         .create(player)
         .then((newPlayer) => {
           console.log('EMIT addPlayer:', loggable(newPlayer))
-          io.emit('addPlayer', newPlayer)
+          const evtId = new Date().getTime()
+          io.emit('addPlayer', { evtId, player: newPlayer })
+          lastEvtId = evtId
           callback({ success: true })
         })
         .catch((err) => {
@@ -49,7 +56,9 @@ app.prepare().then(() => {
     socket.on('deletePlayer', (playerId, callback) => {
       console.log('ON deletePlayer:', socket.id, playerId)
       playerService.delete(playerId).then(() => {
-        io.emit('deletePlayer', playerId)
+        const evtId = new Date().getTime()
+        io.emit('deletePlayer', { evtId, playerId })
+        lastEvtId = evtId
         callback({ success: true })
       })
     })
@@ -60,7 +69,9 @@ app.prepare().then(() => {
         .update(playerId, rest)
         .then((updatedPlayer) => {
           console.log('EMIT updatePlayer:', loggable(updatedPlayer))
-          io.emit('updatePlayer', updatedPlayer)
+          const evtId = new Date().getTime()
+          io.emit('updatePlayer', { evtId, player: updatedPlayer })
+          lastEvtId = evtId
           callback({ success: true })
         })
         .catch((err) => {
@@ -74,8 +85,10 @@ app.prepare().then(() => {
       playerService
         .pause(playerId)
         .then((player) => {
-          io.emit('updatePlayer', player)
           console.log('EMIT updatePlayer (pause):', loggable(player))
+          const evtId = new Date().getTime()
+          io.emit('updatePlayer', { evtId, player })
+          lastEvtId = evtId
           callback({ success: true })
         })
         .catch((err) => {
@@ -88,8 +101,10 @@ app.prepare().then(() => {
       playerService
         .pauseAll()
         .then((players) => {
-          io.emit('updateAllPlayers', players)
           console.log('EMIT updateAllPlayers (pause)')
+          const evtId = new Date().getTime()
+          io.emit('updateAllPlayers', { evtId, players })
+          lastEvtId = evtId
           callback({ success: true })
         })
         .catch((err) => {
@@ -104,7 +119,9 @@ app.prepare().then(() => {
         .resume(playerId)
         .then((player) => {
           console.log('EMIT updatePlayer (resume):', loggable(player))
-          io.emit('updatePlayer', player)
+          const evtId = new Date().getTime()
+          io.emit('updatePlayer', { evtId, player })
+          lastEvtId = evtId
           callback({ success: true })
         })
         .catch((err) => {
@@ -115,8 +132,10 @@ app.prepare().then(() => {
     socket.on('resumeAll', (callback) => {
       console.log('ON resumeAll:', socket.id)
       playerService.resumeAll().then((players) => {
-        io.emit('updateAllPlayers', players)
         console.log('EMIT updateAllPlayers (resume)')
+        const evtId = new Date().getTime()
+        io.emit('updateAllPlayers', { evtId, players })
+        lastEvtId = evtId
         callback({ success: true })
       })
     })
@@ -126,7 +145,9 @@ app.prepare().then(() => {
         .recruit(playerId, faction)
         .then((player) => {
           console.log('EMIT updatePlayer (recruit):', loggable(player))
-          io.emit('updatePlayer', player)
+          const evtId = new Date().getTime()
+          io.emit('updatePlayer', { evtId, player })
+          lastEvtId = evtId
           callback({ success: true })
         })
         .catch((err) => {
@@ -137,32 +158,40 @@ app.prepare().then(() => {
     socket.on('grantTime', (playerId, minutes, callback) => {
       console.log('ON grantTime:', socket.id, playerId, minutes)
       playerService.grantTime(playerId, minutes).then((player) => {
-        io.emit('updatePlayer', player)
         console.log('EMIT updatePlayer (grantTime):', loggable(player))
+        const evtId = new Date().getTime()
+        io.emit('updatePlayer', { evtId, player })
+        lastEvtId = evtId
         callback({ success: true })
       })
     })
     socket.on('grantTimeToAll', (minutes, callback) => {
       console.log('ON grantTimeToAll:', socket.id, minutes)
       playerService.grantTimeToAll(minutes).then((players) => {
-        io.emit('updateAllPlayers', players)
         console.log('EMIT updateAllPlayers (grantTimeToAll)')
+        const evtId = new Date().getTime()
+        io.emit('updateAllPlayers', { evtId, players })
+        lastEvtId = evtId
         callback({ success: true })
       })
     })
     socket.on('takeTime', (playerId, minutes, callback) => {
       console.log('ON takeTime:', socket.id, playerId, minutes)
       playerService.takeTime(playerId, minutes).then((player) => {
-        io.emit('updatePlayer', player)
         console.log('EMIT updatePlayer (takeTime):', loggable(player))
+        const evtId = new Date().getTime()
+        io.emit('updatePlayer', { evtId, player })
+        lastEvtId = evtId
         callback({ success: true })
       })
     })
     socket.on('takeTimeFromAll', (minutes, callback) => {
       console.log('ON takeTimeFromAll:', socket.id, minutes)
       playerService.takeTimeFromAll(minutes).then((players) => {
-        io.emit('updateAllPlayers', players)
         console.log('EMIT updateAllPlayers (takeTimeFromAll)')
+        const evtId = new Date().getTime()
+        io.emit('updateAllPlayers', { evtId, players })
+        lastEvtId = evtId
         callback({ success: true })
       })
     })
@@ -171,7 +200,10 @@ app.prepare().then(() => {
       settingService
         .update(settings)
         .then((newSettings) => {
-          io.emit('updateSettings', newSettings)
+          console.log('EMIT updateSettings:', newSettings)
+          const evtId = new Date().getTime()
+          io.emit('updateSettings', { evtId, settings: newSettings })
+          lastEvtId = evtId
           callback({ success: true })
         })
         .catch((err) => {
@@ -182,42 +214,60 @@ app.prepare().then(() => {
     socket.on('creditKill', (playerId, callback) => {
       console.log('ON creditKill:', socket.id, playerId)
       playerService.creditKill(playerId).then((player) => {
-        io.emit('updatePlayer', player)
+        console.log('EMIT updatePlayer (creditKill):', loggable(player))
+        const evtId = new Date().getTime()
+        io.emit('updatePlayer', { evtId, player })
+        lastEvtId = evtId
         callback({ success: true })
       })
     })
     socket.on('creditRecruit', (playerId, callback) => {
       console.log('ON creditRecruit:', socket.id, playerId)
       playerService.creditRecruit(playerId).then((player) => {
-        io.emit('updatePlayer', player)
+        console.log('EMIT updatePlayer (creditRecruit):', loggable(player))
+        const evtId = new Date().getTime()
+        io.emit('updatePlayer', { evtId, player })
+        lastEvtId = evtId
         callback({ success: true })
       })
     })
     socket.on('removeKill', (playerId, callback) => {
       console.log('ON removeKill:', socket.id, playerId)
       playerService.removeKill(playerId).then((player) => {
-        io.emit('updatePlayer', player)
+        console.log('EMIT updatePlayer (removeKill):', loggable(player))
+        const evtId = new Date().getTime()
+        io.emit('updatePlayer', { evtId, player })
+        lastEvtId = evtId
         callback({ success: true })
       })
     })
     socket.on('removeRecruit', (playerId, callback) => {
       console.log('ON removeRecruit:', socket.id, playerId)
       playerService.removeRecruit(playerId).then((player) => {
-        io.emit('updatePlayer', player)
+        console.log('EMIT updatePlayer (removeRecruit):', loggable(player))
+        const evtId = new Date().getTime()
+        io.emit('updatePlayer', { evtId, player })
+        lastEvtId = evtId
         callback({ success: true })
       })
     })
     socket.on('addFlag', (playerId, flag, callback) => {
       console.log('ON addFlag:', socket.id, playerId, flag)
       playerService.addFlag(playerId, flag).then((player) => {
-        io.emit('updatePlayer', player)
+        console.log('EMIT updatePlayer (addFlag):', loggable(player))
+        const evtId = new Date().getTime()
+        io.emit('updatePlayer', { evtId, player })
+        lastEvtId = evtId
         callback({ success: true })
       })
     })
     socket.on('updateFlags', (playerId, flags, callback) => {
       console.log('ON updateFlags:', socket.id, playerId, flags)
       playerService.updateFlags(playerId, flags).then((player) => {
-        io.emit('updatePlayer', player)
+        console.log('EMIT updatePlayer (updateFlags):', loggable(player))
+        const evtId = new Date().getTime()
+        io.emit('updatePlayer', { evtId, player })
+        lastEvtId = evtId
         callback({ success: true })
       })
     })
@@ -226,7 +276,13 @@ app.prepare().then(() => {
       playerService
         .marshmallowProtocol(playerId, marshmallow)
         .then((player) => {
-          io.emit('updatePlayer', player)
+          console.log(
+            'EMIT updatePlayer (marshmallowProtocol):',
+            loggable(player)
+          )
+          const evtId = new Date().getTime()
+          io.emit('updatePlayer', { evtId, player })
+          lastEvtId = evtId
           callback({ success: true })
         })
     })
