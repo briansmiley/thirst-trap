@@ -8,7 +8,9 @@ import { Button } from '@/components/ui/button'
 import { PlayersDropdown } from '@/app/profile/PlayersDropdown'
 
 export default function ProfilePage() {
-  const playerIds = useAppStore((state) => state.players.map((p) => p.playerId).sort())
+  const playerIds = useAppStore((state) =>
+    state.players.map((p) => p.playerId).sort()
+  )
   const [currentPlayerId, setCurrentPlayerId] = useState<Player['playerId']>()
   const router = useRouter()
 
@@ -37,6 +39,7 @@ export default function ProfilePage() {
             onSelect={handleSelect}
             currentSelection={currentPlayerId ?? ''}
           />
+          {/* comment */}
           <Button onClick={handleSubmit}>Go to Profile</Button>
         </div>
       </div>
