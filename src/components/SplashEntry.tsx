@@ -27,6 +27,7 @@ export default function SplashEntry() {
     console.log('Form submitted')
     const result = await checkPassword(enteredPassword)
     if (result) {
+      console.log('Going to dashboard')
       router.push('/dashboard') // Redirect to main app page
     } else {
       setError('Incorrect password')
