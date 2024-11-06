@@ -40,19 +40,20 @@ export const metadata: Metadata = {
 
 async function getInitProps() {
   'use server'
-  const authenticated = await isAuthenticated()
+  // const authenticated = await isAuthenticated()
   const settings = await settingService.get()
+  const players = await playerService.getAll()
   // Only load data if authenticated
-  if (authenticated) {
-    return {
-      players: await playerService.getAll(),
-      settings,
-    }
-  }
+  // if (authenticated) {
+  //   return {
+  //     players: await playerService.getAll(),
+  //     settings,
+  //   }
+  // }
 
   // Return empty data if not authenticated
   return {
-    players: [],
+    players,
     settings,
   }
 }

@@ -14,12 +14,12 @@ export default function SplashEntry() {
   const router = useRouter()
 
   const handleEnterClick = async () => {
-    const authenticated = await isAuthenticated()
-    if (authenticated) {
-      router.push('/dashboard')
-    } else {
-      setShowPasswordInput(true)
-    }
+    // const authenticated = await isAuthenticated()
+    // if (authenticated) {
+    router.push('/dashboard')
+    // } else {
+    // setShowPasswordInput(true)
+    // }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
