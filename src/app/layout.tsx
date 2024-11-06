@@ -9,6 +9,7 @@ import { AppStoreProvider } from '@/lib/stores/AppStoreProvider'
 import StoreUpdater from '@/lib/stores/StoreUpdater'
 import Navbar from '@/components/Navbar'
 import { Toaster } from '@/components/ui/toaster'
+import { isAuthenticated } from './actions/auth'
 
 export const dynamic = 'force-dynamic'
 
@@ -39,10 +40,20 @@ export const metadata: Metadata = {
 
 async function getInitProps() {
   'use server'
-  console.log('getInitProps log')
+  const authenticated = await isAuthenticated()
+  const settings = await settingService.get()
+  // Only load data if authenticated
+  if (authenticated) {
+    return {
+      players: await playerService.getAll(),
+      settings,
+    }
+  }
+
+  // Return empty data if not authenticated
   return {
-    players: await playerService.getAll(),
-    settings: await settingService.get(),
+    players: [],
+    settings,
   }
 }
 
@@ -66,7 +77,6 @@ export default async function RootLayout({
           <AppStoreProvider initProps={initProps}>
             <StoreUpdater />
             <Navbar />
-            {/* <QrScanner /> */}
             {children}
             <Toaster />
           </AppStoreProvider>
