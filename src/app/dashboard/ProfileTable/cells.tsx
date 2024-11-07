@@ -122,13 +122,14 @@ export function FlagsHeader({
 
 export function FlagsCell({ row }: CellContext<Player, Player['flags']>) {
   return (
-    <div className="text-center">
+    <div className="flex w-full justify-center">
       {row.original.flags.length > 0 ? (
         <>
           <Dialog>
             <DialogTrigger asChild>
               <Button
                 variant="link"
+                className="p-0"
                 onClick={(event) => {
                   event.stopPropagation()
                 }}
@@ -174,7 +175,7 @@ export function FlagsCell({ row }: CellContext<Player, Player['flags']>) {
 export function FactionHeader({
   column,
 }: HeaderContext<Player, Player['faction']>) {
-  return <div>Faction</div>
+  return <div className="text-center">Faction</div>
 }
 
 export function FactionCell({ row }: CellContext<Player, Player['faction']>) {
@@ -198,28 +199,28 @@ export function KillsHeader({
   column,
 }: HeaderContext<Player, Player['kills']>) {
   return (
-    <div className="flex w-full justify-end">
+    <div className="flex w-full justify-center">
       <SkullIcon size={16} />
     </div>
   )
 }
 
 export function KillsCell({ row }: CellContext<Player, Player['kills']>) {
-  return <div className="text-right tabular-nums">{row.original.kills}</div>
+  return <div className="text-center tabular-nums">{row.original.kills}</div>
 }
 
 export function RecruitsHeader({
   column,
 }: HeaderContext<Player, Player['recruits']>) {
   return (
-    <div className="flex w-full justify-end">
+    <div className="flex w-full justify-center">
       <HandshakeIcon size={16} />
     </div>
   )
 }
 
 export function RecruitsCell({ row }: CellContext<Player, Player['recruits']>) {
-  return <div className="text-right tabular-nums">{row.original.recruits}</div>
+  return <div className="text-center tabular-nums">{row.original.recruits}</div>
 }
 
 export function PausedHeader({
