@@ -60,8 +60,8 @@ export default function Commands() {
   }
 
   return (
-    <div className="my_box flex w-[450px] min-w-[200px] max-w-[90%] grow flex-col items-center justify-center gap-5 text-2xl">
-      <h1 className="satisfy text-4xl font-bold">Commands</h1>
+    <div className="my_box flex w-[450px] min-w-[200px] max-w-[90%] grow flex-col items-center justify-center gap-3 text-base sm:gap-5 sm:text-2xl">
+      <h1 className="satisfy text-2xl font-bold sm:text-4xl">Commands</h1>
 
       <div className="flex w-full flex-row items-center justify-around gap-2">
         <div className="flex flex-col items-center justify-center gap-2">
@@ -69,10 +69,10 @@ export default function Commands() {
           <Button
             variant="outline"
             size="icon"
-            className="h-24 w-24"
+            className="size-16 sm:size-24"
             onClick={pauseAll}
           >
-            <Pause className="!size-12" />
+            <Pause className="!size-8 sm:!size-12" />
           </Button>
         </div>
         <div className="flex flex-col items-center justify-center gap-2">
@@ -80,10 +80,10 @@ export default function Commands() {
           <Button
             variant="outline"
             size="icon"
-            className="h-24 w-24"
+            className="size-16 sm:size-24"
             onClick={resumeAll}
           >
-            <Play className="!size-12" />
+            <Play className="!size-8 sm:!size-12" />
           </Button>
         </div>
       </div>

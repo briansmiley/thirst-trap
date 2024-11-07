@@ -41,8 +41,8 @@ export default function SettingsForm({
   }
 
   return (
-    <div className="flex w-full flex-col items-center justify-start gap-4">
-      <div className="flex min-h-12 w-64 items-center justify-between">
+    <div className="flex w-full flex-col items-center justify-start gap-1 sm:gap-4">
+      <div className="flex w-64 items-center justify-between">
         <label htmlFor="maxDeathTimer">Starting Timer</label>
         <Input
           id="startingTimer"
@@ -52,7 +52,7 @@ export default function SettingsForm({
           onChange={(e) => setStartingTimer(parseInt(e.target.value))}
         />
       </div>
-      <div className="flex min-h-12 w-64 items-center justify-between">
+      <div className="flex w-64 items-center justify-between">
         <label htmlFor="maxDeathTimer">Death Timer Cap</label>
         <Input
           id="maxDeathTimer"
@@ -62,7 +62,7 @@ export default function SettingsForm({
           onChange={(e) => setMaxDeathTimer(parseInt(e.target.value))}
         />
       </div>
-      <div className="flex min-h-12 w-64 items-center justify-between">
+      <div className="flex w-64 items-center justify-between">
         <label htmlFor="killTimeCredit">Kill Time Credit</label>
         <Input
           id="killTimeCredit"
@@ -72,7 +72,7 @@ export default function SettingsForm({
           onChange={(e) => setKillTimeCredit(parseInt(e.target.value))}
         />
       </div>
-      <div className="flex min-h-12 w-64 items-center justify-between">
+      <div className="flex w-64 items-center justify-between">
         <label htmlFor="recruitTimeCredit">Recruit Time Credit</label>
         <Input
           id="recruitTimeCredit"

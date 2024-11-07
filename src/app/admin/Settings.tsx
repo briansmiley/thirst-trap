@@ -11,7 +11,7 @@ export default function Settings() {
   const [edit, setEdit] = useState(false)
   return (
     <div className="my_box flex w-[450px] min-w-[200px] max-w-[90%] flex-col items-center justify-start gap-2 sm:max-w-[450px]">
-      <h1 className="satisfy text-4xl font-bold">Settings</h1>
+      <h1 className="satisfy text-2xl font-bold sm:text-4xl">Settings</h1>
       <div className="flex w-full grow flex-col items-center justify-center px-10">
         {edit ? (
           <EditSettings settings={settings} closeEdit={() => setEdit(false)} />
