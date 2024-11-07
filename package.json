@@ -8,7 +8,9 @@
     "build": "npx prisma generate && next build",
     "prod": "NODE_ENV=production npx ts-node src/server/server.ts",
     "start": "NODE_ENV=production node src/server/server.js",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:backup": "tsx src/scripts/db/db.ts backup",
+    "db:restore": "tsx src/scripts/db/db.ts restore"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
