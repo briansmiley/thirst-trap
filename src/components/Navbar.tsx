@@ -6,7 +6,17 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
 import { Button } from './ui/button'
-import { CameraIcon, CheckIcon, LogOut, XIcon } from 'lucide-react'
+import {
+  CameraIcon,
+  CheckIcon,
+  LayoutListIcon,
+  LogOut,
+  QrCodeIcon,
+  SettingsIcon,
+  ShieldIcon,
+  UsersIcon,
+  XIcon,
+} from 'lucide-react'
 import { useSocketSubscription } from '@/socket/client'
 import { cn } from '@/lib/utils'
 
@@ -51,46 +61,46 @@ const Navbar = () => {
             <li>
               <Link
                 href="/dashboard"
-                className={`flex h-full items-center justify-center px-3.5 sm:px-5 md:px-8 ${selectedClass(
+                className={`flex h-full items-center justify-center gap-2 px-5 min-[500px]:px-4 md:px-8 ${selectedClass(
                   '/dashboard'
                 )}`}
               >
-                Dashboard
+                <LayoutListIcon size={18} />{' '}
+                <span className="hidden min-[500px]:inline">Dashboard</span>
               </Link>
             </li>
             <li>
               <Link
                 href="/profile"
-                className={`flex h-full items-center justify-center px-3.5 sm:px-5 md:px-8 ${selectedClass(
+                className={`flex h-full items-center justify-center gap-2 px-5 min-[500px]:px-4 md:px-8 ${selectedClass(
                   '/profile'
                 )}`}
               >
-                Profiles
+                <UsersIcon size={18} />{' '}
+                <span className="hidden min-[500px]:inline">Profiles</span>
               </Link>
             </li>
             <li>
               <Link
                 href="/admin"
-                className={`flex h-full items-center justify-center px-3.5 sm:px-5 md:px-8 ${selectedClass(
+                className={`flex h-full items-center justify-center gap-2 px-5 min-[500px]:px-4 md:px-8 ${selectedClass(
                   '/admin'
                 )}`}
               >
-                Admin
+                <SettingsIcon size={18} />{' '}
+                <span className="hidden min-[500px]:inline">Admin</span>
               </Link>
             </li>
             <li>
               <Link
                 href="/scan"
-                className={`flex h-full items-center justify-center px-3.5 sm:px-5 md:px-8 ${selectedClass(
+                className={`flex h-full items-center justify-center px-5 min-[500px]:px-4 md:px-8 ${selectedClass(
                   '/scan'
                 )}`}
               >
                 <span className="flex items-center gap-2">
-                  QR
-                  <CameraIcon
-                    className="!size-5"
-                    strokeWidth={pathname.startsWith('/scan') ? 3 : 1}
-                  />
+                  <QrCodeIcon size={18} />
+                  <span className="hidden min-[500px]:inline">Scan</span>
                 </span>
               </Link>
             </li>

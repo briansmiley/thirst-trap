@@ -10,7 +10,7 @@ export default function Settings() {
   const { settings } = useAppStore((state) => ({ settings: state.settings }))
   const [edit, setEdit] = useState(false)
   return (
-    <div className="my_box flex w-[450px] min-w-[200px] max-w-[450px] flex-col items-center justify-start gap-2">
+    <div className="my_box flex w-[450px] min-w-[200px] max-w-[90%] flex-col items-center justify-start gap-2 sm:max-w-[450px]">
       <h1 className="satisfy text-4xl font-bold">Settings</h1>
       <div className="flex w-full grow flex-col items-center justify-center px-10">
         {edit ? (
