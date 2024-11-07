@@ -62,6 +62,8 @@ export default function ProfileTable() {
   }))
   const router = useRouter()
 
+  const [globalFilter, setGlobalFilter] = useState('')
+
   useEffect(() => {
     initializeFromStorage()
     setColumnSorting([{ id: 'expirationTime', desc: false }])
@@ -123,8 +125,8 @@ export default function ProfileTable() {
         : []
     )
   return (
-    <main>
-      <div className="flex gap-1 px-1 py-4 sm:gap-4 sm:p-4">
+    <main className="flex max-w-[750px] flex-col items-start gap-1 self-center">
+      <div className="flex justify-start gap-1 py-4 sm:gap-4 sm:py-4">
         {/* Sorting */}
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
