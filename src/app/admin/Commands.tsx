@@ -60,7 +60,7 @@ export default function Commands() {
   }
 
   return (
-    <div className="my_box flex w-[450px] min-w-[200px] max-w-[450px] grow flex-col items-center justify-center gap-5 text-2xl">
+    <div className="my_box flex w-[450px] min-w-[200px] max-w-[90%] grow flex-col items-center justify-center gap-5 text-2xl">
       <h1 className="satisfy text-4xl font-bold">Commands</h1>
 
       <div className="flex w-full flex-row items-center justify-around gap-2">
@@ -92,7 +92,7 @@ export default function Commands() {
           <span>Grant Time</span>
           <div className="flex gap-1">
             <Input
-              className="w-24"
+              className="w-12 sm:w-20"
               type="number"
               step="1"
               value={additionTime}
@@ -111,7 +111,7 @@ export default function Commands() {
           <span>Deduct Time</span>
           <div className="flex gap-1">
             <Input
-              className="w-24"
+              className="w-12 sm:w-20"
               type="number"
               step="1"
               name="minutes"
