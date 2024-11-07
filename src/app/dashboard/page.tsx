@@ -36,7 +36,18 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { ArrowDownIcon, ArrowUpIcon, ChevronDownIcon } from 'lucide-react'
+import {
+  ArrowDownIcon,
+  ArrowDownNarrowWideIcon,
+  ArrowDownWideNarrowIcon,
+  ArrowUpDownIcon,
+  ArrowUpIcon,
+  ArrowUpNarrowWideIcon,
+  ArrowUpWideNarrowIcon,
+  ChevronDownIcon,
+  EyeIcon,
+  FilterIcon,
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 
@@ -61,6 +72,8 @@ export default function ProfileTable() {
     initializeFromStorage: state.initializeFromStorage,
   }))
   const router = useRouter()
+
+  const [globalFilter, setGlobalFilter] = useState('')
 
   useEffect(() => {
     initializeFromStorage()
@@ -111,6 +124,11 @@ export default function ProfileTable() {
     },
   })
 
+  const sortIcon = () => {
+    if (columnSorting.length === 0) return <ArrowUpDownIcon /> // None
+    if (columnSorting[0]?.desc) return <ArrowDownWideNarrowIcon /> // Descending
+    return <ArrowUpNarrowWideIcon /> // Ascending
+  }
   const toggleSort = (label?: string) => () =>
     handleSortingChange(
       label
@@ -123,31 +141,21 @@ export default function ProfileTable() {
         : []
     )
   return (
-    <main className="flex max-w-[750px] flex-col items-start gap-1 self-center">
-      <div className="flex justify-start gap-1 py-4 sm:gap-4 sm:py-4">
+    <main className="mx-auto w-full max-w-[750px] px-4">
+      <div className="flex items-start justify-start gap-1 py-4 sm:gap-4 sm:py-4">
         {/* Sorting */}
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
-            <Button
-              className="flex justify-between gap-2 border capitalize"
-              variant="outline"
-            >
-              Sort:
+            <Button className="pr-1 capitalize" variant="outline">
+              {sortIcon()}
               <span className="font-extrabold">
                 {columnSorting.length
                   ? columnSorting[0].id === 'expirationTime'
                     ? 'Time'
                     : columnSorting[0].id
-                  : 'none'}
+                  : 'Sort'}
               </span>
               <ChevronDownIcon size={18} />
-              {columnSorting.length ? (
-                columnSorting[0]?.desc ? (
-                  <ArrowDownIcon size={18} />
-                ) : (
-                  <ArrowUpIcon size={18} />
-                )
-              ) : null}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -215,8 +223,8 @@ export default function ProfileTable() {
         {/* Filtering */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline">
-              Filter:{' '}
+            <Button variant="outline" className="pr-1">
+              <FilterIcon />{' '}
               {table.getColumn('faction')?.getFilterValue() ? (
                 <Badge
                   className="capitalize"
@@ -264,8 +272,8 @@ export default function ProfileTable() {
         {/* Visibility   */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="">
-              Visibility <ChevronDownIcon size={18} />
+            <Button variant="outline" className="pr-1">
+              <EyeIcon /> <ChevronDownIcon size={18} />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -289,61 +297,67 @@ export default function ProfileTable() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <Table className="border border-neutral-700">
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead
-                  key={header.id}
-                  style={{
-                    width: header.column.columnDef.size
-                      ? `${header.column.columnDef.size}px`
-                      : 'auto',
-                  }}
-                >
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                </TableHead>
-              ))}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                onClick={() => router.push(`/profile/${row.original.playerId}`)}
-                className="cursor-pointer"
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell
-                    key={cell.id}
+      <div className="overflow-x-auto">
+        <Table className="max-w-full overflow-x-auto border border-neutral-700">
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
                     style={{
-                      width: cell.column.columnDef.size
-                        ? `${cell.column.columnDef.size}px`
+                      width: header.column.columnDef.size
+                        ? `${header.column.columnDef.size}px`
                         : 'auto',
                     }}
                   >
-                    {flexRender(cell.column.columnDef.cell, {
-                      ...cell.getContext(),
-                    })}
-                  </TableCell>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
                 ))}
               </TableRow>
-            ))
-          ) : (
-            <TableRow className="block">
-              <TableCell className="h-24 justify-center">No results.</TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  onClick={() =>
+                    router.push(`/profile/${row.original.playerId}`)
+                  }
+                  className="cursor-pointer"
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      style={{
+                        width: cell.column.columnDef.size
+                          ? `${cell.column.columnDef.size}px`
+                          : 'auto',
+                      }}
+                    >
+                      {flexRender(cell.column.columnDef.cell, {
+                        ...cell.getContext(),
+                      })}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow className="block">
+                <TableCell className="h-24 justify-center">
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </main>
   )
 }
