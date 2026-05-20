@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "ts-node src/server/server.ts",
-    "network": "HOSTNAME=\"$(ipconfig getifaddr en0)\" npm run dev -- -H \"$(ipconfig getifaddr en0)\"",
-    "build": "npx prisma generate && next build",
-    "prod": "NODE_ENV=production npx ts-node src/server/server.ts",
-    "start": "NODE_ENV=production node src/server/server.js",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "lint": "next lint",
+    "dev:legacy": "ts-node src/server/server.legacy.ts",
+    "prod:legacy": "NODE_ENV=production npx ts-node src/server/server.legacy.ts",
+    "start:legacy": "NODE_ENV=production node src/server/server.legacy.js",
     "db:backup": "tsx src/scripts/db/db.ts backup",
     "db:restore": "tsx src/scripts/db/db.ts restore"
   },

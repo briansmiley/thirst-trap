@@ -1,5 +1,5 @@
 // import { PlayerServiceT as PlayerServiceI } from "./interface";
-import prisma from '../../app/client'
+import prisma from '../../legacy/prisma'
 import { Player } from '@/app/types'
 import { Faction, Prisma } from '@prisma/client'
 import settingService from './setting'

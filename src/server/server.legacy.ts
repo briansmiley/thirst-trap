@@ -1,3 +1,11 @@
+// LEGACY — the original custom Next.js + Socket.IO entry point. Boots Next,
+// wraps it in a Socket.IO server, and persists every mutation to Postgres via
+// the Prisma services in this directory. Wired to the npm scripts
+// `dev:legacy`, `prod:legacy`, `start:legacy`. To revive: provision a Postgres
+// DB, set DATABASE_URL/DIRECT_URL, run `prisma migrate deploy`, and use the
+// legacy scripts in place of the vanilla `next` ones. See also
+// src/socket/client.legacy.ts for the matching client.
+
 import { createServer } from 'node:http'
 import next from 'next'
 import { Server } from 'socket.io'

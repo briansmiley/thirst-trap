@@ -1,4 +1,4 @@
-import prisma from '../../app/client'
+import prisma from '../../legacy/prisma'
 import { Prisma } from '@prisma/client'
 
 const settingService = {

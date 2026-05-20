@@ -1,6 +1,6 @@
 'use client'
 import 'client-only'
-import { createContext, useRef, useContext } from 'react'
+import { createContext, useEffect, useRef, useContext } from 'react'
 import { useStore } from 'zustand'
 
 import {
@@ -8,6 +8,8 @@ import {
   type InitAppStoreProps,
   createAppStore,
 } from '@/lib/stores/appStore'
+import { setLocalSocketStore } from '@/socket/client'
+import { loadSeed } from '@/lib/seed'
 
 export type AppStoreApi = ReturnType<typeof createAppStore>
 
@@ -25,7 +27,35 @@ export const AppStoreProvider = ({
   const storeRef = useRef<AppStoreApi>()
   if (!storeRef.current) {
     storeRef.current = createAppStore(initProps)
+    setLocalSocketStore(storeRef.current)
   }
+
+  useEffect(() => {
+    const store = storeRef.current
+    if (!store) return
+    let cancelled = false
+
+    const finish = async () => {
+      // persist middleware uses skipHydration: true so SSR/CSR markup matches.
+      // Pull persisted state in now, then fall back to the seed JSON on a
+      // browser that hasn't visited before.
+      await store.persist.rehydrate()
+      if (cancelled) return
+      if (store.getState().players.length === 0) {
+        try {
+          const seed = await loadSeed()
+          if (cancelled) return
+          store.setState({ players: seed.players, settings: seed.settings })
+        } catch (err) {
+          console.error('Failed to load seed data', err)
+        }
+      }
+    }
+    finish()
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   return (
     <AppStoreContext.Provider value={storeRef.current}>

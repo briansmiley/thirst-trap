@@ -3,15 +3,11 @@ import localFont from 'next/font/local'
 import { Satisfy } from 'next/font/google'
 import { ThemeProvider } from 'next-themes'
 import './globals.css'
-import playerService from '@/server/services/player'
-import settingService from '@/server/services/setting'
 import { AppStoreProvider } from '@/lib/stores/AppStoreProvider'
 import StoreUpdater from '@/lib/stores/StoreUpdater'
 import Navbar from '@/components/Navbar'
 import { Toaster } from '@/components/ui/toaster'
-import { isAuthenticated } from './actions/auth'
-
-export const dynamic = 'force-dynamic'
+import { DEFAULT_SETTINGS } from '@/lib/seed'
 
 const satisfy = Satisfy({
   subsets: ['latin'],
@@ -38,32 +34,14 @@ export const metadata: Metadata = {
   },
 }
 
-async function getInitProps() {
-  'use server'
-  // const authenticated = await isAuthenticated()
-  const settings = await settingService.get()
-  const players = await playerService.getAll()
-  // Only load data if authenticated
-  // if (authenticated) {
-  //   return {
-  //     players: await playerService.getAll(),
-  //     settings,
-  //   }
-  // }
-
-  // Return empty data if not authenticated
-  return {
-    players,
-    settings,
-  }
-}
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const initProps = await getInitProps()
+  // Initial state is empty; AppStoreProvider rehydrates from localStorage on
+  // mount and falls back to the bundled seed on first visit.
+  const initProps = { players: [], settings: DEFAULT_SETTINGS }
 
   return (
     <html
