@@ -10,7 +10,7 @@ export async function checkPassword(password: string) {
   }
   if (password === appPassword) {
     // Set a cookie to remember that the user is authenticated
-    const cookieStore = cookies()
+    const cookieStore = await cookies()
     cookieStore.set('authenticated', authCookieToken, {
       httpOnly: true,
       secure: false,
@@ -20,13 +20,13 @@ export async function checkPassword(password: string) {
   return false
 }
 export async function isAuthenticated() {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   if (!authCookieToken) {
     throw new Error('AUTH_COOKIE_TOKEN is not set')
   }
   return cookieStore.get('authenticated')?.value === authCookieToken
 }
 export async function logout() {
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   cookieStore.delete('authenticated')
 }
